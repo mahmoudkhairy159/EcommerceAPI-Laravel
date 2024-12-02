@@ -38,7 +38,6 @@ class ProductResource extends JsonResource
             'category' => $this->category ? $this->category->name : null,
             'brand_id' => $this->brand_id,
             'brand' => $this->brand ? $this->brand->name : null,
-            'main_category' => $this->main_category,
             'is_carted' => $this->is_carted,
             'is_wish_listed' => $this->is_wish_listed,
             'services' => ServiceResource::collection($this->whenLoaded('services')),

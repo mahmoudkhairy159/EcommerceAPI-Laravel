@@ -54,12 +54,7 @@ class ProductFilter extends ModelFilter
             return $q->where('order_type', $orderType);
         });
     }
-    public function mainCategory($mainCategory)
-    {
-        return $this->where(function ($q) use ($mainCategory) {
-            return $q->where('main_category', $mainCategory);
-        });
-    }
+   
     public function returnPolicy($returnPolicy)
     {
         return $this->where(function ($q) use ($returnPolicy) {

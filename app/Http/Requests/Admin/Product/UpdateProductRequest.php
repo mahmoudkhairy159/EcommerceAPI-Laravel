@@ -34,7 +34,6 @@ class UpdateProductRequest extends FormRequest
             'rate' => 'integer|between:0,255',
             'category_id' => 'required|exists:categories,id|integer',
             'brand_id' => 'required|exists:brands,id|integer',
-            'main_category' => 'required|string|max:255',
             'services' => 'nullable|array',
             'services.*' => 'integer|exists:services,id',
             'is_featured' => 'required|integer|in:0,1',

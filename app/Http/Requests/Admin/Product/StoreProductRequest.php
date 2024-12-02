@@ -31,7 +31,6 @@ class StoreProductRequest extends FormRequest
             'return_policy' => 'nullable|string',
             'category_id' => 'required|exists:categories,id|integer',
             'brand_id' => 'required|exists:brands,id|integer',
-            'main_category' => 'required|string|max:255',
             'product_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'services' => 'nullable|array',
             'services.*' => 'integer|exists:services,id',

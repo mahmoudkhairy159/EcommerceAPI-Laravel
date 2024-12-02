@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string('slug')->nullable();
-           
             $table->unsignedBigInteger("category_id")->nullable();
             $table->foreign("category_id")->references("id")->on("categories")->onDelete("cascade");
             $table->string('image1')->nullable();
@@ -33,7 +32,6 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('admins')->nullOnDelete();
             $table->tinyInteger('status')->default(1);
             $table->bigInteger('rank')->default(0); //
-
             $table->timestamps();
             $table->softDeletes();
 

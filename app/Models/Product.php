@@ -35,7 +35,6 @@ class Product extends Model
         'rate',
         'category_id',
         'brand_id',
-        'main_category',
         'is_featured',
     ];
     //slug
