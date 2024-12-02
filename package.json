@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "axios": "^1.6.1",
+        "laravel-vite-plugin": "^0.8.0",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^40.1.0",
+        "@ckeditor/ckeditor5-image": "^40.1.0",
+        "@ckeditor/ckeditor5-language": "^40.1.0",
+        "quill": "^1.3.6"
+    }
+}
