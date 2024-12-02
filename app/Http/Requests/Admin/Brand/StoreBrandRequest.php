@@ -19,8 +19,6 @@ class StoreBrandRequest extends FormRequest
             'long_description' => 'nullable|string|max:10000',
             'long_description_status' => ['nullable', 'in:0,1'],
             'brief' => 'nullable|string|max:10000',
-            'main_category' => 'required|string|max:255|in:0,1,2',
-            'sub_category' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'code' => ['nullable', 'unique:brands,code'],
             'image1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],

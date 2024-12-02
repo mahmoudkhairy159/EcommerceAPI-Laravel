@@ -25,12 +25,7 @@ class BrandFilter extends ModelFilter
             return $q->where('category_id', $categoryId);
         });
     }
-    public function mainCategory($mainCategory)
-    {
-        return $this->where(function ($q) use ($mainCategory) {
-            return $q->where('main_category', $mainCategory);
-        });
-    }
+   
     public function categoryName($categoryName)
     {
         return $this->where(function ($q) use ($categoryName) {

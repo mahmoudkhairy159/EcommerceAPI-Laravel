@@ -18,8 +18,6 @@ class UpdateBrandRequest extends FormRequest
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:500',
             'long_description' => 'nullable|string|max:10000',
-            'main_category' => 'required|string|max:255|in:0,1,2',
-            'sub_category' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'code' => ['nullable', 'unique:brands,code,' . $this->route('brand')],
             'image1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],

@@ -21,8 +21,6 @@ class BrandResource extends JsonResource
             'long_description' => $this->long_description,
             'long_description_status' => $this->long_description_status,
             'brief' => $this->brief,
-            'main_category' => $this->main_category,
-            'sub_category' => $this->sub_category,
             'category_id' => $this->category_id,
             'category' => $this->category ? $this->category->name : null,
             'code' => $this->code,

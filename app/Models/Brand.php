@@ -18,8 +18,6 @@ class Brand extends Model
         'name',
         'slug',
         'code',
-        'main_category',
-        'sub_category', // Added sub_category
         'category_id',
         'image1', // Added image1
         'image2', // Added image2
