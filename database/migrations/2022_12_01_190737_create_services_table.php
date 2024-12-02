@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->string('code')->unique()->nullable();
             $table->string("description", 1000);
-            $table->string("main_category")->nullable();
             $table->string('image')->nullable();
             $table->integer("rate")->default(0);
             $table->foreignId('updated_by')->nullable();

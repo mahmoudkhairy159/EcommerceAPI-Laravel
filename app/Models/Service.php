@@ -17,7 +17,6 @@ class Service extends Model
         'name',
         'slug',
         'description',
-        'main_category',
         'image',
         'code',
         'category_id',

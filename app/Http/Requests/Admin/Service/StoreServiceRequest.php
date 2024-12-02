@@ -16,7 +16,6 @@ class StoreServiceRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'main_category' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'code' => ['nullable', 'unique:brands,code'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
