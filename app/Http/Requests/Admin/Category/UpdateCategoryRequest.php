@@ -17,7 +17,6 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'main_category' => 'required|string|max:255',
             'code' => ['nullable', 'unique:categories,code,' . $this->route('category')],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'status' => ['required', 'in:0,1'],

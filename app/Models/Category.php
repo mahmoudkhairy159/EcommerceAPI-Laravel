@@ -17,7 +17,6 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'main_category',
         'image',
         'code',
         'created_by',

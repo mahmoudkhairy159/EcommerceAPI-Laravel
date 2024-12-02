@@ -20,10 +20,5 @@ class CategoryFilter extends ModelFilter
             return $q->where('code', $code);
         });
     }
-    public function mainCategory($mainCategory)
-    {
-        return $this->where(function ($q) use ($mainCategory) {
-            return $q->where('main_category', $mainCategory);
-        });
-    }
+   
 }
