@@ -34,7 +34,6 @@ return [
             'wishlists' => 'c,r,u,d',
             'wishlist_items' => 'c,r,u,d',
             'contact_messages' => 'c,r,u,d',
-            'reference_customers' => 'c,r,u,d',
             'assets' => 'r,u',
             'pages' => 'r,u,d',
             'hero_sliders' => 'c,r,u,d',

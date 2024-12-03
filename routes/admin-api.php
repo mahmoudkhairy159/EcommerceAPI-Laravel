@@ -19,7 +19,6 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductAccessoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
-use App\Http\Controllers\Admin\ReferenceCustomerController;
 use App\Http\Controllers\Admin\RelatedProductController;
 use App\Http\Controllers\Admin\RelatedServiceController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -229,12 +228,7 @@ Route::name('admin-api.')->group(function () {
     });
     // wishlist routes
 
-    //reference customers routes
-    Route::controller(ReferenceCustomerController::class)->prefix('reference-customers')->name('reference-customers.')->group(function () {
-        Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
-    });
-    Route::apiResource('reference-customers', ReferenceCustomerController::class);
-    //reference customers routes
+   
     //Contact Messages EndPoint
     Route::apiResource('contact-messages', ContactMessageController::class)->only(['index', 'show', 'destroy']);
     //Contact Messages EndPoint

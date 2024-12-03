@@ -21,7 +21,6 @@ use App\Http\Controllers\Api\PageSectionController;
 use App\Http\Controllers\Api\ProductAccessoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductImageController;
-use App\Http\Controllers\Api\ReferenceCustomerController;
 use App\Http\Controllers\Api\RelatedProductController;
 use App\Http\Controllers\Api\RelatedServiceController;
 use App\Http\Controllers\Api\ReviewController;
@@ -190,12 +189,7 @@ Route::name('user-api.')->group(function () {
     });
 // wishlists routes
 
-//reference customers
-    Route::controller(ReferenceCustomerController::class)->prefix('reference-customers')->name('reference-customers.')->group(function () {
-        Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
-    });
-    Route::apiResource('reference-customers', ReferenceCustomerController::class)->only(['index', 'show']);
-//reference customers
+
     //Contact Messages EndPoint
     Route::apiResource('contact-messages', ContactMessageController::class)->only(['store', 'show']);
     //Contact Messages EndPoint
