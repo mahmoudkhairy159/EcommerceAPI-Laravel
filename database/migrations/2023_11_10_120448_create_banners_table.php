@@ -19,8 +19,10 @@ class CreateBannersTable extends Migration
             $table->text('paragraph')->nullable();
             $table->integer('rank')->nullable();
             $table->string('image')->nullable();
-            $table->unsignedBigInteger('admin_id');
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->unsignedBigInteger('created_by')->nullable(); //
+            $table->unsignedBigInteger('updated_by')->nullable(); //
+            $table->foreign('created_by')->references('id')->on('admins')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('admins')->onDelete('set null');
             $table->timestamps();
         });
     }

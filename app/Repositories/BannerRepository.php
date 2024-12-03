@@ -24,7 +24,6 @@ class BannerRepository extends BaseRepository
     {
         try {
             DB::beginTransaction();
-            $data['admin_id'] = auth()->id();
             if (request()->hasFile('image')) {
                 $data['image'] = $this->uploadFile(request()->image, Banner::FILES_DIRECTORY);
             }
@@ -51,7 +50,6 @@ class BannerRepository extends BaseRepository
                 }
                 $data['image'] = $this->uploadFile(request()->image, Banner::FILES_DIRECTORY);
             }
-            $data['admin_id'] = auth()->id();
             $updated = $model->update($data);
             DB::commit();
             return $updated;

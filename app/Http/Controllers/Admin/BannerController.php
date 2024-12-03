@@ -34,7 +34,7 @@ class BannerController extends Controller
         $this->middleware(['ability:admin,banners-delete'])->only(['destroy']);
     }
 
-  
+
     public function index()
     {
         try {
@@ -53,6 +53,7 @@ class BannerController extends Controller
     {
         try {
             $data = $request->validated();
+            $data['created_by'] = auth()->guard($this->guard)->id();
             $created = $this->BannerRepository->createOne($data);
 
             if ($created) {
@@ -76,7 +77,7 @@ class BannerController extends Controller
                 500
             );
         }
-       
+
     }
 
     /**
@@ -104,6 +105,8 @@ class BannerController extends Controller
         try {
 
             $data = $request->validated();
+            $data['updated_by'] = auth()->guard($this->guard)->id();
+
             $updated = $this->BannerRepository->updateOne($data, $id);
             if ($updated) {
                 return $this->messageResponse(

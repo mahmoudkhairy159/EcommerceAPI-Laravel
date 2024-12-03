@@ -24,7 +24,6 @@ class HeroSliderRepository extends BaseRepository
     {
         try {
             DB::beginTransaction();
-            $data['admin_id'] = auth()->id();
             if (request()->hasFile('image')) {
                 $data['image'] = $this->uploadFile(request()->image, HeroSlider::FILES_DIRECTORY);
             }
@@ -53,7 +52,6 @@ class HeroSliderRepository extends BaseRepository
                 }
                 $data['image'] = $this->uploadFile(request()->image, HeroSlider::FILES_DIRECTORY);
             }
-            $data['admin_id'] = auth()->id();
             $updated = $model->update($data);
             DB::commit();
             return $updated;

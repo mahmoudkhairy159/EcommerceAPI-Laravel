@@ -34,7 +34,7 @@ class HeroSliderController extends Controller
         $this->middleware(['ability:admin,hero_sliders-delete'])->only(['destroy']);
     }
 
-  
+
     public function index()
     {
         try {
@@ -53,6 +53,8 @@ class HeroSliderController extends Controller
     {
         try {
             $data = $request->validated();
+            $data['created_by'] = auth()->guard($this->guard)->id();
+
             $created = $this->heroSliderRepository->createOne($data);
 
             if ($created) {
@@ -76,7 +78,7 @@ class HeroSliderController extends Controller
                 500
             );
         }
-       
+
     }
 
     /**
@@ -104,6 +106,7 @@ class HeroSliderController extends Controller
         try {
 
             $data = $request->validated();
+            $data['updated_by'] = auth()->guard($this->guard)->id();
             $updated = $this->heroSliderRepository->updateOne($data, $id);
             if ($updated) {
                 return $this->messageResponse(
