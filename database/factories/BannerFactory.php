@@ -18,7 +18,6 @@ class BannerFactory extends Factory
             'paragraph' => $this->faker->paragraph,
             'image' => 'default.png',
             'rank' => '1',
-            'admin_id' => '1',
         ];
     }
 }

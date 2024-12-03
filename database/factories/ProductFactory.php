@@ -38,7 +38,6 @@ class ProductFactory extends Factory
             'rate' => $this->faker->numberBetween(0, 5),
             'category_id' => null, // Assign appropriate category ID or leave null for seeding
             'brand_id' => null, // Assign appropriate brand ID or leave null for seeding
-            'main_category' =>$this->faker->randomElement(['0', '1','2']) ,
         ];
     }
 }
