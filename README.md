@@ -22,6 +22,6 @@ Welcome to the **EcommerceAPI-Laravel** repository! This API is built with Larav
 
 ### General Features  
 - **App Settings**: Customize global app preferences.  
-- **Contact Us Messages**: Handle user inquiries with built-in tools.  
+- **Contact Us Messages**: Handle user inquiries.  
 
 ---
