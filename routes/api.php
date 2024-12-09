@@ -153,14 +153,29 @@ Route::name('user-api.')->group(function () {
         Route::get('/product/{id}', 'getRelatedServices')->name('getRelatedServices');
     });
     // related-services routes
-// cart routes
-    Route::controller(CartController::class)->name('carts.')->prefix('carts')->group(function () {
-        Route::get('', 'viewCart')->name('viewCart');
-        Route::post('', 'addToCart')->name('addToCart');
-        Route::put('/update/{productId}', 'updateProductQuantity')->name('update');
-        Route::delete('remove/{productId}', 'removeFromCart')->name('remove');
-    });
-// cart routes
+//  cart routes
+    Route::controller(CartController::class)
+        ->name('carts.')
+        ->prefix('carts')
+        ->group(function () {
+            // Display the cart
+            Route::get('/', 'viewCart')->name('view');
+
+            // Add a product to the cart
+            Route::post('/products', 'addToCart')->name('add');
+
+            // Update the quantity of a specific product in the cart
+            Route::put('/products/{productId}', 'updateProductQuantity')->name('update');
+
+            // Remove a specific product from the cart
+            Route::delete('/products/{productId}', 'removeFromCart')->name('remove');
+
+            // Clear the entire cart
+            Route::delete('/clear', 'clearCart')->name('clear');
+
+        });
+
+    //  cart routes
 
     // orders routes
     Route::apiResource('orders', OrderController::class);
@@ -170,7 +185,7 @@ Route::name('user-api.')->group(function () {
         Route::get('/order/{id}', 'getByOrderId')->name('getByOrderId');
     });
     Route::apiResource('order-products', OrderProductController::class)->only(['update', 'destroy']);
-//order-products
+    //order-products
 
     // reviews routes
     Route::controller(ReviewController::class)->name('reviews.')->prefix('/reviews')->group(function () {
@@ -179,15 +194,15 @@ Route::name('user-api.')->group(function () {
         Route::get('/user/{user_id}', 'getByUserId')->name('getByUserId');
     });
     Route::apiResource('reviews', ReviewController::class)->except(['index']);
-// reviews routes
+    // reviews routes
 
-// wishlists routes
+    // wishlists routes
     Route::controller(WishlistController::class)->name('wishlists.')->prefix('wishlists')->group(function () {
         Route::get('', 'viewWishlist')->name('viewWishlist');
         Route::post('', 'addToWishlist')->name('addToWishlist');
         Route::delete('/remove/{productId}', 'removeFromWishlist')->name('removeFromWishlist');
     });
-// wishlists routes
+    // wishlists routes
 
 
     //Contact Messages EndPoint
@@ -200,13 +215,13 @@ Route::name('user-api.')->group(function () {
     Route::controller(PageSectionController::class)->prefix('page-sections')->name('page-sections.')->group(function () {
         Route::get('/{page_id}', 'index')->name('index');
     });
-//page sections routes
+    //page sections routes
 
-//hero-sliders
+    //hero-sliders
     Route::apiResource('hero-sliders', HeroSliderController::class)->only(['index', 'show']);
-//hero-sliders
+    //hero-sliders
 
-//banners
+    //banners
     Route::apiResource('banners', BannerController::class)->only(['index', 'show']);
-//banners
+    //banners
 });

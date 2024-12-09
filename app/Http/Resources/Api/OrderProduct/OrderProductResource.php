@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Api\OrderProduct;
+namespace App\Http\Resources\Api\OrderProduct;
 
 use App\Http\Resources\Admin\Product\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;

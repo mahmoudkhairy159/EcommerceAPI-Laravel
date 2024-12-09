@@ -24,6 +24,7 @@ class Product extends Model
         'status',
         'selling_price',
         'cost_price',
+        'tax',
         'discount',
         'currency',
         'quantity',

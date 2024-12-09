@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Cart;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Carbon\Carbon;
 
 class AddToCartRequest extends FormRequest
 {
@@ -26,7 +27,12 @@ class AddToCartRequest extends FormRequest
     {
         return true;
     }
-
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'expires_at' => $this->input('expires_at', Carbon::now()->addDays(7)->toDateTimeString()),
+        ]);
+    }
     /**
      * Handle a failed validation attempt.
      *

@@ -77,4 +77,13 @@ class StoreProductRequest extends FormRequest
             'statusCode' => 422,
         ], 422));
     }
+      /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'tax' => $this->input('selling_price',0)*core()->getTaxPercentage(),
+        ]);
+    }
 }

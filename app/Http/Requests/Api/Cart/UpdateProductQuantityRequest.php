@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Cart;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -18,7 +19,12 @@ class UpdateProductQuantityRequest extends FormRequest
             'quantity' => ['required', 'integer', 'min:1'],
         ];
     }
-
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'expires_at' => $this->input('expires_at', Carbon::now()->addDays(7)->toDateTimeString()),
+        ]);
+    }
     /**
      * Determine if the user is authorized to make this request.
      */

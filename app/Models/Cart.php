@@ -11,7 +11,7 @@ class Cart extends Model
 
     protected $fillable = ['user_id'];
 
-    public function items()
+    public function cartProducts()
     {
         return $this->hasMany(CartProduct::class);
     }

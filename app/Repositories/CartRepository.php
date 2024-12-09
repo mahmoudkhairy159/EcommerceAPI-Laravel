@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Cart;
 use App\Models\CartProduct;
 use App\Models\Product;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ class CartRepository extends BaseRepository
 
     public function getAll()
     {
-        return $this->model->with('items');
+        return $this->model->with('cartProducts');
     }
 
     public function getCart()
@@ -30,65 +31,71 @@ class CartRepository extends BaseRepository
 
     public function getCartByUserId($userId)
     {
-        return $this->model->with('items')->firstOrCreate(['user_id' => $userId]);
+        return $this->model->with('cartProducts')->firstOrCreate(['user_id' => $userId]);
     }
 
+    //update to cart
     public function updateUserCart($userId, $data)
     {
         DB::beginTransaction();
 
         try {
+            // Retrieve or create the user's cart
             $cart = $this->getCartByUserId($userId);
             $products = $data['products'];
 
             foreach ($products as $productData) {
+                // Fetch the product to ensure it exists
                 $product = Product::findOrFail($productData['id']);
-                $cartProduct = $cart->items()->where('id', $productData['id'])->first();
 
-                if ($cartProduct) {
-                    $cartProduct->quantity = $productData['quantity'];
-                    $cartProduct->save();
-                } else {
-                    $cartProduct = new CartProduct([
-                        'product_id' => $productData['id'],
-                        'quantity' => $productData['quantity'],
-                    ]);
-                    $cart->items()->save($cartProduct);
-                }
+                // Check if the product already exists in the cart
+                $cartProduct = $cart->cartProducts()->where('product_id', $productData['id'])->first();
+                // Calculate the new quantity, tax, and subtotal
+                $quantity = $data['quantity'];
+                // Handle pricing policies
+                $pricingPolicy = core()->getPricingPolicy();
+                $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
+                $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+                $totalTax = $this->calculateTax($tax, $quantity);
+                $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
+                $cartProduct = $this->saveCartProduct($cartProduct, $product->id,$product->name, $price, $totalTax, $subtotal, $quantity, $cart);
+
             }
-            // $cart->total_price = $this->calculateTotalPrice($cart); // Recalculate total price
 
             DB::commit();
             return true;
+
         } catch (Exception $e) {
-            dd($e->getMessage());
             DB::rollBack();
             return false;
         }
     }
+    // End update to cart
 
+
+
+    //add to cart
     public function addProduct(array $data)
     {
         DB::beginTransaction();
 
         try {
+            // Fetch the cart and product
             $cart = $this->getCart();
             $product = Product::findOrFail($data['product_id']);
-            $cartProduct = $cart->items()->where('product_id', $data['product_id'])->first();
 
-            if ($cartProduct) {
-                $cartProduct->quantity += $data['quantity'];
-                $cartProduct->save();
-            } else {
-                $cartProduct = new CartProduct([
-                    'product_id' => $data['product_id'],
-                    'quantity' => $data['quantity'],
-                ]);
-                $cart->items()->save($cartProduct);
-            }
+            // Fetch existing cart product if it exists
+            $cartProduct = $cart->cartProducts()->where('product_id', $data['product_id'])->first();
 
-            $cart->save();
-
+            // Calculate the new quantity, tax, and subtotal
+            $quantity = $cartProduct ? $cartProduct->quantity + $data['quantity'] : $data['quantity'];
+            // Handle pricing policies
+            $pricingPolicy = core()->getPricingPolicy();
+            $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
+            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+            $totalTax = $this->calculateTax($tax, $quantity);
+            $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
+            $cartProduct = $this->saveCartProduct($cartProduct, $product->id,$product->name ,$price, $totalTax, $subtotal, $quantity, $cart);
             DB::commit();
             return $cartProduct;
         } catch (Exception $e) {
@@ -97,13 +104,63 @@ class CartRepository extends BaseRepository
         }
     }
 
+
+
+    private function calculateTax($tax, $quantity)
+    {
+        return $tax * $quantity;
+    }
+
+    // Calculate subtotal
+    private function calculateSubtotal($price, $totalTax, $quantity)
+    {
+        return ($price * $quantity) + $totalTax;
+    }
+
+    // Handle pricing based on the selected pricing policy
+
+
+    // Handle static pricing
+    private function saveCartProduct($cartProduct, $productId,$productName, $price, $totalTax, $subtotal, $quantity, $cart)
+    {
+        if ($cartProduct) {
+            // Update the existing cart product
+            $cartProduct->update([
+                'name' => $productName,
+                'price' => $price,
+                'tax' => $totalTax,
+                'subtotal' => $subtotal,
+                'quantity' => $quantity,
+                'expires_at' =>request('expires_at', Carbon::now()->addDays(7)->toDateTimeString()),
+            ]);
+        } else {
+            // Create a new cart product entry if it doesn't exist
+            $cartProduct = new CartProduct([
+                'product_id' => $productId,
+                'name' => $productName,
+                'price' => $price,
+                'tax' => $totalTax,
+                'subtotal' => $subtotal,
+                'quantity' => $quantity,
+                'expires_at' =>request('expires_at', Carbon::now()->addDays(7)->toDateTimeString()),
+            ]);
+            $cart->cartProducts()->save($cartProduct);
+        }
+
+        return $cartProduct;
+    }
+
+    // end add to cart
+
+
+
     public function removeProduct($productId)
     {
         DB::beginTransaction();
 
         try {
             $cart = $this->getCart();
-            $cart->items()->where('id', $productId)->delete();
+            $cart->cartProducts()->where('id', $productId)->delete();
 
             $cart->save();
 
@@ -120,7 +177,7 @@ class CartRepository extends BaseRepository
 
         try {
             $cart = $this->getCartByUserId($userId);
-            $cart->items()->where('id', $productId)->delete();
+            $cart->cartProducts()->where('id', $productId)->delete();
 
             $cart->save();
 
@@ -131,6 +188,7 @@ class CartRepository extends BaseRepository
             return false;
         }
     }
+
     public function emptyCart($cart_id)
     {
         try {
@@ -149,16 +207,24 @@ class CartRepository extends BaseRepository
         DB::beginTransaction();
 
         try {
+            // Retrieve the cart
             $cart = $this->getCart();
-            $cartProduct = $cart->items()->findOrFail($productId);
 
-            if ($cartProduct) {
-                $cartProduct->quantity = $data['quantity'];
-                $cartProduct->save();
-            }
+            // Find the product in the cart
+            $cartProduct = $cart->cartProducts()->where('product_id', $productId)->firstOrFail();
 
-            $cart->save();
+            // Fetch the product details
+            $product = Product::findOrFail($productId);
 
+            // Calculate the new quantity, tax, and subtotal
+            $quantity = $cartProduct ? $cartProduct->quantity + $data['quantity'] : $data['quantity'];
+            // Handle pricing policies
+            $pricingPolicy = core()->getPricingPolicy();
+            $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
+            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+            $totalTax = $this->calculateTax($tax, $quantity);
+            $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
+            $cartProduct = $this->saveCartProduct($cartProduct, $product->id,$product->name,$price, $totalTax, $subtotal, $quantity, $cart);
             DB::commit();
             return $cartProduct;
         } catch (Exception $e) {
@@ -167,10 +233,40 @@ class CartRepository extends BaseRepository
         }
     }
 
+
     public function getProducts()
     {
         $cart = $this->getCart();
-        return $cart->items()->with('product');
+        $cartProducts = $cart->cartProducts()->with('product')
+            ->when(request('name'), function ($query) {
+                $name = request('name');
+                $query->where('name', 'like', "%{$name}%");
+            })->paginate();  // Eager load products
+
+
+        foreach ($cartProducts as $cartProduct) {
+            $product = $cartProduct->product;  // Use the loaded product
+            // Calculate the new quantity, tax, and subtotal
+            $quantity = $cartProduct->quantity;
+            // Handle pricing policies
+            $pricingPolicy = core()->getPricingPolicy();
+            $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
+            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+            $totalTax = $this->calculateTax($tax, $quantity);
+            $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
+            $cartProduct = $this->saveCartProduct($cartProduct, $product->id, $product->name,$price, $totalTax, $subtotal, $quantity, $cart);
+        }
+
+        return [
+            'cartProducts' => $cartProducts,
+            'sum_price' => $cartProducts->sum('price'),
+            'sum_tax' => $cartProducts->sum('tax'),
+            'sum_subtotal' => $cartProducts->sum('subtotal'),
+            'sum_quantity' => $cartProducts->sum('quantity'),
+
+        ];
     }
+
+
 
 }

@@ -31,8 +31,9 @@ class CartController extends Controller
     public function viewCart()
     {
         try {
-            $data = $this->cartRepository->getProducts()->paginate();
-            return $this->successResponse(new CartProductCollection($data));
+            $data = $this->cartRepository->getProducts();
+            $data['cartProducts']=new CartProductCollection( $data['cartProducts']);
+            return $this->successResponse($data);
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],

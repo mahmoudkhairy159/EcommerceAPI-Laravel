@@ -34,6 +34,8 @@ return new class extends Migration
             $table->tinyInteger('maintenance_mode')->default(0)->nullable();
             $table->string('logo')->nullable();
             $table->string('logo_light')->nullable();
+            $table->enum('pricing_policy',['static', 'dynamic'])->default('static');
+            $table->unsignedInteger('tax_percentage')->default(14); //
             $table->timestamps();
         });
     }

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -28,12 +27,14 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('admins')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('admins')->onDelete('set null');
 
-            $table->decimal("selling_price")->default(0);
-            $table->decimal("cost_price")->default(0);
-            $table->decimal("discount")->default(0);
+            $table->decimal("selling_price", 10, 2)->default(0);
+            $table->decimal("tax", 10, 2)->default(0);
+            $table->decimal("cost_price", 10, 2)->default(0);
+            $table->decimal("discount", 10, 2)->default(0);
 
             $table->string("currency")->nullable();
-            $table->integer("quantity")->default(0);;
+            $table->integer("quantity")->default(0);
+            ;
             $table->integer("alert_stock_quantity")->default(0);
             $table->string("order_type");
             $table->text("short_description")->nullable();
@@ -47,6 +48,11 @@ return new class extends Migration
 
             $table->timestamps();
 
+            // Adding indexes
+            $table->index('category_id');
+            $table->index('brand_id');
+            $table->index('slug');
+
         });
     }
 
@@ -57,6 +63,11 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropIndex(['category_id']); // Drop index for category_id
+            $table->dropIndex(['brand_id']);    // Drop index for brand_id
+            $table->dropIndex(['slug']);        // Drop index for slug
+        });
         Schema::dropIfExists('products');
     }
 };

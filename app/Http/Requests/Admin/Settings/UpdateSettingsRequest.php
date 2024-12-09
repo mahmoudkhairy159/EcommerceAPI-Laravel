@@ -24,21 +24,23 @@ class UpdateSettingsRequest extends FormRequest
     {
         // dd(request()->all());
         $rules = [
-            'emails' => 'nullable|string',
-            'phone_numbers' => 'nullable|string',
-            'map_latitude' => 'nullable|numeric',
-            'map_longitude' => 'nullable|numeric',
-            'facebook_link' => 'nullable|url',
-            'instagram_link' => 'nullable|url',
-            'behance_link' => 'nullable|url',
-            'tiktok_link' => 'nullable|url',
-            'twitter_link' => 'nullable|url',
-            'linkedin_link' => 'nullable|url',
-            'youtube_link' => 'nullable|url',
-            'patreon_link' => 'nullable|url',
-            'google_maps_api_key' => 'nullable',
-            'google_analytics_clint_id' => 'nullable',
-            'google_recaptcha_api_key' => 'nullable',
+            'emails' => ['nullable', 'string'],
+            'phone_numbers' => ['nullable', 'string'],
+            'map_latitude' => ['nullable', 'numeric'],
+            'map_longitude' => ['nullable', 'numeric'],
+            'facebook_link' => ['nullable', 'url'],
+            'instagram_link' => ['nullable', 'url'],
+            'behance_link' => ['nullable', 'url'],
+            'tiktok_link' => ['nullable', 'url'],
+            'twitter_link' => ['nullable', 'url'],
+            'linkedin_link' => ['nullable', 'url'],
+            'youtube_link' => ['nullable', 'url'],
+            'patreon_link' => ['nullable', 'url'],
+            'google_maps_api_key' => ['nullable'],
+            'google_analytics_clint_id' => ['nullable'],
+            'google_recaptcha_api_key' => ['nullable'],
+            'tax_percentage' => ['required', 'numeric', 'between:0,100'],
+            'pricing_policy' => ['required', 'string', 'in:static,dynamic'],
         ];
         foreach (core()->getSupportedLanguagesKeys() as $key) {
             if ($key !== '_token' && $key !== '_method' && $key !== 'image' && $key !== 'status') {
@@ -52,6 +54,7 @@ class UpdateSettingsRequest extends FormRequest
 
         $rules['logo'] = 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:60000';
         $rules['logo_light'] = 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:60000';
+
 
 
         return $rules;

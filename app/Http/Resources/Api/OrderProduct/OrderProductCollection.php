@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Http\Api\OrderProduct;
+namespace App\Http\Resources\Api\OrderProduct;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
