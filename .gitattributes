@@ -5,6 +5,7 @@
 *.html diff=html
 *.md diff=markdown
 *.php diff=php
+*.inc linguist-language=PHP
 /public/uploads/
 
 /.github export-ignore
