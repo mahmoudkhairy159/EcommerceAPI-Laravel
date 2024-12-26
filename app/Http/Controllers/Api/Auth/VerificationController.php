@@ -42,7 +42,7 @@ class VerificationController extends Controller
 
             $user = Auth::user();
 
-            if ($user->verified_at) {
+            if ($user->email_verified_at) {
 
                 return $this->errorResponse(
                     [],
@@ -100,7 +100,7 @@ class VerificationController extends Controller
             }
             $user = Auth::user();
 
-            if ($user->verified_at) {
+            if ($user->email_verified_at) {
 
                 return $this->errorResponse(
                     [],

@@ -29,7 +29,7 @@ class UserResource extends JsonResource
             'blocked' => $this->blocked,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'verified_at' => $this->verified_at,
+            'email_verified_at' => $this->email_verified_at,
             'profile' => new UserProfileResource($this->profile),
         ];
     }

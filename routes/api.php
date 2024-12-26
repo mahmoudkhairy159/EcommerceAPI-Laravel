@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Auth\SocialiteController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\BrandController;
@@ -49,6 +50,12 @@ Route::name('user-api.')->group(function () {
     //app-settings
     // Auth routes
     Route::group(['prefix' => '/auth', 'name' => 'auth.'], function () {
+        Route::controller(SocialiteController::class)->as('socialite.')->group(function () {
+            Route::get('login/{provider}', 'redirect')->name('redirect');
+            Route::get('login/{provider}/callback', 'callback')->name('callback');
+            Route::post('/social-login', 'login')->name('login');
+
+        });
         Route::post('/register', [RegisterController::class, 'create'])->name('create');
         Route::controller(LoginController::class)->group(function () {
             Route::post('/login', 'login')->name('login');

@@ -156,7 +156,7 @@ class UserRepository extends BaseRepository
         try {
             DB::beginTransaction();
             $this->model->where('id', $modelId)->update([
-                'verified_at' => Carbon::now(),
+                'email_verified_at' => Carbon::now(),
             ]);
             DB::commit();
             return true;

@@ -65,7 +65,7 @@ class LoginController extends Controller
 
             $user->save();
             $msg = __('app.auth.login.logged_in_successfully');
-            if (!$user->verified_at) {
+            if (!$user->email_verified_at) {
                 $msg = __('app.auth.login.logged_in_successfully_and_Verification_code_sent');
                 $this->sendOtpCode($user);
             }

@@ -100,6 +100,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     ];
 
     /*******************relationships********************/
+    public function linkedSocialAccounts()
+{
+    return $this->hasOne(LinkedSocialAccount::class);
+}
     public function profile()
     {
         return $this->hasOne(UserProfile::class, 'user_id');

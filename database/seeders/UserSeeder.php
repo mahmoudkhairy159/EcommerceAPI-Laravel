@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'name' => 'Mahmoud Khairy',
                 'email' => 'mahmoudkhairy159@gmail.com',
                 'password' => '12345678',
-                'verified_at' => '2023-10-07 19:22:09',
+                'email_verified_at' => '2023-10-07 19:22:09',
 
             ],
 
