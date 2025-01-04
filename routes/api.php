@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\BrandImageController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactMessageController;
+use App\Http\Controllers\Api\Gateways\PaypalController;
 use App\Http\Controllers\Api\HeroSliderController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderProductController;
@@ -56,7 +57,9 @@ Route::name('user-api.')->group(function () {
             Route::post('/social-login', 'login')->name('login');
 
         });
+
         Route::post('/register', [RegisterController::class, 'create'])->name('create');
+
         Route::controller(LoginController::class)->group(function () {
             Route::post('/login', 'login')->name('login');
             Route::post('/refresh-token', 'refresh')->name('refresh-token');
@@ -231,4 +234,17 @@ Route::name('user-api.')->group(function () {
     //banners
     Route::apiResource('banners', BannerController::class)->only(['index', 'show']);
     //banners
+
+
+    //paypal payment gateway
+    Route::controller(PaypalController::class)->prefix('paypal')->as('paypal.')->group(function () {
+        Route::post('/create-payment',  'createPayment')->name('createPayment');
+        Route::post('/capture-payment',  'capturePayment')->name('capturePayment');
+        Route::get('/success', 'success')->name('success');
+        Route::get('/cancel',  'cancel')->name('cancel');
+
+
+    });
+     //end paypal payment gateway
+
 });
