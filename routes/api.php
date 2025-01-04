@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactMessageController;
 use App\Http\Controllers\Api\Gateways\PaypalController;
+use App\Http\Controllers\Api\Gateways\StripeController;
 use App\Http\Controllers\Api\HeroSliderController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderProductController;
@@ -246,5 +247,16 @@ Route::name('user-api.')->group(function () {
 
     });
      //end paypal payment gateway
+
+       //stripe payment gateway
+    Route::controller(StripeController::class)->prefix('stripe')->as('stripe.')->group(function () {
+        Route::post('/create-payment',  'createPayment')->name('createPayment');
+        Route::post('/capture-payment',  'capturePayment')->name('capturePayment');
+        Route::get('/success', 'success')->name('success');
+        Route::get('/cancel',  'cancel')->name('cancel');
+
+
+    });
+     //end stripe payment gateway
 
 });

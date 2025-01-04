@@ -26,6 +26,7 @@
         "spatie/laravel-backup": "^8.4",
         "spatie/laravel-medialibrary": "^10.15",
         "srmklive/paypal": "~3.0",
+        "stripe/stripe-php": "^16.4",
         "tucker-eric/eloquentfilter": "^3.2",
         "tymon/jwt-auth": "^2.1"
     },
