@@ -37,7 +37,7 @@ class SettingController extends Controller
             $data = $this->settingsRepository->getSettings();
             // return $settings;
             return $this->successResponse(new AppSettingResource($data));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->errorResponse(
                 [$e->getMessage()],
                 __('app.something-went-wrong'),

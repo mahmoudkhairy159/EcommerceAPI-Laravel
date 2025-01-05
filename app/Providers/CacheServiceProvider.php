@@ -54,13 +54,20 @@ class CacheServiceProvider extends ServiceProvider
     private function getCacheKeys()
     {
         return [
-            // app settings Cache
+                // app settings Cache
             CacheKeysType::APP_SETTINGS_CACHE => function () {
                 return Cache::remember(CacheKeysType::APP_SETTINGS_CACHE, now()->addDays(5), function () {
                     return app(SettingsRepository::class)->getSettings();
                 });
             },
-            // app settings Cache
+                // app settings Cache
+
+                // Categories Tree Structure Cache
+            CacheKeysType::CATEGORIES_TREE_CACHE => function () {
+                return Cache::remember(CacheKeysType::CATEGORIES_TREE_CACHE, now()->addDays(5), function () {
+                    return app(CategoryRepository::class)->getActiveTreeStructure();
+                });
+            },
         ];
     }
 

@@ -7,6 +7,7 @@ use App\Http\Resources\Admin\Category\CategoryCollection;
 use App\Http\Resources\Admin\Category\CategoryResource;
 use App\Repositories\CategoryRepository;
 use App\Traits\ApiResponseTrait;
+use App\Types\CacheKeysType;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -89,7 +90,9 @@ class CategoryController extends Controller
     {
         try {
             // Retrieve all categories, and organize them in a tree structure
-            $data = $this->categoryRepository->getActiveTreeStructure();
+            // $data = $this->categoryRepository->getActiveTreeStructure();
+            $data = app(CacheKeysType::CATEGORIES_TREE_CACHE);
+
             return $this->successResponse(CategoryResource::collection($data));
         } catch (Exception $e) {
             return $this->errorResponse([], __('app.something-went-wrong'), 500);

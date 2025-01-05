@@ -11,6 +11,7 @@ use App\Http\Resources\Admin\Category\CategoryCollection;
 use App\Http\Resources\Admin\Category\CategoryResource;
 use App\Repositories\CategoryRepository;
 use App\Traits\ApiResponseTrait;
+use App\Types\CacheKeysType;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -114,6 +115,7 @@ class CategoryController extends Controller
             $data['created_by'] = auth()->guard($this->guard)->id();
 
             $created = $this->categoryRepository->createOne($data);
+            $this->clearCategoriesCache();
 
             return $created
                 ? $this->messageResponse(__('app.categories.created-successfully'), true, 201)
@@ -162,6 +164,7 @@ class CategoryController extends Controller
             $data['updated_by'] = auth()->guard($this->guard)->id();
 
             $updated = $this->categoryRepository->updateOne($data, $id);
+            $this->clearCategoriesCache();
 
             return $updated
                 ? $this->messageResponse(__('app.categories.updated-successfully'), true, 200)
@@ -180,6 +183,7 @@ class CategoryController extends Controller
             $data['updated_by'] = auth()->guard($this->guard)->id();
 
             $updated = $this->categoryRepository->changeStatus($id);
+            $this->clearCategoriesCache();
 
             return $updated
                 ? $this->messageResponse(__('app.categories.status-updated-successfully'), true, 200)
@@ -199,6 +203,7 @@ class CategoryController extends Controller
             $data['updated_by'] = auth()->guard($this->guard)->id();
 
             $updated = $this->categoryRepository->updateSerial($data, $id);
+            $this->clearCategoriesCache();
 
             return $updated
                 ? $this->messageResponse(__('app.categories.serial-updated-successfully'), true, 200)
@@ -221,6 +226,7 @@ class CategoryController extends Controller
 
             // Check if the update was successful
             if ($updated) {
+                $this->clearCategoriesCache();
                 return $this->messageResponse(__('app.categories.updated-successfully'), true, 200);
             } else {
                 return $this->messageResponse(__('app.categories.update-failed'), false, 400);
@@ -238,6 +244,7 @@ class CategoryController extends Controller
     {
         try {
             $deleted = $this->categoryRepository->deleteOne($id);
+            $this->clearCategoriesCache();
 
             return $deleted
                 ? $this->messageResponse(__('app.categories.deleted-successfully'), true, 200)
@@ -267,6 +274,7 @@ class CategoryController extends Controller
     {
         try {
             $deleted = $this->categoryRepository->forceDelete($id);
+            $this->clearCategoriesCache();
 
             return $deleted
                 ? $this->messageResponse(__('app.categories.deleted-successfully'), true, 200)
@@ -283,12 +291,16 @@ class CategoryController extends Controller
     {
         try {
             $restored = $this->categoryRepository->restore($id);
-
+            $this->clearCategoriesCache();
             return $restored
                 ? $this->messageResponse(__('app.categories.restored-successfully'), true, 200)
                 : $this->messageResponse(__('app.categories.restored-failed'), false, 400);
         } catch (Exception $e) {
             return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
+    }
+    private function clearCategoriesCache()
+    {
+        $this->deleteCache(CacheKeysType::CATEGORIES_TREE_CACHE);
     }
 }
