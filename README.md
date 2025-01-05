@@ -76,7 +76,7 @@ php artisan db:seed
 You can access the admin login page using these credentials.
 
 ```
-Email: admin@gmail.com
+Email: mahmoudkhairy159@gmail.com
 Password: 12345678
 ```
 
