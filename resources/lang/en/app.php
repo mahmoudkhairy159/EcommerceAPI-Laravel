@@ -19,6 +19,21 @@ return [
         "updated-failed" => "Admin updated failed",
         "deleted-failed" => "Admin deleted failed",
     ],
+    "heroSliders" => [
+        "heroSliders" => "heroSliders",
+        "heroSlider" => "heroSlider",
+        "show" => "Show heroSliders",
+        "create" => "create a heroSlider",
+        "update" => "update a heroSlider",
+        "delete" => "delete a heroSlider",
+        "destroy" => "destroy a heroSlider",
+        "created-successfully" => "heroSlider created successfully",
+        "updated-successfully" => "heroSlider updated successfully",
+        "deleted-successfully" => "heroSlider deleted successfully",
+        "created-failed" => "heroSlider created failed",
+        "updated-failed" => "heroSlider updated failed",
+        "deleted-failed" => "heroSlider deleted failed",
+    ],
     "settings" => [
         "settings" => "Settings",
         "setting" => "Settings",
@@ -336,7 +351,7 @@ return [
         "deleted-failed" => "Wishlist deleted failed",
         "restored-failed" => "Wishlist restored failed",
     ],
-   
+
     "contactMessages" => [
         "contactMessages" => "contactMessages",
         "contactMessages" => "contactMessages",
