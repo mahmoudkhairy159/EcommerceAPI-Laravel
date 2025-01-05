@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Admin\Rank;
+namespace App\Http\Requests\Admin\Category;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class UpdateRankRequest extends FormRequest
+class BulkUpdateStatusRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,9 +15,9 @@ class UpdateRankRequest extends FormRequest
     public function rules(): array
     {
         return [
-
-            'serial' => 'required|integer|min:0',
-
+            'ids' => ['required', 'array'],
+            'ids.*' => ['integer', 'exists:categories,id'],
+            'status' => ['required', 'in:0,1'],
         ];
     }
 

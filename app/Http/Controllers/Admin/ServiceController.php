@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Rank\UpdateRankRequest;
+use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
 use App\Http\Requests\Admin\Service\StoreServiceRequest;
 use App\Http\Requests\Admin\Service\UpdateServiceRequest;
 use App\Http\Resources\Admin\Service\ServiceCollection;
@@ -198,14 +198,14 @@ class ServiceController extends Controller
             );
         }
     }
-    public function updateRank(UpdateRankRequest $request, $id)
+    public function updateSerial(UpdateSerialRequest $request, $id)
     {
 
         try {
 
             $data = $request->validated();
             $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->serviceRepository->updateRank($data, $id);
+            $updated = $this->serviceRepository->updateSerial($data, $id);
             if ($updated) {
                 return $this->messageResponse(
                     __("app.services.updated-successfully"),

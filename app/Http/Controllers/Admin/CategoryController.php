@@ -4,21 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\StoreCategoryRequest;
+use App\Http\Requests\Admin\Category\BulkUpdateStatusRequest;
 use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
-use App\Http\Requests\Admin\Rank\UpdateRankRequest;
+use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
 use App\Http\Resources\Admin\Category\CategoryCollection;
 use App\Http\Resources\Admin\Category\CategoryResource;
 use App\Repositories\CategoryRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
     use ApiResponseTrait;
+
     protected $categoryRepository;
     protected $_config;
     protected $guard;
+
     public function __construct(CategoryRepository $categoryRepository)
     {
         $this->guard = 'admin-api';
@@ -26,46 +30,79 @@ class CategoryController extends Controller
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->categoryRepository = $categoryRepository;
-        // permissions
-        $this->middleware('auth:' . $this->guard);
-        $this->middleware(['ability:admin,categories-read'])->only(['index', 'show']);
-        $this->middleware(['ability:admin,categories-create'])->only(['store']);
-        $this->middleware(['ability:admin,categories-update'])->only(['update']);
-        $this->middleware(['ability:admin,categories-delete'])->only(['destroy', 'forceDelete', 'restore', 'getOnlyTrashed']);
-    }
-    /**Introduction
-    Issues
-    Changelog
-    FAQ
 
+        // Permissions
+        $this->middleware('auth:' . $this->guard);
+        $this->middleware(['ability:admin,categories-read'])->only(['index', 'show', 'getOnlyTrashed', 'getWithoutPagination']);
+        $this->middleware(['ability:admin,categories-create'])->only(['store']);
+        $this->middleware(['ability:admin,categories-update'])->only(['update', 'changeStatus', 'updateSerial']);
+        $this->middleware(['ability:admin,categories-delete'])->only(['destroy', 'forceDelete', 'restore']);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         try {
             $data = $this->categoryRepository->getAll()->paginate();
-            return $this->successResponse(new CategoryCollection($data));
+            return $this->successResponse( new CategoryCollection($data));
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
+
+    /**
+     * Retrieve categories without pagination.
+     */
     public function getWithoutPagination()
     {
         try {
             $data = $this->categoryRepository->getAll()->get();
             return $this->successResponse(CategoryResource::collection($data));
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
+    /**
+     * Get child categories by parent ID.
+     */
+    public function getByParentId($parentId)
+    {
+        try {
+            // Fetch child categories where parent_id matches the provided parentId
+            $data = $this->categoryRepository->getByParentId($parentId)->get();
+
+            // Return success response with the fetched categories
+            return $this->successResponse(CategoryResource::collection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
+    /**
+     * Get the hierarchical structure of categories.
+     */
+    public function getMainCategories()
+    {
+        try {
+            // Retrieve all categories, and organize them in a tree structure
+            $data = $this->categoryRepository->getMainCategories()->get();
+            return $this->successResponse(CategoryResource::collection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
+    public function getTreeStructure()
+    {
+        try {
+            // Retrieve all categories, and organize them in a tree structure
+            $data = $this->categoryRepository->getTreeStructure();
+            return $this->successResponse(CategoryResource::collection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -75,33 +112,19 @@ class CategoryController extends Controller
         try {
             $data = $request->validated();
             $data['created_by'] = auth()->guard($this->guard)->id();
+
             $created = $this->categoryRepository->createOne($data);
 
-            if ($created) {
-                return $this->messageResponse(
-                    __("app.categories.created-successfully"),
-                    true,
-                    201
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.created-failed"),
-                    false,
-                    400
-                );
-            }
+            return $created
+                ? $this->messageResponse(__('app.categories.created-successfully'), true, 201)
+                : $this->messageResponse(__('app.categories.created-failed'), false, 400);
         } catch (Exception $e) {
-            //    return  $this->messageResponse( $e->getMessage());
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
 
     /**
-     * Show the specified resource.
+     * Display the specified resource.
      */
     public function show($id)
     {
@@ -109,31 +132,23 @@ class CategoryController extends Controller
             $data = $this->categoryRepository->findOrFail($id);
             return $this->successResponse(new CategoryResource($data));
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
+
+    /**
+     * Display a resource by slug.
+     */
     public function showBySlug(string $slug)
     {
         try {
             $data = $this->categoryRepository->findBySlug($slug);
             if (!$data) {
-                return $this->errorResponse(
-                    [],
-                    __('app.data-not-found'),
-                    404
-                );
+                return $this->errorResponse([], __('app.data-not-found'), 404);
             }
             return $this->successResponse(new CategoryResource($data));
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
 
@@ -143,90 +158,78 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, $id)
     {
         try {
-
             $data = $request->validated();
             $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->categoryRepository->updateOne($data, $id);
-            if ($updated) {
-                return $this->messageResponse(
-                    __("app.categories.updated-successfully"),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.updated-failed"),
-                    false,
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            // return  $this->messageResponse( $e->getMessage());
 
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            $updated = $this->categoryRepository->updateOne($data, $id);
+
+            return $updated
+                ? $this->messageResponse(__('app.categories.updated-successfully'), true, 200)
+                : $this->messageResponse(__('app.categories.updated-failed'), false, 400);
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
+
+    /**
+     * Change the status of the specified resource.
+     */
     public function changeStatus($id)
     {
-
         try {
-
             $data['updated_by'] = auth()->guard($this->guard)->id();
+
             $updated = $this->categoryRepository->changeStatus($id);
-            if ($updated) {
-                return $this->messageResponse(
-                    __("app.categories.updated-successfully"),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.updated-failed"),
-                    false,
-                    400
-                );
-            }
+
+            return $updated
+                ? $this->messageResponse(__('app.categories.status-updated-successfully'), true, 200)
+                : $this->messageResponse(__('app.categories.status-update-failed'), false, 400);
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
-    public function updateRank(UpdateRankRequest $request, $id)
+
+    /**
+     * Update the serial rank of the resource.
+     */
+    public function updateSerial(UpdateSerialRequest $request, $id)
     {
-
         try {
-
             $data = $request->validated();
             $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->categoryRepository->updateRank($data, $id);
-            if ($updated) {
-                return $this->messageResponse(
-                    __("app.categories.updated-successfully"),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.updated-failed"),
-                    false,
-                    400
-                );
-            }
+
+            $updated = $this->categoryRepository->updateSerial($data, $id);
+
+            return $updated
+                ? $this->messageResponse(__('app.categories.serial-updated-successfully'), true, 200)
+                : $this->messageResponse(__('app.categories.serial-update-failed'), false, 400);
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
+    /**
+     * Bulk update the status of multiple categories.
+     */
+    public function bulkUpdateStatus(BulkUpdateStatusRequest $request)
+    {
+        try {
+            // Validate the request data
+            $data = $request->validated();
+
+            // Call the bulk update method from the repository
+            $updated = $this->categoryRepository->bulkUpdateStatus($data['ids'], $data['status']);
+
+            // Check if the update was successful
+            if ($updated) {
+                return $this->messageResponse(__('app.categories.updated-successfully'), true, 200);
+            } else {
+                return $this->messageResponse(__('app.categories.update-failed'), false, 400);
+            }
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -235,92 +238,57 @@ class CategoryController extends Controller
     {
         try {
             $deleted = $this->categoryRepository->deleteOne($id);
-            if ($deleted) {
-                return $this->messageResponse(
-                    __("app.categories.deleted-successfully"),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.deleted-failed"),
-                    false,
-                    400
-                );
-            }
+
+            return $deleted
+                ? $this->messageResponse(__('app.categories.deleted-successfully'), true, 200)
+                : $this->messageResponse(__('app.categories.deleted-failed'), false, 400);
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
-    /***********Trashed model SoftDeletes**************/
+
+    /**
+     * Get only trashed resources.
+     */
     public function getOnlyTrashed()
     {
         try {
             $data = $this->categoryRepository->getOnlyTrashed()->paginate();
             return $this->successResponse(new CategoryCollection($data));
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
 
+    /**
+     * Permanently delete a resource.
+     */
     public function forceDelete($id)
     {
         try {
             $deleted = $this->categoryRepository->forceDelete($id);
-            if ($deleted) {
-                return $this->messageResponse(
-                    __("app.categories.deleted-successfully"),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.deleted-failed"),
-                    false,
-                    400
-                );
-            }
+
+            return $deleted
+                ? $this->messageResponse(__('app.categories.deleted-successfully'), true, 200)
+                : $this->messageResponse(__('app.categories.deleted-failed'), false, 400);
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
 
+    /**
+     * Restore a trashed resource.
+     */
     public function restore($id)
     {
         try {
             $restored = $this->categoryRepository->restore($id);
-            if ($restored) {
-                return $this->messageResponse(
-                    __("app.categories.restored-successfully"),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.categories.restored-failed"),
-                    false,
-                    400
-                );
-            }
+
+            return $restored
+                ? $this->messageResponse(__('app.categories.restored-successfully'), true, 200)
+                : $this->messageResponse(__('app.categories.restored-failed'), false, 400);
         } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
         }
     }
-    /***********Trashed model SoftDeletes**************/
 }

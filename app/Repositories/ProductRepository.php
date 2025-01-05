@@ -195,7 +195,7 @@ class ProductRepository extends BaseRepository
             return false;
         }
     }
-    public function updateRank(array $data, int $id)
+    public function updateSerial(array $data, int $id)
     {
         try {
             DB::beginTransaction();

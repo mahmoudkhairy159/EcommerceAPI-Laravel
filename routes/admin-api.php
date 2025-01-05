@@ -90,7 +90,7 @@ Route::name('admin-api.')->group(function () {
     Route::controller(BrandController::class)->prefix('brands')->name('brands.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
-        Route::put('/{id}/update-serial', 'updateRank')->name('updateRank');
+        Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
 
     });
     Route::apiResource('brands', BrandController::class);
@@ -108,7 +108,7 @@ Route::name('admin-api.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::get('/get-without-pagination', 'getWithoutPagination')->name('getWithoutPagination');
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
-        Route::put('/{id}/update-serial', 'updateRank')->name('updateRank');
+        Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
 
     });
     Route::apiResource('services', ServiceController::class);
@@ -124,8 +124,13 @@ Route::name('admin-api.')->group(function () {
     Route::controller(CategoryController::class)->prefix('categories')->name('categories.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::get('/get-without-pagination', 'getWithoutPagination')->name('getWithoutPagination');
+        Route::get('/parents', 'getMainCategories')->name('getMainCategories');
+        Route::get('/parent/{id}', 'getByParentId')->name('getByParentId');
+        Route::get('/tree-structure', 'getTreeStructure')->name('getTreeStructure');
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
-        Route::put('/{id}/update-serial', 'updateRank')->name('updateRank');
+        Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
+        Route::put('/bulk-update-status', 'bulkUpdateStatus')->name('bulkUpdateStatus');
+
 
     });
     Route::apiResource('categories', CategoryController::class);
@@ -142,7 +147,7 @@ Route::name('admin-api.')->group(function () {
         Route::post('/banner', 'createProductsBanner')->name('createProductsBanner');
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
         Route::post('/{id}/update-featured-status', 'updateFeaturedStatus')->name('updateFeaturedStatus');
-        Route::put('/{id}/update-serial', 'updateRank')->name('updateRank');
+        Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
         Route::post('/{id}/delete-image', 'deleteImage')->name('deleteImage');
     });
     Route::apiResource('products', ProductController::class);

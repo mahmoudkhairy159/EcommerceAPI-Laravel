@@ -172,6 +172,7 @@ return [
         "destroy" => "destroy Category",
         "created-successfully" => "Category created successfully",
         "updated-successfully" => "Category updated successfully",
+        "serial-updated-successfully" => "Category serial updated successfully",
         "deleted-successfully" => "Category deleted successfully",
         "restored-successfully" => "Category restored successfully",
         "created-failed" => "Category created failed",

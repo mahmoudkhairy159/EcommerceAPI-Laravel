@@ -23,7 +23,7 @@ class Category extends Model
         'updated_by',
         'status',
         'serial',
-
+        'parent_id',
     ];
     //image
     //slug
@@ -73,6 +73,17 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+       // Parent relationship
+       public function parent()
+       {
+           return $this->belongsTo(Category::class, 'parent_id');
+       }
+
+       // Children relationship
+       public function children()
+       {
+           return $this->hasMany(Category::class, 'parent_id');
+       }
     /*******************End Relationships********************* */
 
 }

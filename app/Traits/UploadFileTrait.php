@@ -20,10 +20,17 @@ trait UploadFileTrait
         return ($path != null) ? asset('uploads/' . $path) : '';
     }
 
-    public function deleteFile($imageName, $directory)
+
+    public function deleteFile($filePath, string $disk = "public_uploads")
     {
-        if (File::exists(public_path('uploads/' . $directory . '/' . $imageName))) {
-            Storage::disk('public_uploads')->delete($directory . '/' . $imageName);
-        }
+
+        Storage::disk($disk)->delete($filePath);
     }
+
+    // public function deleteFile($imageName, $directory)
+    // {
+    //     if (File::exists(public_path('uploads/' . $directory . '/' . $imageName))) {
+    //         Storage::disk('public_uploads')->delete($directory . '/' . $imageName);
+    //     }
+    // }
 }

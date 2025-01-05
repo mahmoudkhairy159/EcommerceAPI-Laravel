@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Admin\Category;
+namespace App\Http\Requests\Admin\Serial;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class UpdateCategoryRequest extends FormRequest
+class UpdateSerialRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,13 +15,9 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:categories,name,' . $this->route('category')],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'code' => ['nullable', 'unique:categories,code,' . $this->route('category')],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'status' => ['required', 'in:0,1'],
-            'serial' => ['required', 'integer', 'min:0'],
-            'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
+
+            'serial' => 'required|integer|min:0',
+
         ];
     }
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Brand\StoreBrandRequest;
 use App\Http\Requests\Admin\Brand\UpdateBrandRequest;
-use App\Http\Requests\Admin\Rank\UpdateRankRequest;
+use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
 use App\Http\Resources\Admin\Brand\BrandCollection;
 use App\Http\Resources\Admin\Brand\BrandResource;
 use App\Repositories\BrandRepository;
@@ -185,14 +185,14 @@ class BrandController extends Controller
             );
         }
     }
-    public function updateRank(UpdateRankRequest $request, $id)
+    public function updateSerial(UpdateSerialRequest $request, $id)
     {
 
         try {
 
             $data = $request->validated();
             $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->brandRepository->updateRank($data, $id);
+            $updated = $this->brandRepository->updateSerial($data, $id);
             if ($updated) {
                 return $this->messageResponse(
                     __("app.brands.updated-successfully"),

@@ -28,7 +28,7 @@ class BrandRepository extends BaseRepository
             ->filter(request()->all())
             ->with('brandImages')
             ->where('status', Brand::STATUS_ACTIVE)
-            ->orderBy('serial', 'desc');
+            ->orderBy('serial', 'asc');
     }
     public function findBySlug(string $slug)
     {
@@ -186,7 +186,7 @@ class BrandRepository extends BaseRepository
             return false;
         }
     }
-    public function updateRank(array $data, int $id)
+    public function updateSerial(array $data, int $id)
     {
         try {
             DB::beginTransaction();

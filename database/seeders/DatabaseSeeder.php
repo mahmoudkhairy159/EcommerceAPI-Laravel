@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             PageSeeder::class,
             AssetSeeder::class,
+            CategorySeeder::class,
             HeroSliderSeeder::class,
             BannerSeeder::class,
             ProductSeeder::class,

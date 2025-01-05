@@ -37,9 +37,9 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $data = $this->categoryRepository->getAll()->paginate();
+            $data = $this->categoryRepository->getAllActive()->paginate();
             return $this->successResponse(new CategoryCollection($data));
-        } catch (Exception $e) {
+                } catch (Exception $e) {
             return $this->errorResponse(
                 [],
                 __('app.something-went-wrong'),
@@ -50,7 +50,7 @@ class CategoryController extends Controller
     public function getWithoutPagination()
     {
         try {
-            $data = $this->categoryRepository->getAll()->get();
+            $data = $this->categoryRepository->getAllActive()->get();
             return $this->successResponse(CategoryResource::collection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -60,6 +60,41 @@ class CategoryController extends Controller
             );
         }
     }
+    public function getByParentId($parentId)
+    {
+        try {
+            // Fetch child categories where parent_id matches the provided parentId
+            $data = $this->categoryRepository->getActiveByParentId($parentId)->get();
+
+            // Return success response with the fetched categories
+            return $this->successResponse(CategoryResource::collection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
+    /**
+     * Get the hierarchical structure of categories.
+     */
+    public function getMainCategories()
+    {
+        try {
+            // Retrieve all categories, and organize them in a tree structure
+            $data = $this->categoryRepository->getActiveMainCategories()->get();
+            return $this->successResponse(CategoryResource::collection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
+    public function getTreeStructure()
+    {
+        try {
+            // Retrieve all categories, and organize them in a tree structure
+            $data = $this->categoryRepository->getActiveTreeStructure();
+            return $this->successResponse(CategoryResource::collection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse([], __('app.something-went-wrong'), 500);
+        }
+    }
 
     /**
      * Show the specified resource.
@@ -67,7 +102,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->categoryRepository->findOrFail($id);
+            $data = $this->categoryRepository->getActiveOneById($id);
             return $this->successResponse(new CategoryResource($data));
         } catch (Exception $e) {
             return $this->errorResponse(

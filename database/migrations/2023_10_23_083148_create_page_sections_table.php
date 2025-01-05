@@ -18,7 +18,7 @@ class CreatePageSectionsTable extends Migration
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->bigInteger('serial')->default(0); //
+            $table->bigInteger('serial')->default(1); //
             $table->tinyInteger('status')->default(1); //
             $table->unsignedBigInteger("page_id")->nullable();
             $table->foreign("page_id")->references("id")->on("pages")->onDelete("cascade");

@@ -25,7 +25,7 @@ class ServiceRepository extends BaseRepository
         return $this->model
             ->filter(request()->all())
             ->where('status', Service::STATUS_ACTIVE)
-            ->orderBy('serial', 'desc');
+            ->orderBy('serial', 'asc');
     }
     public function getFeaturedServices()
     {
@@ -162,7 +162,7 @@ class ServiceRepository extends BaseRepository
             return false;
         }
     }
-    public function updateRank(array $data, int $id)
+    public function updateSerial(array $data, int $id)
     {
         try {
             DB::beginTransaction();

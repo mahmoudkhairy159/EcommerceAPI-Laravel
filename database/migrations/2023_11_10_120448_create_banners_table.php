@@ -17,7 +17,7 @@ class CreateBannersTable extends Migration
             $table->id();
             $table->string('heading')->nullable();
             $table->text('paragraph')->nullable();
-            $table->integer('serial')->nullable();
+            $table->bigInteger('serial')->default(1); //
             $table->string('image')->nullable();
             $table->unsignedBigInteger('created_by')->nullable(); //
             $table->unsignedBigInteger('updated_by')->nullable(); //

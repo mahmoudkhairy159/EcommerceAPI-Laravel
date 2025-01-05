@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
-use App\Http\Requests\Admin\Rank\UpdateRankRequest;
+use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
 use App\Http\Resources\Admin\Product\ProductCollection;
 use App\Http\Resources\Admin\Product\ProductResource;
 use App\Repositories\ProductRepository;
@@ -124,28 +124,9 @@ class ProductController extends Controller
         }
 
     }
-    public function createProductsBanner(Request $request)
-    {
-        try {
-            file_put_contents("product_banners.txt", $request->text);
-            return $this->messageResponse(
-                __("app.products.created-successfully"),
-                true,
-                201
-            );
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
-        }
 
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(StoreProductRequest $request)
     {
         try {
@@ -300,14 +281,14 @@ class ProductController extends Controller
             );
         }
     }
-    public function updateRank(UpdateRankRequest $request, $id)
+    public function updateSerial(UpdateSerialRequest $request, $id)
     {
 
         try {
 
             $data = $request->validated();
             $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->productRepository->updateRank($data, $id);
+            $updated = $this->productRepository->updateSerial($data, $id);
             if ($updated) {
                 return $this->messageResponse(
                     __("app.products.updated-successfully"),

@@ -12,16 +12,17 @@ class StoreCategoryRequest extends FormRequest
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
-    {
-        return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'code' => ['nullable', 'unique:categories,code'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'serial' => 'required|integer|min:0',
+{
+    return [
+        'name' => ['required', 'string', 'max:255', 'unique:categories,name'],
+        'description' => ['nullable', 'string', 'max:1000'],
+        'code' => ['nullable', 'unique:categories,code'],
+        'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
+        'serial' => ['required', 'integer', 'min:0'],
+        'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
+    ];
+}
 
-        ];
-    }
 
     /**
      * Determine if the user is authorized to make this request.
