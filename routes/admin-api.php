@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -228,7 +229,7 @@ Route::name('admin-api.')->group(function () {
     });
     // wishlist routes
 
-   
+
     //Contact Messages EndPoint
     Route::apiResource('contact-messages', ContactMessageController::class)->only(['index', 'show', 'destroy']);
     //Contact Messages EndPoint
@@ -259,4 +260,12 @@ Route::name('admin-api.')->group(function () {
         Route::post('/send', 'send')->name('send');
     });
 //mails
+
+// vendors routes
+Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
+    Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
+    Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
+});
+Route::apiResource('vendors', VendorController::class);
+// vendors routes
 });
