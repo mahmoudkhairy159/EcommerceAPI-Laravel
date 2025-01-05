@@ -24,12 +24,15 @@ class UpdateHeroSliderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'heading' => 'nullable|string|max:255',
-            'paragraph' => 'nullable|string',
-            'rank' => 'required|numeric',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif',
+            'heading' => ['nullable', 'string', 'max:255'],
+            'paragraph' => ['nullable', 'string'],
+            'rank' => ['required', 'numeric'],
+            'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif'],
+            'button_url' => ['nullable', 'url'],
+            'status' => ['required', 'in:1,0'],
         ];
     }
+
 
     protected function failedValidation(Validator $validator)
     {

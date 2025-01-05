@@ -19,6 +19,8 @@ class HeroSliderResource extends JsonResource
             'heading' => $this->heading,
             'paragraph' => $this->paragraph,
             'rank' => $this->rank,
+            'button_url' => $this->button_url,
+            'status' => $this->status,
             'image_url' => $this->image_url,
             'created_at' => $this->created_at,
         ];

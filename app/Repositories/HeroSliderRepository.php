@@ -17,9 +17,20 @@ class HeroSliderRepository extends BaseRepository
 
     public function getAll()
     {
-        return $this->model->orderBy('rank', 'asc');
+        return $this->model->orderBy('created_at', 'desc');
+    }
+    public function getAllActive()
+    {
+        return $this->model->where('status',HeroSlider::STATUS_ACTIVE)->orderBy('rank', 'asc');
     }
 
+    public function getOneActiveById(int $id)
+    {
+        return $this->model
+            ->where('status', HeroSlider::STATUS_ACTIVE)
+            ->where('id', $id)
+            ->first();
+    }
     public function createOne($data)
     {
         try {

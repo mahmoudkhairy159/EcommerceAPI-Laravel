@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\HeroSlider\HeroSliderCollection;
 use App\Http\Resources\Api\HeroSlider\HeroSliderResource;
+use App\Models\HeroSlider;
 use App\Repositories\HeroSliderRepository;
 use App\Traits\ApiResponseTrait;
 use App\Traits\GeneralTrait;
@@ -24,7 +25,7 @@ class HeroSliderController extends Controller
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
-        $this->heroSliderRepository= $heroSliderRepository;
+        $this->heroSliderRepository = $heroSliderRepository;
         // permissions
         // $this->middleware('auth:' . $this->guard);
     }
@@ -32,7 +33,7 @@ class HeroSliderController extends Controller
     public function index()
     {
         try {
-            $data = $this->heroSliderRepository->getAll()->get();
+            $data = $this->heroSliderRepository->getAllActive()->get();
             return $this->successResponse(HeroSliderResource::collection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -46,7 +47,14 @@ class HeroSliderController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->heroSliderRepository->findOrFail($id);
+            $data = $this->heroSliderRepository->getOneActiveById($id);
+            if (!$data) {
+                return $this->errorResponse(
+                    [],
+                    __('app.data-not-found'),
+                    404
+                );
+            }
             return $this->successResponse(new HeroSliderResource($data));
         } catch (Exception $e) {
             return $this->errorResponse(
