@@ -12,7 +12,7 @@ class BrandImage extends Model
     protected $fillable = [
         'brand_id',
         'image',
-        'rank',
+        'serial',
     ];
     //image
     const FILES_DIRECTORY = 'brand_images';

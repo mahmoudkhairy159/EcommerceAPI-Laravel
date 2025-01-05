@@ -18,7 +18,7 @@ class StoreCategoryRequest extends FormRequest
             'description' => 'nullable|string|max:1000',
             'code' => ['nullable', 'unique:categories,code'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
 
         ];
     }

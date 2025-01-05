@@ -12,7 +12,7 @@ class ProductImage extends Model
     protected $fillable = [
         'product_id',
         'image',
-        'rank'
+        'serial'
     ];
     //image
     const FILES_DIRECTORY = 'product_images';

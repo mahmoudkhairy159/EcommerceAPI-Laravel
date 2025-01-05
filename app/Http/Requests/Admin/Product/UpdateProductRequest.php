@@ -19,7 +19,7 @@ class UpdateProductRequest extends FormRequest
             'code' => 'nullable|string|max:255|unique:products,code,' . $this->route('product'),
             'video_url' => 'nullable|string',
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
             'status' => 'required|integer|between:0,1',
             'selling_price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',

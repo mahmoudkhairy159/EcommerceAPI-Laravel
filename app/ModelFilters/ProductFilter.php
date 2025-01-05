@@ -54,7 +54,7 @@ class ProductFilter extends ModelFilter
             return $q->where('order_type', $orderType);
         });
     }
-   
+
     public function returnPolicy($returnPolicy)
     {
         return $this->where(function ($q) use ($returnPolicy) {
@@ -90,9 +90,9 @@ class ProductFilter extends ModelFilter
         }
         return $this;
     }
-    public function rank($rank)
+    public function serial($serial)
     {
-        if ($rank) {
+        if ($serial) {
             return $this->orderBy("created_at", "DESC");
         }
         return $this;

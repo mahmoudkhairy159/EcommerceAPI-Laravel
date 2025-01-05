@@ -31,7 +31,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('admins')->nullOnDelete();
             $table->tinyInteger('status')->default(1);
-            $table->bigInteger('rank')->default(0); //
+            $table->bigInteger('serial')->default(0); //
             $table->timestamps();
             $table->softDeletes();
 

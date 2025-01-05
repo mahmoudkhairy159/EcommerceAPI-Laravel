@@ -16,7 +16,7 @@ class StoreBrandImageRequest extends FormRequest
 
         return [
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:10000'],
-            'rank' => 'nullable|integer|min:0',
+            'serial' => 'nullable|integer|min:0',
 
             'brand_id' => ['required', 'exists:brands,id'],
         ];

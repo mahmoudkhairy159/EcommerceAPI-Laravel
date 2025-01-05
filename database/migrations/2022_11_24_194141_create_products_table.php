@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('code')->nullable()->unique(); //
             $table->string('image')->nullable(); //
             $table->string('video_url')->nullable(); //
-            $table->bigInteger('rank')->default(0); //
+            $table->bigInteger('serial')->default(0); //
             $table->tinyInteger('status')->default(1); //
             $table->tinyInteger('is_featured')->default(0);
             $table->unsignedBigInteger('created_by')->nullable(); //

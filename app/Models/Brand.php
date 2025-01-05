@@ -28,7 +28,7 @@ class Brand extends Model
         'created_by',
         'updated_by',
         'status',
-        'rank',
+        'serial',
     ];
     //slug
     public function sluggable(): array

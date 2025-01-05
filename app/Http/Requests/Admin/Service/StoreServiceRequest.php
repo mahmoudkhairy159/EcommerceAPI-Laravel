@@ -19,7 +19,7 @@ class StoreServiceRequest extends FormRequest
             'category_id' => 'nullable|exists:categories,id',
             'code' => ['nullable', 'unique:brands,code'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
 
         ];
     }

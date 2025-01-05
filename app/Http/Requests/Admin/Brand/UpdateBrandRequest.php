@@ -23,7 +23,7 @@ class UpdateBrandRequest extends FormRequest
             'image1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'image2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'status' => ['required', 'in:0,1'],
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
             'long_description_status' => ['required', 'in:0,1'],
             'brief' => 'nullable|string|max:10000',
             'brand_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],

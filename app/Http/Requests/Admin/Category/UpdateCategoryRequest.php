@@ -20,7 +20,7 @@ class UpdateCategoryRequest extends FormRequest
             'code' => ['nullable', 'unique:categories,code,' . $this->route('category')],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'status' => ['required', 'in:0,1'],
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
 
         ];
     }

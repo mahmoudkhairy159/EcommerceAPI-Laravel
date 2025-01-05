@@ -16,7 +16,7 @@ class UpdateRankRequest extends FormRequest
     {
         return [
 
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
 
         ];
     }

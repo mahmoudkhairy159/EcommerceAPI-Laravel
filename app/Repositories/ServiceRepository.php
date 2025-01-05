@@ -25,7 +25,7 @@ class ServiceRepository extends BaseRepository
         return $this->model
             ->filter(request()->all())
             ->where('status', Service::STATUS_ACTIVE)
-            ->orderBy('rank', 'desc');
+            ->orderBy('serial', 'desc');
     }
     public function getFeaturedServices()
     {

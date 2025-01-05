@@ -29,7 +29,7 @@ class BrandResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'rank' => $this->rank,
+            'serial' => $this->serial,
             'brand_images' => BrandImageResource::collection($this->whenLoaded('brandImages')),
 
         ];

@@ -24,7 +24,7 @@ class ProductFactory extends Factory
             'code' => $this->faker->unique()->numerify('P####'),
             'image' => 'default.png',
             'video_url' => $this->faker->url(),
-            'rank' => $this->faker->numberBetween(0, 100),
+            'serial' => $this->faker->numberBetween(0, 100),
             'selling_price' => $this->faker->randomFloat(2, 10, 1000),
             'cost_price' => $this->faker->randomFloat(2, 5, 500),
             'discount' => $this->faker->randomFloat(2, 0, 50),

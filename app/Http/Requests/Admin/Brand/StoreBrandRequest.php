@@ -25,7 +25,7 @@ class StoreBrandRequest extends FormRequest
             'image2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'brand_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
 
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
         ];
     }
 

@@ -25,7 +25,7 @@ class CategoryRepository extends BaseRepository
         return $this->model
             ->filter(request()->all())
             ->where('status', Category::STATUS_ACTIVE)
-            ->orderBy('rank', 'desc');
+            ->orderBy('serial', 'desc');
     }
     public function findBySlug(string $slug)
     {

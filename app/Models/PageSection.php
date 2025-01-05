@@ -16,7 +16,7 @@ class PageSection extends Model
         'title',
         'description',
         'image',
-        'rank',
+        'serial',
         'status',
         'page_id',
     ];

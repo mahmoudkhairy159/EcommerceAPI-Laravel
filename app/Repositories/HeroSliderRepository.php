@@ -21,7 +21,7 @@ class HeroSliderRepository extends BaseRepository
     }
     public function getAllActive()
     {
-        return $this->model->where('status',HeroSlider::STATUS_ACTIVE)->orderBy('rank', 'asc');
+        return $this->model->where('status',HeroSlider::STATUS_ACTIVE)->orderBy('serial', 'asc');
     }
 
     public function getOneActiveById(int $id)

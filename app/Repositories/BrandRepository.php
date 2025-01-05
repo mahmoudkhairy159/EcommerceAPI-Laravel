@@ -28,7 +28,7 @@ class BrandRepository extends BaseRepository
             ->filter(request()->all())
             ->with('brandImages')
             ->where('status', Brand::STATUS_ACTIVE)
-            ->orderBy('rank', 'desc');
+            ->orderBy('serial', 'desc');
     }
     public function findBySlug(string $slug)
     {

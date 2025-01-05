@@ -25,7 +25,7 @@ class PageSectionRepository extends BaseRepository
         return $this->model
             ->where('page_id', $page_id)
             ->where('status', PageSection::STATUS_ACTIVE)
-            ->orderBy('rank', 'desc');
+            ->orderBy('serial', 'desc');
     }
     public function findBySlug(string $slug)
     {

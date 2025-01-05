@@ -17,7 +17,7 @@ class StorePageSectionRequest extends FormRequest
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'rank' => 'nullable|integer|min:0',
+            'serial' => 'nullable|integer|min:0',
             'page_id' => 'nullable|exists:pages,id', // Ensure the page_id exists in pages table
         ];
     }

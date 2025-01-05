@@ -18,7 +18,7 @@ class StoreProductRequest extends FormRequest
             'code' => 'nullable|string|max:255|unique:products,code',
             'video_url' => 'nullable|string',
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'rank' => 'required|integer|min:0',
+            'serial' => 'required|integer|min:0',
             'selling_price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
             'discount' => 'required|numeric|min:0',

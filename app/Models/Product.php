@@ -20,7 +20,7 @@ class Product extends Model
         'code',
         'image',
         'video_url',
-        'rank',
+        'serial',
         'status',
         'selling_price',
         'cost_price',

@@ -26,7 +26,7 @@ class UpdateHeroSliderRequest extends FormRequest
         return [
             'heading' => ['nullable', 'string', 'max:255'],
             'paragraph' => ['nullable', 'string'],
-            'rank' => ['required', 'numeric'],
+            'serial' => ['required', 'numeric'],
             'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif'],
             'button_url' => ['nullable', 'url'],
             'status' => ['required', 'in:1,0'],

@@ -23,7 +23,7 @@ class Service extends Model
         'created_by',
         'updated_by',
         'status',
-        'rank',
+        'serial',
     ];
     //image
     //slug

@@ -17,7 +17,7 @@ class BannerRepository extends BaseRepository
 
     public function getAll()
     {
-        return $this->model->orderBy('rank', 'asc');
+        return $this->model->orderBy('serial', 'asc');
     }
 
     public function createOne($data)

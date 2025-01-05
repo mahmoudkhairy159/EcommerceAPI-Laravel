@@ -17,7 +17,7 @@ class CreateHeroSlidersTable extends Migration
             $table->id();
             $table->string('heading')->nullable();
             $table->text('paragraph')->nullable();
-            $table->integer('rank')->nullable();
+            $table->integer('serial')->nullable();
             $table->string('image')->nullable();
             $table->string('button_url')->nullable();
             $table->boolean('status')->default(1);

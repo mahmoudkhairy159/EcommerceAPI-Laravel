@@ -22,7 +22,7 @@ class ServiceResource extends JsonResource
             'rate' => $this->rate,
             "image_url" => $this->image_url,
             'status' => $this->status,
-            'rank' => $this->rank,
+            'serial' => $this->serial,
 
         ];
     }

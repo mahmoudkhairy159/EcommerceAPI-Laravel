@@ -28,7 +28,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
             $table->unsignedBigInteger("category_id")->nullable();
             $table->foreign("category_id")->references("id")->on("categories")->onDelete("cascade");
-            $table->bigInteger('rank')->default(0); //
+            $table->bigInteger('serial')->default(0); //
 
             $table->timestamps();
             $table->softDeletes();
