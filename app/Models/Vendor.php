@@ -44,6 +44,10 @@ class Vendor extends Authenticatable implements JWTSubject
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
     //status
+    //Show in home
+    const IS_FEATURED_ACTIVE = 1;
+    const IS_FEATURED_INACTIVE = 0;
+    //Show in home
     protected function getImageUrlAttribute()
     {
         return $this->image ? $this->getFileAttribute($this->image) : null;

@@ -37,7 +37,7 @@ class VendorController extends Controller
     public function index()
     {
         try {
-            $data = $this->vendorRepository->getAll()->paginate();
+            $data = $this->vendorRepository->getAllActive()->paginate();
             return $this->successResponse(new VendorCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(

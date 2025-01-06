@@ -24,6 +24,12 @@ class UpdateVendorRequest extends FormRequest
             'facebook_link' => ['nullable', 'url'],
             'instagram_link' => ['nullable', 'url'],
             'twitter_link' => ['nullable', 'url'],
+            'is_featured' => ['required', 'in:1,0'],
+            'serial' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
             'status' => ['required', 'in:1,0'],
             'blocked' => ['required', 'in:1,0'],
         ];

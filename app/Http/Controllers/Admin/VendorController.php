@@ -23,17 +23,17 @@ class VendorController extends Controller
 
     public function __construct(VendorRepository $vendorRepository)
     {
-        $this->guard = 'vendor-api';
+        $this->guard = 'admin-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->vendorRepository = $vendorRepository;
         // abilitys
         $this->middleware('auth:' . $this->guard);
-        $this->middleware(['ability:vendor,vendors-read'])->only(['index', 'show']);
-        $this->middleware(['ability::vendor,vendors-create'])->only(['store']);
-        $this->middleware(['ability::vendor,vendors-update'])->only(['update']);
-        $this->middleware(['ability::vendor,vendors-delete'])->only(['destroy']);
+        $this->middleware(['ability:admin,vendors-read'])->only(['index', 'show']);
+        $this->middleware(['ability::admin,vendors-create'])->only(['store']);
+        $this->middleware(['ability::admin,vendors-update'])->only(['update']);
+        $this->middleware(['ability::admin,vendors-delete'])->only(['destroy']);
     }
     /**
      * Display a listing of the resource.

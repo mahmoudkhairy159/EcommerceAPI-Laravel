@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\RelatedServiceController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -262,5 +263,13 @@ Route::name('user-api.')->group(function () {
 
     });
      //end stripe payment gateway
+
+      //Vendors
+    Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
+        Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
+        Route::get('/featured', 'getFeatured')->name('getFeatured');
+    });
+    Route::apiResource('vendors', VendorController::class)->only(['index', 'show']);
+    //Vendors
 
 });

@@ -108,14 +108,23 @@ class AuthController extends Controller
     public function update(AuthUpdateVendorRequest $request)
     {
         try {
-            $vendor = auth($this->guard)->user();
-            $request->validated();
-            $data = $request->only('name', 'phone', 'email', 'password');
-
+            $vendor = auth(guard: $this->guard)->user();
+            $data = $request->only(
+                'name',
+                'phone',
+                'email',
+                'image',
+                'password',
+                'description',
+                'address',
+                'facebook_link',
+                'instagram_link',
+                'twitter_link'
+            );
             if (!isset($data['password']) || !$data['password']) {
                 unset($data['password']);
             }
-            $updatedVendor = $this->vendorRepository->update($data, $vendor->id);
+            $updatedVendor = $this->vendorRepository->updateOne($data, $vendor->id);
             return $this->successResponse(
                 new VendorResource($updatedVendor),
                 "Data updated successfully",

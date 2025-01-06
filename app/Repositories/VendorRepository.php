@@ -18,6 +18,20 @@ class VendorRepository extends BaseRepository
             ->filter(request()->all())
             ->orderBy('created_at', 'desc');
     }
+    public function getAllActive()
+    {
+        return $this->model
+            ->filter(request()->all())
+            ->where('status', Vendor::STATUS_ACTIVE)
+            ->orderBy('serial', 'asc');
+    }
+    public function getFeatured()
+    {
+        return $this->model
+        ->where('status', Vendor::STATUS_ACTIVE)
+        ->where('is_featured', Vendor::IS_FEATURED_ACTIVE)
+        ->orderBy('serial','asc')->limit(5);
+    }
     public function findBySlug(string $slug)
     {
         return $this->model->where('slug', $slug)

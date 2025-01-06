@@ -27,6 +27,8 @@ class VendorResource extends JsonResource
             'twitter' => $this->twitter_link,
             'status' => $this->status,
             'blocked' => $this->blocked,
+            'is_featured' => $this->is_featured,
+            'serial' => $this->serial,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,

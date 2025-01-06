@@ -15,6 +15,7 @@ return [
         'admin' => [
             'users' => 'c,r,u,d',
             'admins' => 'c,r,u,d',
+            'vendors' => 'c,r,u,d',
             'brands' => 'c,r,u,d',
             'carts' => 'c,r,u,d',
             'cart_products' => 'c,r,u,d',
@@ -42,6 +43,9 @@ return [
 
         ],
         'user' => [
+            'profile' => 'r,u',
+        ],
+        'vendor' => [
             'profile' => 'r,u',
         ],
         // 'role_name' => [
