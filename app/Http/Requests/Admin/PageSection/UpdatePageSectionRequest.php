@@ -15,11 +15,30 @@ class UpdatePageSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'serial' => 'nullable|integer|min:0',
-            'status' => 'nullable|in:0,1',
+            'title' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
+            'description' => [
+                'nullable',
+                'string'
+            ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:10000'
+            ],
+            'serial' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+            'status' => [
+                'required',
+                'in:0,1'
+            ],
         ];
     }
 

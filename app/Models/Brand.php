@@ -19,8 +19,7 @@ class Brand extends Model
         'slug',
         'code',
         'category_id',
-        'image1', // Added image1
-        'image2', // Added image2
+        'image', // Added image1
         'short_description', // Added short_description
         'long_description', // Added long_description
         'long_description_status', // Added long_description
@@ -28,6 +27,7 @@ class Brand extends Model
         'created_by',
         'updated_by',
         'status',
+        'is_featured',
         'serial',
     ];
     //slug
@@ -44,20 +44,21 @@ class Brand extends Model
 //image
     const FILES_DIRECTORY = 'brands';
 
-    protected $appends = ['image_1_url', 'image_2_url'];
-    protected function getImage1UrlAttribute()
+    protected $appends = ['image_url'];
+    protected function getImageUrlAttribute()
     {
-        return $this->image1 ? $this->getFileAttribute($this->image1) : null;
+        return $this->image ? $this->getFileAttribute($this->image) : null;
     }
-    protected function getImage2UrlAttribute()
-    {
-        return $this->image2 ? $this->getFileAttribute($this->image2) : null;
-    }
+
 //image
     //status
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
     //status
+     //Show in home
+     const IS_FEATURED_ACTIVE = 1;
+     const IS_FEATURED_INACTIVE = 0;
+     //Show in home
     public function modelFilter()
     {
         return $this->provideFilter(BrandFilter::class);

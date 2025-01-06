@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Vendor\Vendor;
+namespace App\Http\Resources\Api\Vendor;
 
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,18 +18,15 @@ class VendorResource extends JsonResource
             'slug' => $this->slug,
             'email' => $this->email,
             'phone' => $this->phone,
-            'image_url' => $this->image_url,
+            'image' => $this->image,
             'description' => $this->description,
             'address' => $this->address,
-            'facebook' => $this->facebook_link,
-            'instagram' => $this->instagram_link,
-            'twitter' => $this->twitter_link,
-            'status' => $this->status,
-            'blocked' => $this->blocked,
-            'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'social_links' => [
+                'facebook' => $this->facebook_link,
+                'instagram' => $this->instagram_link,
+                'twitter' => $this->twitter_link,
+            ],
+
         ];
     }
 }

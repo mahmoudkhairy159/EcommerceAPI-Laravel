@@ -19,7 +19,13 @@ return new class extends Migration
             $table->string('phone')->unique()->nullable();
             $table->string('password')->nullable();
             $table->string('image')->nullable();
+            $table->text('description')->nullable();
+            $table->string('address')->nullable();
+            $table->string('facebook_link')->nullable();
+            $table->string('instagram_link')->nullable();
+            $table->string('twitter_link')->nullable();
             $table->boolean('status')->default(1);
+            $table->boolean('is_featured')->default(0);
             $table->boolean('blocked')->default(0);
             $table->timestamp('password_updated_at')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();

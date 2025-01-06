@@ -14,13 +14,37 @@ class StorePageSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'serial' => 'nullable|integer|min:0',
-            'page_id' => 'nullable|exists:pages,id', // Ensure the page_id exists in pages table
+            'title' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
+            'description' => [
+                'nullable',
+                'string'
+            ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:10000'
+            ],
+            'serial' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'page_id' => [
+                'nullable',
+                'exists:pages,id' // Ensure the page_id exists in pages table
+            ],
+            'status' => [
+                'required',
+                'in:0,1'
+            ],
         ];
     }
+
 
     /**
      * Determine if the user is authorized to make this request.

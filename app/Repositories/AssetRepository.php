@@ -36,7 +36,7 @@ class AssetRepository extends BaseRepository
             $model = $this->model->where('name', $asset_name)->first();
             if (request()->hasFile('image')) {
                 if ($model->image) {
-                    $this->deleteFile($model->image, Asset::FILES_DIRECTORY);
+                    $this->deleteFile($model->image);
                 }
                 $data['image'] = $this->uploadFile(request()->file('image'), Asset::FILES_DIRECTORY);
             }

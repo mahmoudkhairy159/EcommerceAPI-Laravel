@@ -12,17 +12,26 @@ class VendorResource extends JsonResource
      */
     public function toArray($request): array
     {
+
         return [
             'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
             'email' => $this->email,
             'phone' => $this->phone,
-            'name' => $this->name,
+            'image_url' => $this->image_url,
+            'description' => $this->description,
+            'address' => $this->address,
+            'facebook' => $this->facebook_link,
+            'instagram' => $this->instagram_link,
+            'twitter' => $this->twitter_link,
             'status' => $this->status,
             'blocked' => $this->blocked,
+            'created_by' => $this->created_by,
+            'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            "image_url" => $this->image_url,
-
         ];
+
     }
 }

@@ -109,6 +109,7 @@ Route::name('user-api.')->group(function () {
     //Brands
     Route::controller(BrandController::class)->prefix('brands')->name('brands.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
+        Route::get('/featured', 'getFeatured')->name('getFeatured');
     });
     Route::apiResource('brands', BrandController::class)->only(['index', 'show']);
     //Brands

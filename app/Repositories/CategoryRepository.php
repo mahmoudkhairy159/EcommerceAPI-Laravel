@@ -174,7 +174,7 @@ class CategoryRepository extends BaseRepository
     {
         if ($file) {
             if ($existingImage) {
-                $this->deleteFile($existingImage, Category::FILES_DIRECTORY);
+                $this->deleteFile($existingImage);
             }
             return $this->uploadFile($file, Category::FILES_DIRECTORY);
         }

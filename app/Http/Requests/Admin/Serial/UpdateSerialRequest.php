@@ -13,13 +13,16 @@ class UpdateSerialRequest extends FormRequest
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
-    {
-        return [
+{
+    return [
+        'serial' => [
+            'required', // Serial is a required field
+            'integer',  // Ensure serial is an integer
+            'min:1'      // Minimum value for serial is 1
+        ],
+    ];
+}
 
-            'serial' => 'required|integer|min:0',
-
-        ];
-    }
 
     /**
      * Determine if the user is authorized to make this request.

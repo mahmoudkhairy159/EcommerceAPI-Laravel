@@ -24,10 +24,25 @@ class StoreBannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'heading' => 'nullable|string|max:255',
-            'paragraph' => 'nullable|string',
-            'serial' => 'required|numeric',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif',
+            'heading' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
+            'paragraph' => [
+                'nullable',
+                'string'
+            ],
+            'serial' => [
+                'required',
+                'numeric',
+                'min:1'
+            ],
+            'image' => [
+                'required',
+                'file',
+                'mimes:jpeg,png,jpg,gif'
+            ],
         ];
     }
 

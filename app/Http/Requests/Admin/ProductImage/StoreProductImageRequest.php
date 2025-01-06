@@ -13,15 +13,25 @@ class StoreProductImageRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:10000'],
-            'serial' => 'nullable|integer|min:0',
-
-            'product_id' => ['required', 'exists:products,id'],
+            'image' => [
+                'required',
+                'image',
+                'mimes:jpeg,png,jpg,gif,svg', // Allow image types: jpeg, png, jpg, gif, svg
+                'max:10000' // Max size of 10MB
+            ],
+            'serial' => [
+                'required',
+                'integer',
+                'min:1' // Minimum value for serial is 1
+            ],
+            'product_id' => [
+                'required',
+                'exists:products,id' // Ensure the product_id exists in the products table
+            ],
         ];
-
     }
+
 
     /**
      * Determine if the user is authorized to make this request.

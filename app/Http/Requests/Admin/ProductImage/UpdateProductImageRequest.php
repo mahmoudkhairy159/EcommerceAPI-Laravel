@@ -14,9 +14,17 @@ class UpdateProductImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:10000'],
-            'serial' => 'nullable|integer|min:0',
-
+            'image' => [
+                'required',
+                'image', // Ensure the file is an image
+                'mimes:jpeg,png,jpg,gif,svg', // Allowed image formats: jpeg, png, jpg, gif, svg
+                'max:10000' // Max file size of 10MB
+            ],
+            'serial' => [
+                'required', // Serial is a required field
+                'integer', // Ensure serial is an integer
+                'min:1' // Minimum value for serial is 1
+            ],
         ];
     }
 

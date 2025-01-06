@@ -17,10 +17,15 @@ class UpdateVendorRequest extends FormRequest
             'name' => ['required', 'string', 'min:3', 'max:256'],
             'email' => ['required', 'email', 'unique:vendors,email,' . $this->route('vendor')],
             'phone' => ['required', 'alpha_num', 'between:11,13', 'unique:vendors,phone,' . $this->route('vendor')],
-            'status' => ['required', 'in:1,0'],
-            'blocked' => ['required', 'in:1,0'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'password' => ['nullable', 'string', 'min:3', 'max:256', 'confirmed'],
+            'description' => ['nullable', 'string'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'facebook_link' => ['nullable', 'url'],
+            'instagram_link' => ['nullable', 'url'],
+            'twitter_link' => ['nullable', 'url'],
+            'status' => ['required', 'in:1,0'],
+            'blocked' => ['required', 'in:1,0'],
         ];
     }
 

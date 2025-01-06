@@ -77,7 +77,7 @@ class ServiceRepository extends BaseRepository
             $model = $this->model->findOrFail($id);
             if (request()->hasFile('image')) {
                 if ($model->image) {
-                    $this->deleteFile($model->image, Service::FILES_DIRECTORY);
+                    $this->deleteFile($model->image);
                 }
                 $data['image'] = $this->uploadFile(request()->file('image'), Service::FILES_DIRECTORY);
             }
@@ -122,7 +122,7 @@ class ServiceRepository extends BaseRepository
             DB::beginTransaction();
             $model = $this->model->findOrFail($id);
             if ($model->image) {
-                $this->deleteFile($model->image, Service::FILES_DIRECTORY);
+                $this->deleteFile($model->image);
             }
             $deleted = $model->forceDelete();
             DB::commit();

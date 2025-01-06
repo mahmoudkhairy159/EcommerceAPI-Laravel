@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->unsignedBigInteger("category_id")->nullable();
             $table->foreign("category_id")->references("id")->on("categories")->onDelete("cascade");
-            $table->string('image1')->nullable();
-            $table->string('image2')->nullable(); // Added image1
+            $table->string('image')->nullable();
             $table->text('short_description')->nullable(); // Added short_description
             $table->text('long_description')->nullable(); // Added long_description
             $table->tinyInteger('long_description_status')->default(1);
@@ -31,6 +30,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('admins')->nullOnDelete();
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('is_featured')->default(0);
             $table->bigInteger('serial')->default(1); //
             $table->timestamps();
             $table->softDeletes();

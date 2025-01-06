@@ -17,11 +17,7 @@ class WishlistRepository extends BaseRepository
         return Wishlist::class;
     }
 
-    /**
-     * Get all wishlists with their items.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
+   
     public function getAll()
     {
         return $this->model->with('items');

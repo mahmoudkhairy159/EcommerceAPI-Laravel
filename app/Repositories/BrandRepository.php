@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Brand;
 use App\Models\BrandImage;
+use App\Traits\SoftDeletableTrait;
 use App\Traits\UploadFileTrait;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -11,6 +12,7 @@ use Prettus\Repository\Eloquent\BaseRepository;
 class BrandRepository extends BaseRepository
 {
     use UploadFileTrait;
+    use SoftDeletableTrait;
     public function model()
     {
         return Brand::class;
@@ -19,22 +21,26 @@ class BrandRepository extends BaseRepository
     {
         return $this->model
             ->filter(request()->all())
-            ->with('brandImages')
             ->orderBy('created_at', 'desc');
     }
     public function getAllActive()
     {
         return $this->model
             ->filter(request()->all())
-            ->with('brandImages')
             ->where('status', Brand::STATUS_ACTIVE)
             ->orderBy('serial', 'asc');
+    }
+    public function getFeatured()
+    {
+        return $this->model
+        ->where('status', Brand::STATUS_ACTIVE)
+        ->where('is_featured', Brand::IS_FEATURED_ACTIVE)
+        ->orderBy('serial','asc')->limit(5);
     }
     public function findBySlug(string $slug)
     {
         return $this->model->where('slug', $slug)
             ->with('brandImages')
-
             ->first();
     }
     public function findActiveBySlug(string $slug)
@@ -52,12 +58,10 @@ class BrandRepository extends BaseRepository
         try {
             DB::beginTransaction();
 
-            if (request()->hasFile('image1')) {
-                $data['image1'] = $this->uploadFile(request()->file('image1'), Brand::FILES_DIRECTORY);
+            if (request()->hasFile('image')) {
+                $data['image'] = $this->uploadFile(request()->file('image'), Brand::FILES_DIRECTORY);
             }
-            if (request()->hasFile('image2')) {
-                $data['image2'] = $this->uploadFile(request()->file('image2'), Brand::FILES_DIRECTORY);
-            }
+
             if (request()->hasFile('brand_images')) {
                 $images = request()->file('brand_images');
                 $uploadedImages = [];
@@ -78,6 +82,7 @@ class BrandRepository extends BaseRepository
 
             return $created;
         } catch (\Throwable $th) {
+            dd( $th->getMessage());
             DB::rollBack();
             return false;
         }
@@ -90,16 +95,10 @@ class BrandRepository extends BaseRepository
 
             $model = $this->model->findOrFail($id);
             if (request()->hasFile('image1')) {
-                if ($model->image1) {
-                    $this->deleteFile($model->image1, Brand::FILES_DIRECTORY);
+                if ($model->image) {
+                    $this->deleteFile($model->image);
                 }
-                $data['image1'] = $this->uploadFile(request()->file('image1'), Brand::FILES_DIRECTORY);
-            }
-            if (request()->hasFile('image2')) {
-                if ($model->image2) {
-                    $this->deleteFile($model->image2, Brand::FILES_DIRECTORY);
-                }
-                $data['image2'] = $this->uploadFile(request()->file('image2'), Brand::FILES_DIRECTORY);
+                $data['image'] = $this->uploadFile(request()->file('image'), Brand::FILES_DIRECTORY);
             }
             $updated = $model->update($data);
             DB::commit();
@@ -115,9 +114,7 @@ class BrandRepository extends BaseRepository
         try {
             DB::beginTransaction();
             $model = $this->model->findOrFail($id);
-            // if ($model->image) {
-            //     $this->deleteFile($model->image);
-            // }
+
             $deleted = $model->delete();
             DB::commit();
             return $deleted;
@@ -128,48 +125,7 @@ class BrandRepository extends BaseRepository
         }
     }
 
-    /***********Trashed model SoftDeletes**************/
-    public function getOnlyTrashed()
-    {
-        return $this->model
-            ->onlyTrashed()
-            ->filter(request()->all())
-            ->orderBy('deleted_at', 'desc');
-    }
-    public function forceDelete(int $id)
-    {
-        try {
-            DB::beginTransaction();
-            $model = $this->model->findOrFail($id);
-            if ($model->image1) {
-                $this->deleteFile($model->image1, Brand::FILES_DIRECTORY);
-            }
-            if ($model->image1) {
-                $this->deleteFile($model->image2, Brand::FILES_DIRECTORY);
-            }
-            $deleted = $model->forceDelete();
-            DB::commit();
-            return $deleted;
-        } catch (\Throwable $th) {
 
-            DB::rollBack();
-            return false;
-        }
-    }
-    public function restore(int $id)
-    {
-        try {
-            DB::beginTransaction();
-            $model = $this->model->withTrashed()->findOrFail($id);
-            $restored = $model->restore();
-            DB::commit();
-            return $restored;
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return false;
-        }
-    }
-    /***********Trashed model SoftDeletes**************/
 
     public function changeStatus(int $id)
     {

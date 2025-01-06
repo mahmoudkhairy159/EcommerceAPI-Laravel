@@ -15,21 +15,65 @@ class UpdateBrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'short_description' => 'nullable|string|max:500',
-            'long_description' => 'nullable|string|max:10000',
-            'category_id' => 'nullable|exists:categories,id',
-            'code' => ['nullable', 'unique:brands,code,' . $this->route('brand')],
-            'image1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'image2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'status' => ['required', 'in:0,1'],
-            'serial' => 'required|integer|min:0',
-            'long_description_status' => ['required', 'in:0,1'],
-            'brief' => 'nullable|string|max:10000',
-            'brand_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-
+            'name' => [
+                'required',
+                'string',
+                'max:255'
+            ],
+            'short_description' => [
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'long_description' => [
+                'required_if:long_description_status,1',
+                'max:10000'
+            ],
+            'long_description_status' => [
+                'required',
+                'in:0,1'
+            ],
+            'category_id' => [
+                'nullable',
+                'exists:categories,id'
+            ],
+            'code' => [
+                'nullable',
+                'unique:brands,code,' . $this->route('brand')
+            ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:10000'
+            ],
+            'status' => [
+                'required',
+                'in:0,1'
+            ],
+            'is_featured' => [
+                'required',
+                'in:0,1'
+            ],
+            'serial' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'brief' => [
+                'nullable',
+                'string',
+                'max:10000'
+            ],
+            'brand_images.*' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:10000'
+            ],
         ];
     }
+
 
     /**
      * Determine if the user is authorized to make this request.

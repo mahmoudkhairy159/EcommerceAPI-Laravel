@@ -59,7 +59,7 @@ class HeroSliderRepository extends BaseRepository
             $model = $this->model->findOrFail($id);
             if (request()->hasFile('image')) {
                 if ($model->image) {
-                    $this->deleteFile($model->image, HeroSlider::FILES_DIRECTORY);
+                    $this->deleteFile($model->image);
                 }
                 $data['image'] = $this->uploadFile(request()->image, HeroSlider::FILES_DIRECTORY);
             }
@@ -79,7 +79,7 @@ class HeroSliderRepository extends BaseRepository
             DB::beginTransaction();
             $model = $this->model->findOrFail($id);
             if ($model->image) {
-                $this->deleteFile($model->image, HeroSlider::FILES_DIRECTORY);
+                $this->deleteFile($model->image);
             }
             $deleted = $model->delete();
             DB::commit();

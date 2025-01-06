@@ -22,14 +22,30 @@ class UpdateBannerRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
-    {
-        return [
-            'heading' => 'nullable|string|max:255',
-            'paragraph' => 'nullable|string',
-            'serial' => 'required|numeric',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif',
-        ];
-    }
+{
+    return [
+        'heading' => [
+            'nullable',
+            'string',
+            'max:255'
+        ],
+        'paragraph' => [
+            'nullable',
+            'string'
+        ],
+        'serial' => [
+            'required',
+            'numeric',
+            'min:1'
+        ],
+        'image' => [
+            'nullable',
+            'file',
+            'mimes:jpeg,png,jpg,gif'
+        ],
+    ];
+}
+
 
     protected function failedValidation(Validator $validator)
     {

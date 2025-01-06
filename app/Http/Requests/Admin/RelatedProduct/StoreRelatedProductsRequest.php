@@ -15,7 +15,7 @@ class StoreRelatedProductsRequest extends FormRequest
     {
         return [
             'product_id' => ['required', 'exists:products,id'],
-         sto
+         
         ];
     }
 

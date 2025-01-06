@@ -26,7 +26,7 @@ class StoreHeroSliderRequest extends FormRequest
         return [
             'heading' => ['nullable', 'string', 'max:255'],
             'paragraph' => ['nullable', 'string'],
-            'serial' => ['required', 'numeric'],
+            'serial' => ['required', 'numeric','min:1'],
             'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif'],
             'button_url' => ['nullable', 'url'],
             'status' => ['required', 'in:1,0'],

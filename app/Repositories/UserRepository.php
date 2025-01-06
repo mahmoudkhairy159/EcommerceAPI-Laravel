@@ -76,7 +76,7 @@ class UserRepository extends BaseRepository
             $model = $this->model->findOrFail($id);
             if (request()->hasFile('image')) {
                 if ($model->image) {
-                    $this->deleteFile($model->image, User::FILES_DIRECTORY);
+                    $this->deleteFile($model->image);
                 }
                 $modelData['image'] = $this->uploadFile(request()->file('image'), User::FILES_DIRECTORY);
             }
@@ -105,7 +105,7 @@ class UserRepository extends BaseRepository
 
             $model = $this->model->findOrFail($id);
             // if ($model->image) {
-            // $this->deleteFile($model->image,User::FILES_DIRECTORY);
+            // $this->deleteFile($model->image);
             // }
             // $deleted = $model->delete();
             $model->status = User::STATUS_INACTIVE;
@@ -174,7 +174,7 @@ class UserRepository extends BaseRepository
 
             $model = $this->model->findOrFail($id);
             if ($model->image) {
-                $this->deleteFile($model->image, User::FILES_DIRECTORY);
+                $this->deleteFile($model->image);
             }
             $modelData['image'] = $this->uploadFile(request()->file('image'), User::FILES_DIRECTORY);
 
@@ -196,7 +196,7 @@ class UserRepository extends BaseRepository
 
             $model = $this->model->findOrFail($id);
             if ($model->image) {
-                $this->deleteFile($model->image, User::FILES_DIRECTORY);
+                $this->deleteFile($model->image);
             }
             $modelData['image'] = null;
             $model->update($modelData);

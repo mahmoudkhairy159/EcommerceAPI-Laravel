@@ -14,11 +14,18 @@ class StoreVendorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:256'],
-            'email' => ['required', 'email', 'unique:vendors,email'],
-            'phone' => ['required', 'alpha_num', 'between:11,13', 'unique:vendors,phone'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'password' => ['required', 'string', 'min:3', 'max:256', 'confirmed'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'unique:vendors,email'],
+            'phone' => ['nullable', 'string', 'unique:vendors,phone'],
+            'password' => ['nullable', 'string', 'min:3', 'max:256', 'confirmed'],
+            'image' => ['nullable', 'image', 'max:2048'], // Assuming image uploads
+            'description' => ['nullable', 'string'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'facebook_link' => ['nullable', 'url'],
+            'instagram_link' => ['nullable', 'url'],
+            'twitter_link' => ['nullable', 'url'],
+            'status' => ['required', 'in:1,0'],
+            'blocked' => ['required', 'in:1,0'],
         ];
     }
 

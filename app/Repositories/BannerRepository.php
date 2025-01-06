@@ -46,7 +46,7 @@ class BannerRepository extends BaseRepository
             $model = $this->model->findOrFail($id);
             if (request()->hasFile('image')) {
                 if ($model->image) {
-                    $this->deleteFile($model->image, Banner::FILES_DIRECTORY);
+                    $this->deleteFile($model->image);
                 }
                 $data['image'] = $this->uploadFile(request()->image, Banner::FILES_DIRECTORY);
             }
@@ -66,7 +66,7 @@ class BannerRepository extends BaseRepository
             DB::beginTransaction();
             $model = $this->model->findOrFail($id);
             if ($model->image) {
-                $this->deleteFile($model->image, Banner::FILES_DIRECTORY);
+                $this->deleteFile($model->image);
             }
             $deleted = $model->delete();
             DB::commit();

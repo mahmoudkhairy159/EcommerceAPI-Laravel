@@ -18,7 +18,7 @@ class UpdateServiceRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'category_id' => 'nullable|exists:categories,id',
-            'code' => ['nullable', 'unique:brands,code,' . $this->route('brand')],
+            'code' => ['nullable', 'unique:services,code,' . $this->route('service')],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             'status' => ['required', 'in:0,1'],
             'serial' => 'required|integer|min:0',

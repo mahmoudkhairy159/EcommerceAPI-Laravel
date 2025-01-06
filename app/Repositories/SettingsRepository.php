@@ -45,14 +45,14 @@ class SettingsRepository   extends BaseRepository
         }
         if (request()->hasFile('logo')) {
             if ($settings->logo) {
-                $this->deleteFile($settings->logo, 's3');
+                $this->deleteFile($settings->logo);
             }
             $data['logo'] = $this->uploadImage(request()->file('logo'), Setting::FILES_DIRECTORY);
         }
 
         if (request()->hasFile('logo_light')) {
             if ($settings->logo_light) {
-                $this->deleteFile($settings->logo_light, 's3');
+                $this->deleteFile($settings->logo_light);
             }
             $data['logo_light'] = $this->uploadImage(request()->file('logo_light'), Setting::FILES_DIRECTORY, );
         }
