@@ -55,7 +55,7 @@ class CartRepository extends BaseRepository
                 // Handle pricing policies
                 $pricingPolicy = core()->getPricingPolicy();
                 $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
-                $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+                $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->price;
                 $totalTax = $this->calculateTax($tax, $quantity);
                 $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
                 $cartProduct = $this->saveCartProduct($cartProduct, $product->id,$product->name, $price, $totalTax, $subtotal, $quantity, $cart);
@@ -92,7 +92,7 @@ class CartRepository extends BaseRepository
             // Handle pricing policies
             $pricingPolicy = core()->getPricingPolicy();
             $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
-            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->price;
             $totalTax = $this->calculateTax($tax, $quantity);
             $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
             $cartProduct = $this->saveCartProduct($cartProduct, $product->id,$product->name ,$price, $totalTax, $subtotal, $quantity, $cart);
@@ -221,7 +221,7 @@ class CartRepository extends BaseRepository
             // Handle pricing policies
             $pricingPolicy = core()->getPricingPolicy();
             $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
-            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->price;
             $totalTax = $this->calculateTax($tax, $quantity);
             $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
             $cartProduct = $this->saveCartProduct($cartProduct, $product->id,$product->name,$price, $totalTax, $subtotal, $quantity, $cart);
@@ -251,7 +251,7 @@ class CartRepository extends BaseRepository
             // Handle pricing policies
             $pricingPolicy = core()->getPricingPolicy();
             $tax = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->tax : $product->tax;
-            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->selling_price;
+            $price = $cartProduct && $pricingPolicy == 'static' ? $cartProduct->price : $product->price;
             $totalTax = $this->calculateTax($tax, $quantity);
             $subtotal = $this->calculateSubtotal($product->price, $totalTax, $quantity);
             $cartProduct = $this->saveCartProduct($cartProduct, $product->id, $product->name,$price, $totalTax, $subtotal, $quantity, $cart);

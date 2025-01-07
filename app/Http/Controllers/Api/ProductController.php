@@ -54,7 +54,7 @@ class ProductController extends Controller
             return $this->successResponse(ProductResource::collection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
-                [],
+                [$e->getMessage()],
                 __('app.something-went-wrong'),
                 500
             );

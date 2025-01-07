@@ -34,7 +34,7 @@ class UpdateOrderService
                         'order_id' => $order->id,
                         'product_id' => $productData['product_id'],
                         'quantity' => $productData['quantity'],
-                        'selling_price' => $productData['selling_price'],
+                        'price' => $productData['price'],
                         'cost_price' => $productData['cost_price'],
 
                     ]);

@@ -15,28 +15,31 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'code' => 'nullable|string|max:255|unique:products,code,' . $this->route('product'),
-            'video_url' => 'nullable|string',
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
-            'serial' => 'required|integer|min:0',
-            'status' => 'required|integer|between:0,1',
-            'selling_price' => 'required|numeric|min:0',
-            'cost_price' => 'required|numeric|min:0',
-            'discount' => 'required|numeric|min:0',
-            'currency' => 'sometimes|required|string|max:255',
-            'quantity' => 'sometimes|required|integer|min:0',
-            'alert_stock_quantity' => 'integer|min:0',
-            'order_type' => 'sometimes|required|string|max:255',
-            'short_description' => 'sometimes|required|string',
-            'long_description' => 'sometimes|required|string',
-            'return_policy' => 'nullable|string',
-            'rate' => 'integer|between:0,255',
-            'category_id' => 'required|exists:categories,id|integer',
-            'brand_id' => 'required|exists:brands,id|integer',
-            'services' => 'nullable|array',
-            'services.*' => 'integer|exists:services,id',
-            'is_featured' => 'required|integer|in:0,1',
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:100', 'unique:products,code,' . $this->route('product')],
+            'seo_description' => ['nullable', 'string', 'max:500'],
+            'seo_keys' => ['nullable', 'string', 'max:500'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'video_url' => ['nullable', 'url', 'max:500'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'brand_id' => ['required', 'exists:brands,id'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'offer_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
+            'offer_start_date' => ['nullable', 'date', 'before_or_equal:offer_end_date'],
+            'offer_end_date' => ['nullable', 'date', 'after_or_equal:offer_start_date'],
+            'currency' => ['required', 'string', 'max:10'],
+            'quantity' => ['required', 'integer', 'min:0'],
+            'alert_stock_quantity' => ['required', 'integer', 'min:0'],
+            'short_description' => ['nullable', 'string', 'max:500'],
+            'long_description' => ['nullable', 'string'],
+            'return_policy' => ['nullable', 'string', 'max:1000'],
+            'is_featured' =>  ['required', 'in:0,1' ],
+            'is_top' => ['required', 'in:0,1' ],
+            'is_best' =>['required', 'in:0,1' ],
+            'approval_status' => ['required', 'in:0,1,2' ],
+            'status' => ['required', 'in:0,1' ],
+            'serial' => ['required', 'string', 'min:1'],
 //related products
             'relatedProductIds' => ['nullable', 'array'],
             'relatedProductIds.*' => [
@@ -81,7 +84,7 @@ class UpdateProductRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'tax' => $this->input('selling_price',0)*core()->getTaxPercentage(),
+            'tax' => $this->input('price',0)*core()->getTaxPercentage(),
         ]);
     }
 }

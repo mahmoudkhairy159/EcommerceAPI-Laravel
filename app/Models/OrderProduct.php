@@ -19,7 +19,7 @@ class OrderProduct extends Model
         'order_id',
         'product_id',
         'quantity',
-        'selling_price',
+        'price',
         'cost_price',
         'return_policy',
         'discount',

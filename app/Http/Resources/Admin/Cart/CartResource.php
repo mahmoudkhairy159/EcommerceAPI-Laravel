@@ -16,7 +16,7 @@ class CartResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'total_price' => $this->items()->count() == 0 ? $this->items->sum(function ($cartProduct) {
-                return $cartProduct->product->selling_price * $cartProduct->quantity;
+                return $cartProduct->product->price * $cartProduct->quantity;
             }) : 0,
             'discount_amount' => $this->discount_amount,
             'created_at' => $this->created_at,

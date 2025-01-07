@@ -75,7 +75,7 @@ class OrderRepository extends BaseRepository
     public function calculateTotalPrice($order)
     {
         return $order->products->sum(function ($orderProduct) {
-            return ($orderProduct->selling_price * $orderProduct->quantity) - $orderProduct->discount;
+            return ($orderProduct->price * $orderProduct->quantity) - $orderProduct->discount;
         });
     }
 

@@ -5,11 +5,13 @@ namespace App\Repositories;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Wishlist;
+use App\Traits\SoftDeletableTrait;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class ProductRepository extends BaseRepository
 {
+    use SoftDeletableTrait;
     public function model()
     {
         return Product::class;
@@ -18,7 +20,6 @@ class ProductRepository extends BaseRepository
     {
         return $this->model
             ->filter(request()->all())
-            ->with(['category', 'brand'])
             ->orderBy('created_at', 'desc');
     }
     public function getStatistics()
@@ -34,7 +35,7 @@ class ProductRepository extends BaseRepository
         // $date_type = $request->date_type;
 
         return [
-            // "product_total_order" => Order$this->model->where("product_id", $id)->FilterByOrderReportDate($date_type)->sum("selling_price"),
+            // "product_total_order" => Order$this->model->where("product_id", $id)->FilterByOrderReportDate($date_type)->sum("price"),
             // "product_views_count" => $this->model->find($id)->no_of_views,
             // "total_orders_count" => Order::query()->FilterByProductId($id)->count(),
             // "pending_orders_count" => Order::query()->FilterByProductId($id)->FilterByStatus("Pending")->FilterByOrderReportDate($date_type)->count(),
@@ -49,8 +50,8 @@ class ProductRepository extends BaseRepository
     {
         return $this->model
             ->filter(request()->all())
-            ->with(['category', 'brand'])
             ->where('status', Product::STATUS_ACTIVE)
+            ->where('approval_status', Product::APPROVAL_APPROVED)
             ->orderBy('created_at', 'desc');
     }
 
@@ -58,9 +59,8 @@ class ProductRepository extends BaseRepository
     {
         return $this->model
             ->filter(request()->all())
-            ->with(['category', 'brand'])
             ->where('status', Product::STATUS_ACTIVE)
-            ->where('is_featured', 1)
+            ->where('approval_status', Product::APPROVAL_APPROVED)
             ->inRandomOrder();
     }
     public function getLowQuantityAlertProductsCount()
@@ -73,19 +73,23 @@ class ProductRepository extends BaseRepository
     public function getFavoriteCustomersCountByProductId($id)
     {
         return [
-            'no_of_customers' => Wishlist::where('product_id', $id)->count(),
+            'no_of_customers' => Wishlist::where('user_id', auth()->id())
+                ->whereHas('items', function ($query) use ($id) {
+                    $query->where('product_id', $id);
+                })
+                ->count(),
         ];
     }
     public function findBySlug(string $slug)
     {
         return $this->model->where('slug', $slug)
-            ->with(['category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->first();
     }
     public function getOneById(string $id)
     {
         return $this->model->where('id', $id)
-            ->with(['category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->first();
     }
 
@@ -94,8 +98,9 @@ class ProductRepository extends BaseRepository
 
         return $this->model
             ->where('slug', $slug)
-            ->with(['category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->where('status', Product::STATUS_ACTIVE)
+            ->where('approval_status', Product::APPROVAL_APPROVED)
             ->first();
     }
     public function getOneActiveById(string $id)
@@ -103,8 +108,9 @@ class ProductRepository extends BaseRepository
 
         return $this->model
             ->where('id', $id)
-            ->with(['category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->where('status', Product::STATUS_ACTIVE)
+            ->where('approval_status', Product::APPROVAL_APPROVED)
             ->first();
     }
     public function createOne(array $data)
@@ -195,6 +201,20 @@ class ProductRepository extends BaseRepository
             return false;
         }
     }
+    public function changeApprovalStatus(int $id, $data)
+    {
+        try {
+            DB::beginTransaction();
+            $product = $this->model->findOrFail($id);
+            $updated = $product->update($data);
+            DB::commit();
+            return $updated;
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            return false;
+        }
+    }
     public function updateSerial(array $data, int $id)
     {
         try {
@@ -236,9 +256,8 @@ class ProductRepository extends BaseRepository
             // if ($product->image) {
             //     $this->deleteFile($product->image);
             // }
-            // $deleted = $product->delete();
-            $product->status = Product::STATUS_INACTIVE;
-            $deleted = $product->save();
+            $deleted = $product->delete();
+
             DB::commit();
             return $deleted;
         } catch (\Throwable $th) {
@@ -288,35 +307,7 @@ class ProductRepository extends BaseRepository
         }
     }
 
-    // public function syncRelatedProducts(array $data)
-    // {
-    //     try {
-    //         DB::beginTransaction();
-    //         $product = $this->model->findOrFail($data['product_id']);
 
-    //         // Detach all old related products
-    //         $currentRelatedProducts = $product->relatedProducts()->pluck('related_product_id')->toArray();
-    //         foreach ($currentRelatedProducts as $relatedProductId) {
-    //             $relatedProduct = $this->model->findOrFail($relatedProductId);
-    //             $relatedProduct->relatedProducts()->detach($data['product_id']);
-    //         }
-
-    //         // Sync the new related products
-    //         $product->relatedProducts()->sync($data['relatedProductIds']);
-
-    //         // Ensure bidirectional relationship
-    //         foreach ($data['relatedProductIds'] as $relatedProductId) {
-    //             $relatedProduct = $this->model->findOrFail($relatedProductId);
-    //             $relatedProduct->relatedProducts()->syncWithoutDetaching($data['product_id']);
-    //         }
-
-    //         DB::commit();
-    //         return true;
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-    //         return false;
-    //     }
-    // }
     public function syncRelatedProducts(array $data, $productId)
     {
         try {
@@ -429,7 +420,7 @@ class ProductRepository extends BaseRepository
     }
     /*********************************Related_services***************************************/
 
-/*********************************product_accessories***************************************/
+    /*********************************product_accessories***************************************/
     public function addProductAccessories(array $data)
     {
         try {
@@ -449,35 +440,7 @@ class ProductRepository extends BaseRepository
             return false;
         }
     }
-    // public function syncProductAccessories(array $data)
-    // {
-    //     try {
-    //         DB::beginTransaction();
-    //         $product = $this->model->findOrFail($data['product_id']);
 
-    //         // Detach all old product accessories
-    //         $currentProductAccessories = $product->accessories()->pluck('accessory_id')->toArray();
-    //         foreach ($currentProductAccessories as $productAccessoryId) {
-    //             $productAccessory = $this->model->findOrFail($productAccessoryId);
-    //             $productAccessory->accessories()->detach($data['product_id']);
-    //         }
-
-    //         // Sync the new related products
-    //         $product->accessories()->sync($data['productAccessoriesIds']);
-
-    //         // Ensure bidirectional relationship
-    //         foreach ($data['productAccessoriesIds'] as $productAccessoryId) {
-    //             $productAccessory = $this->model->findOrFail($productAccessoryId);
-    //             $productAccessory->accessories()->syncWithoutDetaching($data['product_id']);
-    //         }
-
-    //         DB::commit();
-    //         return true;
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-    //         return false;
-    //     }
-    // }
     public function syncProductAccessories(array $data, $productId)
     {
         try {
@@ -536,5 +499,5 @@ class ProductRepository extends BaseRepository
     {
         return $product->accessories();
     }
-/*********************************product_accessories***************************************/
+    /*********************************product_accessories***************************************/
 }

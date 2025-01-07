@@ -137,15 +137,21 @@ Route::name('admin-api.')->group(function () {
     //categories routes
 
     // products routes
+      /***********Trashed products SoftDeletes**************/
+      Route::controller(ProductController::class)->prefix('products')->as('products.')->group(function () {
+        Route::get('trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed products SoftDeletes**************/
     Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::get('/statistics', 'getStatistics')->name('getStatistics');
         Route::get('/{id}/statistics', 'getStatisticsById')->name('getStatisticsById');
         Route::get('/low-quantity-alert-products-count', 'getLowQuantityAlertProductsCount')->name('getLowQuantityAlertProductsCount');
         Route::get('/{id}/favorite-customers-count', 'getFavoriteCustomersCountByProductId')->name('getFavoriteCustomersCountByProductId');
-        Route::get('/banner', 'getProductsBanner')->name('getProductsBanner');
-        Route::post('/banner', 'createProductsBanner')->name('createProductsBanner');
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
+        Route::post('/{id}/change-approval-status', 'changeApprovalStatus')->name('changeApprovalStatus');
         Route::post('/{id}/update-featured-status', 'updateFeaturedStatus')->name('updateFeaturedStatus');
         Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
         Route::post('/{id}/delete-image', 'deleteImage')->name('deleteImage');

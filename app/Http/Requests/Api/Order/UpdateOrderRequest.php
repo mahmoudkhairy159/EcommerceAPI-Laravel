@@ -27,7 +27,7 @@ class UpdateOrderRequest extends FormRequest
             'products' => ['nullable', 'array'],
             'products.*.product_id' => ['required_with:products', 'exists:products,id'],
             'products.*.quantity' => ['required_with:products', 'integer', 'min:1'],
-            'products.*.selling_price' => ['required_with:products', 'numeric'],
+            'products.*.price' => ['required_with:products', 'numeric'],
             'products.*.cost_price' => ['required_with:products', 'numeric'],
 
         ];

@@ -34,7 +34,7 @@ class PurchaseOrderService
             }
             // Calculate total price
             $data['total_price'] = $cartItems->sum(function ($cartItem) {
-                return $cartItem->quantity * $cartItem->product->selling_price;
+                return $cartItem->quantity * $cartItem->product->price;
             });
             $data['order_date'] = Carbon::now();
 
@@ -47,7 +47,7 @@ class PurchaseOrderService
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
                     'quantity' => $cartItem->quantity,
-                    'selling_price' => $cartItem->product->selling_price,
+                    'price' => $cartItem->product->price,
                     'cost_price' => $cartItem->product->cost_price,
                 ]);
             }

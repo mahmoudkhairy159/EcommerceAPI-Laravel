@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\AppSetting\AppSettingResource;
+use App\Traits\ApiResponseTrait;
 use App\Types\CacheKeysType;
 
 class AppSettingsController extends Controller
 {
+    use ApiResponseTrait;
 
     public function index()
     {

@@ -17,7 +17,7 @@ class OrderProductResource extends JsonResource
             'order_id' => $this->pivot->order_id,
             'product_id' => $this->pivot->product_id,
             'quantity' => $this->pivot->quantity,
-            'selling_price' => $this->pivot->selling_price,
+            'price' => $this->pivot->price,
             'cost_price' => $this->pivot->cost_price,
             'discount' => $this->pivot->discount,
             'return_policy' => $this->pivot->return_policy,

@@ -8,37 +8,45 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
-    use HasFactory, Filterable, Sluggable,UploadFileTrait;
+    use HasFactory, Filterable, SoftDeletes, Sluggable, UploadFileTrait;
 
     protected $fillable = [
         'name',
         'slug',
         'code',
+        'seo_description',
+        'seo_keys',
         'image',
         'video_url',
-        'serial',
-        'status',
-        'selling_price',
-        'cost_price',
-        'tax',
-        'discount',
+        'vendor_id',
+        'category_id',
+        'brand_id',
+        'price',
+        'offer_price',
+        'offer_start_date',
+        'offer_end_date',
         'currency',
         'quantity',
         'alert_stock_quantity',
-        'order_type',
         'short_description',
         'long_description',
         'return_policy',
-        'rate',
-        'category_id',
-        'brand_id',
         'is_featured',
+        'is_top',
+        'is_best',
+        'approval_status',
+        'created_by',
+        'updated_by',
+        'status',
+        'serial',
     ];
-    //slug
+
+    // Slug configuration
     public function sluggable(): array
     {
         return [
@@ -48,15 +56,21 @@ class Product extends Model
             ],
         ];
     }
-    //slug
-    //status
+
+    // Status constants
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
-    //status
-    //image
+
+    // Approval status constants
+    const APPROVAL_PENDING = 0;
+    const APPROVAL_APPROVED = 1;
+    const APPROVAL_REJECTED = 2;
+
+    // Image constants
     const FILES_DIRECTORY = 'products';
 
     protected $appends = ['image_url', "is_wish_listed", "is_carted"];
+
     protected function getImageUrlAttribute()
     {
         return $this->image ? $this->getFileAttribute($this->image) : null;
@@ -64,58 +78,65 @@ class Product extends Model
     public function getIsCartedAttribute()
     {
         return Auth::guard('user-api')->user() ? $this->cartProducts()->where("cart_id", Auth::guard('user-api')->user()->cart->id)->exists() : false;
-
     }
 
     public function getIsWishListedAttribute()
     {
         return Auth::guard('user-api')->user() ? $this->cartProducts()->where("cart_id", Auth::guard('user-api')->user()->cart->id)->exists() : false;
-        // return $this->Wishlists()->where("user_id", Auth::guard('user-api')->id())->exists();
     }
-    //image
+
     public function modelFilter()
     {
         return $this->provideFilter(ProductFilter::class);
     }
-    //image
-    /*******************Relationships********************* */
 
-    public function Category()
+    /******************* Relationships *********************/
+
+    public function category()
     {
-
         return $this->belongsTo(Category::class);
     }
 
-    public function Brand()
+    public function brand()
     {
-
         return $this->belongsTo(Brand::class);
     }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }
+
     public function updatedBy()
     {
         return $this->belongsTo(Admin::class, 'updated_by');
     }
+
     public function productImages()
     {
         return $this->hasMany(ProductImage::class);
     }
+
     public function orders()
     {
-
-        return $this->belongsToMany(Order::class, "order_products");
+        return $this->belongsToMany(Order::class, 'order_products');
     }
+
     public function relatedProducts()
     {
         return $this->belongsToMany(Product::class, 'related_products', 'product_id', 'related_product_id');
     }
+
     public function accessories()
     {
         return $this->belongsToMany(Product::class, 'product_accessories', 'product_id', 'accessory_id');
     }
+
     public function services()
     {
         return $this->belongsToMany(Service::class, 'product_service');
@@ -133,10 +154,8 @@ class Product extends Model
 
     public function wishlists()
     {
-
         return $this->hasMany(Wishlist::class);
     }
 
-    /*******************End Relationships********************* */
-
+    /******************* End Relationships *********************/
 }

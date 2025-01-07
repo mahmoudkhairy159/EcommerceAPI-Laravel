@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Category\CategoryCollection;
-use App\Http\Resources\Admin\Category\CategoryResource;
+use App\Http\Resources\Api\Category\CategoryCollection;
+use App\Http\Resources\Api\Category\CategoryResource;
 use App\Repositories\CategoryRepository;
 use App\Traits\ApiResponseTrait;
 use App\Types\CacheKeysType;

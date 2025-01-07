@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Product\ChangeApprovalStatusRequest;
 use App\Http\Requests\Admin\Product\StoreProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
 use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
@@ -104,26 +105,14 @@ class ProductController extends Controller
             return $this->successResponse($data);
         } catch (Exception $e) {
             return $this->errorResponse(
-                [],
+                [$e->getMessage()],
                 __('app.something-went-wrong'),
                 500
             );
         }
 
     }
-    public function getProductsBanner()
-    {
-        try {
-            return file_get_contents("product_banners.txt");
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
-        }
 
-    }
 
 
 
@@ -253,6 +242,37 @@ class ProductController extends Controller
             );
         }
     }
+    public function changeApprovalStatus(ChangeApprovalStatusRequest $request, $id)
+    {
+
+        try {
+            $data=$request->validated();
+            $data['updated_by'] = auth()->guard($this->guard)->id();
+            $updated = $this->productRepository->changeApprovalStatus($id,$data);
+            if ($updated) {
+                return $this->messageResponse(
+                    __("app.products.updated-successfully"),
+                    true,
+                    200
+                );
+            }{
+                return $this->messageResponse(
+                    __("app.products.updated-failed"),
+                    false,
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+
+            return $this->errorResponse(
+                [],
+                __('app.something-went-wrong'),
+                500
+            );
+        }
+    }
+
     public function updateFeaturedStatus($id)
     {
 
@@ -365,4 +385,71 @@ class ProductController extends Controller
             );
         }
     }
+       /***********Trashed model SoftDeletes**************/
+       public function getOnlyTrashed()
+       {
+           try {
+               $data = $this->productRepository->getOnlyTrashed()->paginate();
+               return $this->successResponse(new ProductCollection($data));
+           } catch (Exception $e) {
+               return $this->errorResponse(
+                   [],
+                   __('app.something-went-wrong'),
+                   500
+               );
+           }
+       }
+
+       public function forceDelete($id)
+       {
+           try {
+               $deleted = $this->productRepository->forceDelete($id);
+               if ($deleted) {
+                   return $this->messageResponse(
+                       __("app.products.deleted-successfully"),
+                       true,
+                       200
+                   );
+               }{
+                   return $this->messageResponse(
+                       __("app.products.deleted-failed"),
+                       false,
+                       400
+                   );
+               }
+           } catch (Exception $e) {
+               return $this->errorResponse(
+                   [],
+                   __('app.something-went-wrong'),
+                   500
+               );
+           }
+       }
+
+       public function restore($id)
+       {
+           try {
+               $restored = $this->productRepository->restore($id);
+               if ($restored) {
+                   return $this->messageResponse(
+                       __("app.products.restored-successfully"),
+                       true,
+                       200
+                   );
+               }{
+                   return $this->messageResponse(
+                       __("app.products.restored-failed"),
+                       false,
+                       400
+                   );
+               }
+           } catch (Exception $e) {
+               return $this->errorResponse(
+                   [],
+                   __('app.something-went-wrong'),
+                   500
+               );
+           }
+       }
+       /***********Trashed model SoftDeletes**************/
 }
