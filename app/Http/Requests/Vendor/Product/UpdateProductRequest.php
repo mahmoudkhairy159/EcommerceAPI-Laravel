@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Vendor\Product;
 
+use App\Enums\ProductTypeEnum;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -32,9 +34,7 @@ class UpdateProductRequest extends FormRequest
             'short_description' => ['nullable', 'string', 'max:500'],
             'long_description' => ['nullable', 'string'],
             'return_policy' => ['nullable', 'string', 'max:1000'],
-            'is_featured' =>  ['required', 'in:0,1' ],
-            'is_top' => ['required', 'in:0,1' ],
-            'is_best' =>['required', 'in:0,1' ],
+            'product_type' =>  ['nullable', Rule::in(ProductTypeEnum::getConstants()) ],
             'status' => ['required', 'in:0,1' ],
             'serial' => ['required', 'string', 'min:1'],
 //related products

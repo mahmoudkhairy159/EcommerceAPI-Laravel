@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\ChangeApprovalStatusRequest;
 use App\Http\Requests\Admin\Product\StoreProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
+use App\Http\Requests\Admin\Product\UpdateProductTypeRequest;
 use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
 use App\Http\Resources\Admin\Product\ProductCollection;
 use App\Http\Resources\Admin\Product\ProductResource;
@@ -273,13 +274,13 @@ class ProductController extends Controller
         }
     }
 
-    public function updateFeaturedStatus($id)
+    public function updateProductType(UpdateProductTypeRequest $request,$id)
     {
 
         try {
-
+            $data=$request->validated();
             $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->productRepository->updateFeaturedStatus($id);
+            $updated = $this->productRepository->updateProductType($id, $data);
             if ($updated) {
                 return $this->messageResponse(
                     __("app.products.updated-successfully"),

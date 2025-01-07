@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ProductTypeEnum;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -42,9 +43,7 @@ class ProductFactory extends Factory
         'short_description' => $this->faker->sentence(),
         'long_description' => $this->faker->paragraph(),
         'return_policy' => $this->faker->text(200),
-        'is_featured' => $this->faker->boolean(),
-        'is_top' => $this->faker->boolean(),
-        'is_best' => $this->faker->boolean(),
+        'product_type' => $this->faker->randomElement(ProductTypeEnum::getConstants()), // Random value from ProductTypeEnum
         'approval_status' => $this->faker->randomElement([0, 1, 2]), // Pending, Approved, Rejected
         'status' => $this->faker->randomElement([0, 1]), // Inactive, Active
         'serial' => 1,

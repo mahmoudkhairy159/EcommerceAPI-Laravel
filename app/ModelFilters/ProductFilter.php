@@ -35,20 +35,12 @@ class ProductFilter extends ModelFilter
         return $this->where('status', $status);
     }
 
-    public function isFeatured($isFeatured)
+    public function productType($productType)
     {
-        return $this->where('is_featured', $isFeatured);
+        return $this->where('product_type', $productType);
     }
 
-    public function isBest($isBest)
-    {
-        return $this->where('is_best', $isBest);
-    }
 
-    public function isTop($isTop)
-    {
-        return $this->where('is_top', $isTop);
-    }
 
     public function approvalStatus($statusApproval)
     {

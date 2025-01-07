@@ -35,9 +35,8 @@ class ProductResource extends JsonResource
             'short_description' => $this->short_description,
             'long_description' => $this->long_description,
             'return_policy' => $this->return_policy,
-            'is_featured' => $this->is_featured,
-            'is_top' => $this->is_top,
-            'is_best' => $this->is_best,
+            'product_type' => $this->product_type,
+
             'approval_status' => $this->approval_status,
             'status' => $this->status,
             'serial' => $this->serial,

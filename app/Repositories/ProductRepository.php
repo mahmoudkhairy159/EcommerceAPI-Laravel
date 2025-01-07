@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\ProductTypeEnum;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Wishlist;
@@ -61,7 +62,7 @@ class ProductRepository extends BaseRepository
             ->filter(request()->all())
             ->where('status', Product::STATUS_ACTIVE)
             ->where('approval_status', Product::APPROVAL_APPROVED)
-            ->inRandomOrder();
+            ->where('product_type', ProductTypeEnum::FEATURED_PRODUCT);
     }
     public function getLowQuantityAlertProductsCount()
     {
@@ -230,13 +231,12 @@ class ProductRepository extends BaseRepository
             return false;
         }
     }
-    public function updateFeaturedStatus(int $id)
+    public function updateProductType(int $id, $data)
     {
         try {
             DB::beginTransaction();
             $product = $this->model->findOrFail($id);
-            $product->is_featured = $product->is_featured == 1 ? 0 : 1;
-            $updated = $product->save();
+            $updated = $product->update($data);
             DB::commit();
 
             return $updated;

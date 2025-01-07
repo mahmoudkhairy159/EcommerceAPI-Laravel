@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Vendor\Product\UpdateProductTypeRequest;
 use App\Http\Requests\Vendor\Product\StoreProductRequest;
 use App\Http\Requests\Vendor\Product\UpdateProductRequest;
 use App\Http\Requests\Vendor\Serial\UpdateSerialRequest;
@@ -29,7 +30,7 @@ class ProductController extends Controller
         $this->productRepository = $productRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
-       
+
     }
     /**Introduction
     Issues
@@ -238,15 +239,13 @@ class ProductController extends Controller
             );
         }
     }
-
-
-    public function updateFeaturedStatus($id)
+ public function updateProductType(UpdateProductTypeRequest $request,$id)
     {
 
         try {
-
-            $data['updated_by'] = auth()->guard($this->guard)->id();
-            $updated = $this->productRepository->updateFeaturedStatus($id);
+            $data=$request->validated();
+            $data['vendor_id'] = auth()->guard($this->guard)->id();
+            $updated = $this->productRepository->updateProductType($id, $data);
             if ($updated) {
                 return $this->messageResponse(
                     __("app.products.updated-successfully"),

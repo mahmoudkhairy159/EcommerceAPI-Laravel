@@ -23,6 +23,7 @@
         "mindscms/laravelshoppingcart": "^2.1",
         "prettus/l5-repository": "^2.9",
         "santigarcor/laratrust": "^8.2",
+        "spatie/enum": "^3.13",
         "spatie/laravel-backup": "^8.4",
         "spatie/laravel-medialibrary": "^10.15",
         "srmklive/paypal": "~3.0",

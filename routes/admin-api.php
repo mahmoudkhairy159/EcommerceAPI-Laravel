@@ -150,11 +150,11 @@ Route::name('admin-api.')->group(function () {
         Route::get('/{id}/statistics', 'getStatisticsById')->name('getStatisticsById');
         Route::get('/low-quantity-alert-products-count', 'getLowQuantityAlertProductsCount')->name('getLowQuantityAlertProductsCount');
         Route::get('/{id}/favorite-customers-count', 'getFavoriteCustomersCountByProductId')->name('getFavoriteCustomersCountByProductId');
-        Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
-        Route::post('/{id}/change-approval-status', 'changeApprovalStatus')->name('changeApprovalStatus');
-        Route::post('/{id}/update-featured-status', 'updateFeaturedStatus')->name('updateFeaturedStatus');
+        Route::put('/{id}/change-status', 'changeStatus')->name('changeStatus');
+        Route::put('/{id}/change-approval-status', 'changeApprovalStatus')->name('changeApprovalStatus');
+        Route::put('/{id}/update-product-type', 'updateProductType')->name('updateProductType');
         Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
-        Route::post('/{id}/delete-image', 'deleteImage')->name('deleteImage');
+        Route::delete('/{id}/delete-image', 'deleteImage')->name('deleteImage');
     });
     Route::apiResource('products', ProductController::class);
     // products routes

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProductTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -42,9 +43,8 @@ return new class extends Migration {
             $table->longText("long_description")->nullable();
             $table->longText("return_policy")->nullable();
 
-            $table->boolean('is_featured')->default(0);
-            $table->boolean('is_top')->default(0);
-            $table->boolean('is_best')->default(0);
+            $table->enum('product_type',ProductTypeEnum::getConstants())->nullable();
+
             $table->tinyInteger('approval_status')->default(0);
 
             $table->unsignedBigInteger('created_by')->nullable();
