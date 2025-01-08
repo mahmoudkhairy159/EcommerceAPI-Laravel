@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductAccessoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\ProductVariantItemController;
 use App\Http\Controllers\Admin\RelatedProductController;
 use App\Http\Controllers\Admin\RelatedServiceController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -55,11 +57,11 @@ Route::name('admin-api.')->group(function () {
     Route::controller(PermissionController::class)->name('permissions.')->prefix('/permissions')->group(function () {
         Route::get('/', 'index')->name('index');
     });
-// Permissions routes
+    // Permissions routes
 
-// Roles routes
+    // Roles routes
     Route::apiResource('roles', RoleController::class);
-// Roles routes
+    // Roles routes
 
     // Admins routes
     Route::apiResource('admins', AdminController::class);
@@ -75,9 +77,9 @@ Route::name('admin-api.')->group(function () {
     // SETTINGS
     Route::controller(SettingController::class)->name('settings.')
         ->prefix('settings')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::put('/update', 'update')->name('update');
-    });
+            Route::get('', 'index')->name('index');
+            Route::put('/update', 'update')->name('update');
+        });
     // SETTINGS
     //brands routes
     /***********Trashed brands SoftDeletes**************/
@@ -137,8 +139,8 @@ Route::name('admin-api.')->group(function () {
     //categories routes
 
     // products routes
-      /***********Trashed products SoftDeletes**************/
-      Route::controller(ProductController::class)->prefix('products')->as('products.')->group(function () {
+    /***********Trashed products SoftDeletes**************/
+    Route::controller(ProductController::class)->prefix('products')->as('products.')->group(function () {
         Route::get('trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
         Route::delete('force-delete/{id}', 'forceDelete')->name('forceDelete');
         Route::post('restore/{id}', 'restore')->name('restore');
@@ -165,12 +167,24 @@ Route::name('admin-api.')->group(function () {
     });
     Route::apiResource('product-images', ProductImageController::class)->except(['index']);
     // product-images routes
+    // product-variants routes
+    Route::controller(ProductVariantController::class)->prefix('product-variants')->as('product-variants.')->group(function () {
+        Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
+    });
+    Route::apiResource('product-variants', ProductVariantController::class)->except(['index']);
+    // product-variants routes
+    // product-variant-items routes
+    Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
+        Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
+    });
+    Route::apiResource('product-variant-items', ProductVariantController::class)->except(['index']);
+    // product-variant-items routes
     // brand-images routes
     Route::controller(BrandImageController::class)->prefix('brand-images')->as('brand-images.')->group(function () {
         Route::get('/brand/{id}', 'getByBrandId')->name('getByBrandId');
     });
     Route::apiResource('brand-images', BrandImageController::class)->except(['index']);
-// brand-images routes
+    // brand-images routes
     // product-accessories routes
     Route::controller(ProductAccessoryController::class)->prefix('product-accessories')->as('related-products.')->group(function () {
         Route::get('/product/{id}', 'getProductAccessories')->name('getProductAccessories');
@@ -209,16 +223,16 @@ Route::name('admin-api.')->group(function () {
         Route::put('/{id}/change-status', 'changeStatus')->name('changeStatus');
     });
     Route::apiResource('orders', OrderController::class);
-// orders routes
+    // orders routes
 
-//order-products
+    //order-products
     Route::controller(OrderProductController::class)->prefix('order-products')->as('order-products.')->group(function () {
         Route::get('/order/{id}', 'getByOrderId')->name('getByOrderId');
     });
     Route::apiResource('order-products', OrderProductController::class)->except(['index']);
-//order-products
+    //order-products
 
-// reviews routes
+    // reviews routes
     /***********Trashed reviews SoftDeletes**************/
     Route::controller(ReviewController::class)->prefix('reviews')->as('reviews.')->group(function () {
         Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
@@ -246,37 +260,37 @@ Route::name('admin-api.')->group(function () {
     //Contact Messages EndPoint
 //Pages
     Route::apiResource('pages', PageController::class)->only(['index', 'show', 'update']);
-//Pages
+    //Pages
 //page sections routes
     Route::controller(PageSectionController::class)->prefix('page-sections')->name('page-sections.')->group(function () {
         Route::get('/{page_id}', 'index')->name('index');
     });
     Route::apiResource('page-sections', PageSectionController::class)->except(['index']);
-//page sections routes
+    //page sections routes
 
-//assets
+    //assets
     Route::controller(AssetController::class)->prefix('assets')->name('assets.')->group(function () {
         Route::get('/page/{page_id}', 'index')->name('index');
         Route::put('/{asset_name}', 'update')->name('update');
     });
-//assets
+    //assets
     //hero-sliders
     Route::apiResource('hero-sliders', HeroSliderController::class);
     //hero-sliders
 //banners
     Route::apiResource('banners', BannerController::class);
-//bannerss
+    //bannerss
 //mails
     Route::controller(MailController::class)->prefix('mails')->name('mails.')->group(function () {
         Route::post('/send', 'send')->name('send');
     });
-//mails
+    //mails
 
-// vendors routes
-Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
-    Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
-    Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
-});
-Route::apiResource('vendors', VendorController::class);
-// vendors routes
+    // vendors routes
+    Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
+        Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
+        Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
+    });
+    Route::apiResource('vendors', VendorController::class);
+    // vendors routes
 });

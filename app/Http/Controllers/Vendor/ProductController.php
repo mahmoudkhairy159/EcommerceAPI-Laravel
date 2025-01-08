@@ -216,7 +216,7 @@ class ProductController extends Controller
 
         try {
 
-            $data['updated_by'] = auth()->guard($this->guard)->id();
+            $data['vendor_id'] = auth()->guard($this->guard)->id();
             $updated = $this->productRepository->changeStatus($id);
             if ($updated) {
                 return $this->messageResponse(
@@ -273,7 +273,7 @@ class ProductController extends Controller
         try {
 
             $data = $request->validated();
-            $data['updated_by'] = auth()->guard($this->guard)->id();
+            $data['vendor_id'] = auth()->guard($this->guard)->id();
             $updated = $this->productRepository->updateSerial($data, $id);
             if ($updated) {
                 return $this->messageResponse(

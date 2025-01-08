@@ -24,6 +24,8 @@ use App\Http\Controllers\Api\PageSectionController;
 use App\Http\Controllers\Api\ProductAccessoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductImageController;
+use App\Http\Controllers\Api\ProductVariantController;
+use App\Http\Controllers\Api\ProductVariantItemController;
 use App\Http\Controllers\Api\RelatedProductController;
 use App\Http\Controllers\Api\RelatedServiceController;
 use App\Http\Controllers\Api\ReviewController;
@@ -148,6 +150,19 @@ Route::name('user-api.')->group(function () {
     });
     Route::apiResource('product-images', ProductImageController::class)->only(['show']);
     // product-images routes
+    // product-variants routes
+    Route::controller(ProductVariantController::class)->prefix('product-variants')->as('product-variants.')->group(function () {
+        Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
+    });
+    Route::apiResource('product-variants', ProductVariantController::class)->only(['show']);
+    // product-variants routes
+
+     // product-variant-items routes
+     Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
+        Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
+    });
+    Route::apiResource('product-variant-items', ProductVariantItemController::class)->only(['show']);
+    // product-variant-items routes
     // brand-images routes
     Route::controller(BrandImageController::class)->prefix('brand-images')->as('brand-images.')->group(function () {
         Route::get('/brand/{id}', 'getByBrandId')->name('getByBrandId');

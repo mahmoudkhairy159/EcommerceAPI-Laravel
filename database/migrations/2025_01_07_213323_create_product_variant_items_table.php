@@ -8,33 +8,30 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('product_images', function (Blueprint $table) {
+        Schema::create('product_variant_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("product_id");
-            $table->foreign("product_id")->references("id")->on("products")->onDelete("cascade");
-            $table->string("image");
-            $table->bigInteger('serial')->default(1); //
+            $table->unsignedBigInteger('product_variant_id');
+            $table->foreign('product_variant_id')->references('id')->on('product_variants')->onDelete('cascade');
+            $table->string('name');
+            $table->double("price", 10, 2)->default(0); //set 0 if it is free price
+            $table->boolean('is_default')->default(1); //
+            $table->boolean('status')->default(1); //
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
 
             $table->foreign('created_by')->references('id')->on('admins')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('admins')->onDelete('set null');
-
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('product_images');
+        Schema::dropIfExists('product_variant_items');
     }
 };

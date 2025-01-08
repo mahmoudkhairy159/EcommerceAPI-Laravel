@@ -84,13 +84,13 @@ class ProductRepository extends BaseRepository
     public function findBySlug(string $slug)
     {
         return $this->model->where('slug', $slug)
-            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants','productImages', 'services', 'relatedProducts', 'accessories'])
             ->first();
     }
     public function getOneById(string $id)
     {
         return $this->model->where('id', $id)
-            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants','productImages', 'services', 'relatedProducts', 'accessories'])
             ->first();
     }
 
@@ -99,7 +99,7 @@ class ProductRepository extends BaseRepository
 
         return $this->model
             ->where('slug', $slug)
-            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants','productImages', 'services', 'relatedProducts', 'accessories'])
             ->where('status', Product::STATUS_ACTIVE)
             ->where('approval_status', Product::APPROVAL_APPROVED)
             ->first();
@@ -109,7 +109,7 @@ class ProductRepository extends BaseRepository
 
         return $this->model
             ->where('id', $id)
-            ->with(['vendor', 'category', 'brand', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand','productVariants', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->where('status', Product::STATUS_ACTIVE)
             ->where('approval_status', Product::APPROVAL_APPROVED)
             ->first();

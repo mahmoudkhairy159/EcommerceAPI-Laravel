@@ -153,6 +153,7 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
+
             $data = $this->productRepository->getOneById($id);
             return $this->successResponse(new ProductResource($data));
         } catch (Exception $e) {

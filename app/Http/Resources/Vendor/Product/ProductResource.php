@@ -5,6 +5,7 @@ namespace App\Http\Resources\Vendor\Product;
 use App\Http\Resources\Vendor\Brand\BrandResource;
 use App\Http\Resources\Vendor\Category\CategoryResource;
 use App\Http\Resources\Vendor\ProductImage\ProductImageResource;
+use App\Http\Resources\Vendor\ProductVariant\ProductVariantResource;
 use App\Http\Resources\Vendor\Service\ServiceResource;
 use App\Http\Resources\Vendor\Vendor\VendorResource;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -49,6 +50,7 @@ class ProductResource extends JsonResource
             'brand' => new BrandResource($this->whenLoaded('brand')),
             'services' => ServiceResource::collection($this->whenLoaded('services')),
             'product_images' => ProductImageResource::collection($this->whenLoaded('productImages')),
+            'product_variants' => ProductVariantResource::collection($this->whenLoaded('productVariants')),
             'related_products' => ProductResource::collection($this->whenLoaded('relatedProducts')),
             'accessories' => ProductResource::collection($this->whenLoaded('accessories')),
         ];

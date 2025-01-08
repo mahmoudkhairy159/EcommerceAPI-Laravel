@@ -5,6 +5,9 @@ use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\Auth\AuthController;
 use App\Http\Controllers\Vendor\BrandController;
 use App\Http\Controllers\Vendor\CategoryController;
+use App\Http\Controllers\Vendor\ProductImageController;
+use App\Http\Controllers\Vendor\ProductVariantController;
+use App\Http\Controllers\Vendor\ProductVariantItemController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -72,7 +75,24 @@ Route::name('vendor-api.')->group(function () {
     });
     Route::apiResource('products', ProductController::class);
     // products routes
-
+ // product-images routes
+ Route::controller(ProductImageController::class)->prefix('product-images')->as('product-images.')->group(function () {
+    Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
+});
+Route::apiResource('product-images', ProductImageController::class)->except(['index']);
+// product-images routes
+ // product-variants routes
+ Route::controller(ProductVariantController::class)->prefix('product-variants')->as('product-variants.')->group(function () {
+    Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
+});
+Route::apiResource('product-variants', ProductVariantController::class)->except(['index']);
+// product-variants routes
+  // product-variant-items routes
+  Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
+    Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
+});
+Route::apiResource('product-variant-items', ProductVariantItemController::class)->except(['index']);
+// product-variant-items routes
 
 
 
