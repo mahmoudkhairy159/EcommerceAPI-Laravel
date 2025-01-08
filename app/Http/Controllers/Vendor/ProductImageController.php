@@ -11,22 +11,30 @@ use App\Http\Requests\Vendor\ProductImage\StoreProductImageRequest;
 use App\Http\Requests\Vendor\ProductImage\UpdateProductImageRequest;
 use App\Http\Resources\Vendor\ProductImage\ProductImageCollection;
 use App\Http\Resources\Vendor\ProductImage\ProductImageResource;
+use App\Repositories\ProductRepository;
 
 class ProductImageController extends Controller
 {
     use ApiResponseTrait;
     protected $productImageRepository;
+    protected $productRepository;
     protected $_config;
     protected $guard;
-    public function __construct(ProductImageRepository $productImageRepository)
+    public function __construct(ProductImageRepository $productImageRepository,ProductRepository $productRepository)
     {
         $this->guard = 'vendor-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->productImageRepository = $productImageRepository;
+        $this->productRepository = $productRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
+        $this->middleware('checkVendorProductOwnership')->only([
+            'getByProductId',
+            'store',
+            'update',
+        ]);
 
     }
     /**Introduction
@@ -138,6 +146,14 @@ class ProductImageController extends Controller
     public function destroy($id)
     {
         try {
+            $isOwner=$this->productRepository->checkProductOwnership($id,'productImages');
+            if (!$isOwner) {
+                return $this->errorResponse(
+                    [],
+                    __("Unauthorized"),
+                    403
+                );
+            }
             $deleted = $this->productImageRepository->deleteOne($id);
             if ($deleted) {
                 return $this->messageResponse(
@@ -154,7 +170,7 @@ class ProductImageController extends Controller
             }
         } catch (Exception $e) {
             return $this->errorResponse(
-                [],
+                [$e->getMessage()],
                 __('app.something-went-wrong'),
                 500
             );

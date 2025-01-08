@@ -11,20 +11,24 @@ use App\Http\Requests\Vendor\ProductVariantItem\StoreProductVariantItemRequest;
 use App\Http\Requests\Vendor\ProductVariantItem\UpdateProductVariantItemRequest;
 use App\Http\Resources\Vendor\ProductVariantItem\ProductVariantItemCollection;
 use App\Http\Resources\Vendor\ProductVariantItem\ProductVariantItemResource;
+use App\Repositories\ProductRepository;
+use App\Repositories\ProductVariantRepository;
 
 class ProductVariantItemController extends Controller
 {
     use ApiResponseTrait;
     protected $productVariantItemRepository;
+    protected $productRepository;
     protected $_config;
     protected $guard;
-    public function __construct(ProductVariantItemRepository $productVariantItemRepository)
+    public function __construct(ProductVariantItemRepository $productVariantItemRepository,ProductRepository $productRepository)
     {
         $this->guard = 'vendor-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->productVariantItemRepository = $productVariantItemRepository;
+        $this->productRepository = $productRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
     }
@@ -59,6 +63,14 @@ class ProductVariantItemController extends Controller
     public function store(StoreProductVariantItemRequest $request)
     {
         try {
+            $isOwner=$this->productRepository->checkProductOwnership($request->product_variant_id,'productVariants');
+            if (!$isOwner) {
+                return $this->errorResponse(
+                    [],
+                    __("Unauthorized"),
+                    403
+                );
+            }
             $data =  $request->validated();
             $created = $this->productVariantItemRepository->createOne($data);
 
@@ -108,7 +120,14 @@ class ProductVariantItemController extends Controller
     public function update(UpdateProductVariantItemRequest $request, $id)
     {
         try {
-
+            $isOwner=$this->productVariantItemRepository->checkProductOwnership($id);
+            if (!$isOwner) {
+                return $this->errorResponse(
+                    [],
+                    __("Unauthorized"),
+                    403
+                );
+            }
             $data =  $request->validated();
             $updated = $this->productVariantItemRepository->updateOne($data, $id);
             if ($updated) {
@@ -139,6 +158,14 @@ class ProductVariantItemController extends Controller
     public function destroy($id)
     {
         try {
+            $isOwner=$this->productVariantItemRepository->checkProductOwnership($id);
+            if (!$isOwner) {
+                return $this->errorResponse(
+                    [],
+                    __("Unauthorized"),
+                    403
+                );
+            }
             $deleted = $this->productVariantItemRepository->deleteOne($id);
             if ($deleted) {
                 return $this->messageResponse(

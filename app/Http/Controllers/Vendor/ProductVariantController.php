@@ -5,28 +5,36 @@ namespace App\Http\Controllers\Vendor;
 use Exception;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Vendor\ProductVariant\StoreProductVariantRequest;
+use App\Http\Requests\Vendor\ProductVariant\UpdateProductVariantRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\ProductVariantRepository;
-use App\Http\Requests\Vendor\ProductVariantItem\StoreProductVariantItemRequest;
-use App\Http\Requests\Vendor\ProductVariantItem\UpdateProductVariantItemRequest;
 use App\Http\Resources\Vendor\ProductVariant\ProductVariantCollection;
 use App\Http\Resources\Vendor\ProductVariant\ProductVariantResource;
+use App\Repositories\ProductRepository;
 
 class ProductVariantController extends Controller
 {
     use ApiResponseTrait;
     protected $productVariantRepository;
+    protected $productRepository;
     protected $_config;
     protected $guard;
-    public function __construct(ProductVariantRepository $productVariantRepository)
+    public function __construct(ProductVariantRepository $productVariantRepository,ProductRepository $productRepository)
     {
         $this->guard = 'vendor-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->productVariantRepository = $productVariantRepository;
+        $this->productRepository = $productRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
+        $this->middleware('checkVendorProductOwnership')->only([
+            'getByProductId',
+            'store',
+            'update',
+        ]);
 
     }
     /**Introduction
@@ -55,7 +63,7 @@ class ProductVariantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductVariantItemRequest $request)
+    public function store(StoreProductVariantRequest $request)
     {
         try {
             $data =  $request->validated();
@@ -104,7 +112,7 @@ class ProductVariantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductVariantItemRequest $request, $id)
+    public function update(UpdateProductVariantRequest $request, $id)
     {
         try {
 
@@ -138,6 +146,15 @@ class ProductVariantController extends Controller
     public function destroy($id)
     {
         try {
+            $isOwner=$this->productRepository->checkProductOwnership($id,'productVariants');
+            if (!$isOwner) {
+                return $this->errorResponse(
+                    [],
+                    __("Unauthorized"),
+                    403
+                );
+            }
+
             $deleted = $this->productVariantRepository->deleteOne($id);
             if ($deleted) {
                 return $this->messageResponse(

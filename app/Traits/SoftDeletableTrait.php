@@ -13,6 +13,7 @@ trait SoftDeletableTrait
             ->filter(request()->all())
             ->orderBy('deleted_at', 'desc');
     }
+   
     public function forceDelete(int $id)
     {
         try {

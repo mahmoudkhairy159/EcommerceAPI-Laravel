@@ -89,4 +89,15 @@ class ProductVariantItemRepository extends BaseRepository
             return false;
         }
     }
+    public function checkProductOwnership($id)
+    {
+        return $this->model
+            ->where('id', $id)  // Check if the product has the given ID
+            ->whereHas('productVariant.product', function ($query) {
+                // Ensure the product's vendor_id matches the authenticated vendor
+                $query->where('vendor_id', auth()->guard('vendor-api')->id());
+            })
+            ->exists();  // Check if the product exists based on the above conditions
+    }
+
 }

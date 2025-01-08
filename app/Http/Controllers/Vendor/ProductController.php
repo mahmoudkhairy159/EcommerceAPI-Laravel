@@ -30,6 +30,20 @@ class ProductController extends Controller
         $this->productRepository = $productRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
+        $this->middleware('checkVendorProductOwnership')->only([
+            'getStatisticsById',
+            'getFavoriteCustomersCountByProductId',
+            'store',
+            'update',
+            'changeStatus',
+            'updateProductType',
+            'updateSerial',
+            'destroy',
+            'deleteImage',
+            'restore',
+            'forceDelete',
+        ]);
+
 
     }
     /**Introduction
@@ -39,10 +53,10 @@ class ProductController extends Controller
 
      * Display a listing of the resource.
      */
-    public function index()
+    public function getAllByVendorId($vendorId)
     {
         try {
-            $data = $this->productRepository->getAll()->paginate();
+            $data = $this->productRepository->getAllByVendorId($vendorId)->paginate();
             return $this->successResponse(new ProductCollection($data));
         } catch (Exception $e) {
             dd($e->getMessage());
@@ -54,10 +68,10 @@ class ProductController extends Controller
         }
     }
 
-    public function getStatistics()
+    public function getStatisticsByVendorId($vendorId)
     {
         try {
-            $data = $this->productRepository->getStatistics();
+            $data = $this->productRepository->getStatisticsByVendorId($vendorId);
             return $this->successResponse($data);
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -352,10 +366,10 @@ class ProductController extends Controller
         }
     }
        /***********Trashed model SoftDeletes**************/
-       public function getOnlyTrashed()
+       public function getOnlyTrashedByVendorId($vendorId)
        {
            try {
-               $data = $this->productRepository->getOnlyTrashed()->paginate();
+               $data = $this->productRepository->getOnlyTrashedByVendorId($vendorId)->paginate();
                return $this->successResponse(new ProductCollection($data));
            } catch (Exception $e) {
                return $this->errorResponse(

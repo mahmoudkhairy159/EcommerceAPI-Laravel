@@ -23,6 +23,13 @@ class ProductRepository extends BaseRepository
             ->filter(request()->all())
             ->orderBy('created_at', 'desc');
     }
+    public function getAllByVendorId($vendorId)
+    {
+        return $this->model
+            ->where('vendor_id', $vendorId)
+            ->filter(request()->all())
+            ->orderBy('created_at', 'desc');
+    }
     public function getStatistics()
     {
         return [
@@ -30,6 +37,14 @@ class ProductRepository extends BaseRepository
             "active_products_count" => $this->model->where('status', Product::STATUS_ACTIVE)->count(),
         ];
     }
+    public function getStatisticsByVendorId($vendorId)
+    {
+        return [
+            "products_count" => $this->model->where('vendor_id', $vendorId)->count(),
+            "active_products_count" => $this->model->where('vendor_id', $vendorId)->where('status', Product::STATUS_ACTIVE)->count(),
+        ];
+    }
+
     public function getStatisticsById($id)
     {
 
@@ -84,13 +99,13 @@ class ProductRepository extends BaseRepository
     public function findBySlug(string $slug)
     {
         return $this->model->where('slug', $slug)
-            ->with(['vendor', 'category', 'brand', 'productVariants','productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->first();
     }
     public function getOneById(string $id)
     {
         return $this->model->where('id', $id)
-            ->with(['vendor', 'category', 'brand', 'productVariants','productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->first();
     }
 
@@ -99,7 +114,7 @@ class ProductRepository extends BaseRepository
 
         return $this->model
             ->where('slug', $slug)
-            ->with(['vendor', 'category', 'brand', 'productVariants','productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->where('status', Product::STATUS_ACTIVE)
             ->where('approval_status', Product::APPROVAL_APPROVED)
             ->first();
@@ -109,7 +124,7 @@ class ProductRepository extends BaseRepository
 
         return $this->model
             ->where('id', $id)
-            ->with(['vendor', 'category', 'brand','productVariants', 'productImages', 'services', 'relatedProducts', 'accessories'])
+            ->with(['vendor', 'category', 'brand', 'productVariants', 'productImages', 'services', 'relatedProducts', 'accessories'])
             ->where('status', Product::STATUS_ACTIVE)
             ->where('approval_status', Product::APPROVAL_APPROVED)
             ->first();
@@ -500,4 +515,22 @@ class ProductRepository extends BaseRepository
         return $product->accessories();
     }
     /*********************************product_accessories***************************************/
+    public function getOnlyTrashedByVendorId($vendorId)
+    {
+        return $this->model
+            ->onlyTrashed()
+            ->where('vendor_id',$vendorId)
+            ->filter(request()->all())
+            ->orderBy('deleted_at', 'desc');
+    }
+    public function checkProductOwnership($id, $relation)
+    {
+        return $this->model
+            ->where('vendor_id', auth()->guard('vendor-api')->id())
+            ->whereHas($relation, function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->exists();
+    }
+
 }

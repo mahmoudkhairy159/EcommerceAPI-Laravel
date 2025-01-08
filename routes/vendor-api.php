@@ -56,14 +56,15 @@ Route::name('vendor-api.')->group(function () {
     // products routes
     /***********Trashed products SoftDeletes**************/
     Route::controller(ProductController::class)->prefix('products')->as('products.')->group(function () {
-        Route::get('trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
-        Route::delete('force-delete/{id}', 'forceDelete')->name('forceDelete');
-        Route::post('restore/{id}', 'restore')->name('restore');
+        Route::get('/trashed/vendor/{id}', 'getOnlyTrashedByVendorId')->name('getOnlyTrashedByVendorId');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
     });
     /***********Trashed products SoftDeletes**************/
     Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
-        Route::get('/statistics', 'getStatistics')->name('getStatistics');
+        Route::get('/vendor/{id}', 'getAllByVendorId')->name('getAllByVendorId');
+        Route::get('/statistics/vendor/{id}', 'getStatisticsByVendorId')->name('getStatisticsByVendorId');
         Route::get('/{id}/statistics', 'getStatisticsById')->name('getStatisticsById');
         Route::get('/low-quantity-alert-products-count', 'getLowQuantityAlertProductsCount')->name('getLowQuantityAlertProductsCount');
         Route::get('/{id}/favorite-customers-count', 'getFavoriteCustomersCountByProductId')->name('getFavoriteCustomersCountByProductId');
@@ -73,7 +74,7 @@ Route::name('vendor-api.')->group(function () {
         Route::put('/{id}/update-serial', 'updateSerial')->name('updateSerial');
         Route::delete('/{id}/delete-image', 'deleteImage')->name('deleteImage');
     });
-    Route::apiResource('products', ProductController::class);
+    Route::apiResource('products', ProductController::class)->except('index');
     // products routes
  // product-images routes
  Route::controller(ProductImageController::class)->prefix('product-images')->as('product-images.')->group(function () {
