@@ -39,8 +39,8 @@ return [
             'pages' => 'r,u,d',
             'hero_sliders' => 'c,r,u,d',
             'banners' => 'c,r,u,d',
-
-
+            'flash_sales' => 'r,u',
+            'flash_sale_Products' => 'c,r,u,d',
         ],
         'user' => [
             'profile' => 'r,u',

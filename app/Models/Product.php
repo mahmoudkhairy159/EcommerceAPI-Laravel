@@ -75,12 +75,12 @@ class Product extends Model
     }
     public function getIsCartedAttribute()
     {
-        return Auth::guard('user-api')->user() ? $this->cartProducts()->where("cart_id", Auth::guard('user-api')->user()->cart->id)->exists() : false;
+        return Auth::guard('user-api')->user() &&Auth::guard('user-api')->user()->cart? $this->cartProducts()->where("cart_id", Auth::guard('user-api')->user()->cart->id)->exists() : false;
     }
 
     public function getIsWishListedAttribute()
     {
-        return Auth::guard('user-api')->user() ? $this->cartProducts()->where("cart_id", Auth::guard('user-api')->user()->cart->id)->exists() : false;
+        return Auth::guard('user-api')->user() &&  Auth::guard('user-api')->user()->wishlist? $this->wishlistItems()->where("wishlist_id", Auth::guard('user-api')->user()->wishlist->id)->exists() : false;
     }
 
     public function modelFilter()
@@ -148,15 +148,19 @@ class Product extends Model
     {
         return $this->hasMany(CartProduct::class);
     }
+    public function flashSaleProduct()
+    {
+        return $this->hasOne(FlashSaleProduct::class);
+    }
 
     public function reviews()
     {
         return $this->morphMany(Review::class, 'reviewable');
     }
 
-    public function wishlists()
+    public function wishlistItems()
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(WishlistItem::class);
     }
 
     /******************* End Relationships *********************/

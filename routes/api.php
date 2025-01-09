@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\BrandImageController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactMessageController;
+use App\Http\Controllers\Api\FlashSaleController;
+use App\Http\Controllers\Api\FlashSaleProductController;
 use App\Http\Controllers\Api\Gateways\PaypalController;
 use App\Http\Controllers\Api\Gateways\StripeController;
 use App\Http\Controllers\Api\HeroSliderController;
@@ -286,5 +288,13 @@ Route::name('user-api.')->group(function () {
     });
     Route::apiResource('vendors', VendorController::class)->only(['index', 'show']);
     //Vendors
+
+        //flash-sales routes
+        Route::controller(FlashSaleProductController::class)->prefix('flash-sale-products')->name('flash-sale-products.')->group(function () {
+            Route::get('/show-at-home', 'getShowAtHome')->name('getShowAtHome');
+        });
+        Route::apiResource('flash-sales', FlashSaleController::class)->only('index');
+        Route::apiResource('flash-sale-products', FlashSaleProductController ::class)->only('index');
+        //flash-sales routes
 
 });

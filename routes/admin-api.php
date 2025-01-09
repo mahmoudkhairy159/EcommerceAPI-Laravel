@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\BrandImageController;
 use App\Http\Controllers\Admin\CartController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\FlashSaleController;
+use App\Http\Controllers\Admin\FlashSaleProductController;
 use App\Http\Controllers\Admin\HeroSliderController;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\OrderController;
@@ -280,7 +282,7 @@ Route::name('admin-api.')->group(function () {
     //hero-sliders
 //banners
     Route::apiResource('banners', BannerController::class);
-    //bannerss
+    //banners
 //mails
     Route::controller(MailController::class)->prefix('mails')->name('mails.')->group(function () {
         Route::post('/send', 'send')->name('send');
@@ -294,4 +296,8 @@ Route::name('admin-api.')->group(function () {
     });
     Route::apiResource('vendors', VendorController::class);
     // vendors routes
+    //flash-sales routes
+    Route::apiResource('flash-sales', FlashSaleController::class)->only('index','update');
+    Route::apiResource('flash-sale-products', FlashSaleProductController ::class)->except('show');
+    //flash-sales routes
 });

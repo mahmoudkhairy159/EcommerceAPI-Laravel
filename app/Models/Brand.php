@@ -19,7 +19,7 @@ class Brand extends Model
         'slug',
         'code',
         'category_id',
-        'image', // Added image1
+        'image', // Added image
         'short_description', // Added short_description
         'long_description', // Added long_description
         'long_description_status', // Added long_description

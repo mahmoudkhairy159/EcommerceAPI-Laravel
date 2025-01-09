@@ -94,7 +94,7 @@ class BrandRepository extends BaseRepository
             DB::beginTransaction();
 
             $model = $this->model->findOrFail($id);
-            if (request()->hasFile('image1')) {
+            if (request()->hasFile('image')) {
                 if ($model->image) {
                     $this->deleteFile($model->image);
                 }
