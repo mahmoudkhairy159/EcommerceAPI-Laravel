@@ -148,6 +148,7 @@ Route::name('admin-api.')->group(function () {
     /***********Trashed products SoftDeletes**************/
     Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
+        Route::get('/pending', 'getAllPendingProducts')->name('getAllPendingProducts');
         Route::get('/statistics', 'getStatistics')->name('getStatistics');
         Route::get('/{id}/statistics', 'getStatisticsById')->name('getStatisticsById');
         Route::get('/low-quantity-alert-products-count', 'getLowQuantityAlertProductsCount')->name('getLowQuantityAlertProductsCount');

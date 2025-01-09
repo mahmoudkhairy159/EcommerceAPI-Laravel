@@ -22,8 +22,7 @@ class ProductVariantItemRepository extends BaseRepository
     {
         return $this->model
             ->where('product_variant_id', $product_variant_id)
-            ->where('status', ProductVariantItem::STATUS_ACTIVE)
-            ->where('is_default', ProductVariantItem::STATUS_ACTIVE);
+            ->where('status', ProductVariantItem::STATUS_ACTIVE);
 
     }
 
@@ -38,7 +37,6 @@ class ProductVariantItemRepository extends BaseRepository
         return $this->model
         ->where('id', $id)
         ->where('status', ProductVariantItem::STATUS_ACTIVE)
-        ->where('is_default', ProductVariantItem::STATUS_ACTIVE)
         ->first();
 
     }

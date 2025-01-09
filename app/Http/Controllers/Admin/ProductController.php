@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\Product\UpdateProductTypeRequest;
 use App\Http\Requests\Admin\Serial\UpdateSerialRequest;
 use App\Http\Resources\Admin\Product\ProductCollection;
 use App\Http\Resources\Admin\Product\ProductResource;
+use App\Models\Product;
 use App\Repositories\ProductRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
@@ -47,6 +48,20 @@ class ProductController extends Controller
     {
         try {
             $data = $this->productRepository->getAll()->paginate();
+            return $this->successResponse(new ProductCollection($data));
+        } catch (Exception $e) {
+            dd($e->getMessage());
+            return $this->errorResponse(
+                [],
+                __('app.something-went-wrong'),
+                500
+            );
+        }
+    }
+    public function getAllPendingProducts()
+    {
+        try {
+            $data = $this->productRepository->getAllByApprovalStatus(Product::APPROVAL_PENDING)->paginate();
             return $this->successResponse(new ProductCollection($data));
         } catch (Exception $e) {
             dd($e->getMessage());

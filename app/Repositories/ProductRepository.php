@@ -23,6 +23,13 @@ class ProductRepository extends BaseRepository
             ->filter(request()->all())
             ->orderBy('created_at', 'desc');
     }
+    public function getAllByApprovalStatus($approvalStatus)
+    {
+        return $this->model
+            ->where('approval_status', $approvalStatus)
+            ->filter(request()->all())
+            ->orderBy('created_at', 'desc');
+    }
     public function getAllByVendorId($vendorId)
     {
         return $this->model
