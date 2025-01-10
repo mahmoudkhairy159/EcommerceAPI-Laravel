@@ -35,7 +35,10 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('logo_light')->nullable();
             $table->enum('pricing_policy',['static', 'dynamic'])->default('static');
-            $table->unsignedInteger('tax_percentage')->default(14); //
+            $table->unsignedInteger(column: 'tax_percentage')->default(14); //
+            $table->string('currency')->nullable();
+            $table->string('timezone')->nullable();
+
             $table->timestamps();
         });
     }

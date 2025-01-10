@@ -37,10 +37,7 @@ class StoreBrandRequest extends FormRequest
                 'string',
                 'max:10000'
             ],
-            'category_id' => [
-                'nullable',
-                'exists:categories,id'
-            ],
+
             'code' => [
                 'nullable',
                 'unique:brands,code'

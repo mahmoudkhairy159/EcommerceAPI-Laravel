@@ -18,7 +18,6 @@ class Brand extends Model
         'name',
         'slug',
         'code',
-        'category_id',
         'image', // Added image
         'short_description', // Added short_description
         'long_description', // Added long_description
@@ -67,13 +66,7 @@ class Brand extends Model
     protected $table = 'brands';
 
     /*******************Relationships********************* */
-    /**
-     * Get the category associated with the brand.
-     */
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+    
     public function products()
     {
 

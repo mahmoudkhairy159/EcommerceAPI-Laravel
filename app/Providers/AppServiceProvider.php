@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Types\CacheKeysType;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
   public function boot()
   {
     //
+    config()->set('app.timezone',core()->getAppSettings()->timezone);
   }
 }

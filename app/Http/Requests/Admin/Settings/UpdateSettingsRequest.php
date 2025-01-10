@@ -41,6 +41,10 @@ class UpdateSettingsRequest extends FormRequest
             'google_recaptcha_api_key' => ['nullable'],
             'tax_percentage' => ['required', 'numeric', 'between:0,100'],
             'pricing_policy' => ['required', 'string', 'in:static,dynamic'],
+            'currency' => ['nullable', 'string'],
+            'timezone' => ['nullable', 'string'],
+
+
         ];
         foreach (core()->getSupportedLanguagesKeys() as $key) {
             if ($key !== '_token' && $key !== '_method' && $key !== 'image' && $key !== 'status') {

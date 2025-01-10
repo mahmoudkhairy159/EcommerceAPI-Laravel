@@ -16,15 +16,12 @@ class BrandSeeder extends Seeder
      */
     public function run()
     {
-         // Ensure you have at least one category and admin to assign to the brand
-         $category = Category::inRandomOrder()->first(); // Randomly pick a category
          $admin = Admin::inRandomOrder()->first(); // Randomly pick an admin for created_by and updated_by
 
          // Creating sample brands
          Brand::create([
              'name' => 'Brand A',
              'slug' => 'brand-a',
-             'category_id' => $category ? $category->id : null,
              'image' => 'https://via.placeholder.com/150', // Placeholder image URL
              'short_description' => 'Short description of Brand A.',
              'long_description' => 'Detailed description of Brand A.',
@@ -41,7 +38,6 @@ class BrandSeeder extends Seeder
          Brand::create([
              'name' => 'Brand B',
              'slug' => 'brand-b',
-             'category_id' => $category ? $category->id : null,
              'image' => 'https://via.placeholder.com/150',
              'short_description' => 'Short description of Brand B.',
              'long_description' => 'Detailed description of Brand B.',
@@ -58,7 +54,6 @@ class BrandSeeder extends Seeder
          Brand::create([
              'name' => 'Brand C',
              'slug' => 'brand-c',
-             'category_id' => $category ? $category->id : null,
              'image' => 'https://via.placeholder.com/150',
              'short_description' => 'Short description of Brand C.',
              'long_description' => 'Detailed description of Brand C.',

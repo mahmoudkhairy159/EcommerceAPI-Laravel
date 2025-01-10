@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Types\CacheKeysType;
 use Illuminate\Support\Facades\DB;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -18,6 +19,10 @@ class Core
     public function getSupportedLanguagesKeys()
     {
         return LaravelLocalization::getSupportedLanguagesKeys();
+    }
+    public function getAppSettings()
+    {
+        return app(CacheKeysType::APP_SETTINGS_CACHE);
     }
 
 

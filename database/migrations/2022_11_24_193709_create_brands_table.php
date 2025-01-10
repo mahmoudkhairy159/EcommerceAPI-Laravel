@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string('slug')->nullable();
-            $table->unsignedBigInteger("category_id")->nullable();
-            $table->foreign("category_id")->references("id")->on("categories")->onDelete("cascade");
             $table->string('image')->nullable();
             $table->text('short_description')->nullable(); // Added short_description
             $table->text('long_description')->nullable(); // Added long_description

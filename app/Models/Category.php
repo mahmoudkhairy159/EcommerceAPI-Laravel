@@ -58,14 +58,7 @@ class Category extends Model
 
     /*******************Relationships********************* */
 
-    /**
-     * Get the brands for the category.
-     */
-    public function brands()
-    {
-        return $this->hasMany(Brand::class);
-    }
-    public function services()
+      public function services()
     {
         return $this->hasMany(Service::class);
     }

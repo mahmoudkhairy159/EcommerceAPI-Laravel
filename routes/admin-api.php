@@ -80,6 +80,8 @@ Route::name('admin-api.')->group(function () {
     Route::controller(SettingController::class)->name('settings.')
         ->prefix('settings')->group(function () {
             Route::get('', 'index')->name('index');
+            Route::get('/currency-list', 'getCurrencyList')->name('getCurrencyList');
+            Route::get('/timezone-list', action: 'getTimezoneList')->name('getTimezoneList');
             Route::put('/update', 'update')->name('update');
         });
     // SETTINGS

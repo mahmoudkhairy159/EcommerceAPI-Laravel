@@ -33,10 +33,7 @@ class UpdateBrandRequest extends FormRequest
                 'required',
                 'in:0,1'
             ],
-            'category_id' => [
-                'nullable',
-                'exists:categories,id'
-            ],
+          
             'code' => [
                 'nullable',
                 'unique:brands,code,' . $this->route('brand')

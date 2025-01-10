@@ -25,18 +25,49 @@ class SettingController extends Controller
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
+        $this->settingsRepository = $settingsRepository;
+
         // permissions
         $this->middleware('auth:' . $this->guard);
-        $this->middleware(['ability:admin,settings-read'])->only(['index']);
+        $this->middleware(['ability:admin,settings-read'])->only(['index','getCurrencyList','getTimezoneList']);
         $this->middleware(['ability:admin,settings-update'])->only(['update']);
 
     }
     public function index()
     {
         try {
+
             $data = $this->settingsRepository->getSettings();
             // return $settings;
             return $this->successResponse(new AppSettingResource($data));
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [$e->getMessage()],
+                __('app.something-went-wrong'),
+                500
+            );
+        }
+    }
+    public function getCurrencyList()
+    {
+        try {
+            $data = config('settings.currency_list');
+            // return $settings;
+            return $this->successResponse($data);
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [$e->getMessage()],
+                __('app.something-went-wrong'),
+                500
+            );
+        }
+    }
+    public function getTimezoneList()
+    {
+        try {
+            $data = config('settings.timezone_list');
+            // return $settings;
+            return $this->successResponse($data);
         } catch (Exception $e) {
             return $this->errorResponse(
                 [$e->getMessage()],

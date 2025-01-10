@@ -25,4 +25,5 @@ class AppSettingsController extends Controller
             );
         }
     }
+    
 }

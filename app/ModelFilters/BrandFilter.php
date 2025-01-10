@@ -19,21 +19,9 @@ class BrandFilter extends ModelFilter
             return $q->where('code', $code);
         });
     }
-    public function categoryId($categoryId)
-    {
-        return $this->where(function ($q) use ($categoryId) {
-            return $q->where('category_id', $categoryId);
-        });
-    }
+
+
    
-    public function categoryName($categoryName)
-    {
-        return $this->where(function ($q) use ($categoryName) {
-            return $q->whereHas("category", function ($q) use ($categoryName) {
-                return $q->where("name", "like", "%" . $categoryName . "%");
-            });
-        });
-    }
     public function status($status)
     {
         return $this->where(function ($q) use ($status) {

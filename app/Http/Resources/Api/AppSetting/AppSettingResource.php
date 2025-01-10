@@ -43,6 +43,8 @@ class AppSettingResource extends JsonResource
             'logo_url' => $this->logo_url,
             'logo_light_url' => $this->logo_light_url,
             'address' => $this->address,
+            'timezone' => $this->timezone,
+            'currency' => $this->currency,
             "supported_languages" => core()->getSupportedLocales(),
             "app_direction" => core()->getCurrentLocaleDirection(),
             // 'translations' => $this->translations,
