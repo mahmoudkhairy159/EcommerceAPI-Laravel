@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\ShippingRuleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\WishlistController;
@@ -310,4 +311,11 @@ Route::name('admin-api.')->group(function () {
     });
     Route::apiResource('coupons', CouponController::class);
     //coupons routes
+
+     //shipping-rules routes
+     Route::controller(ShippingRuleController::class)->prefix('shipping-rules')->name('shipping-rules.')->group(function () {
+        Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
+    });
+    Route::apiResource('shipping-rules', ShippingRuleController::class);
+    //shipping-rules routes
 });

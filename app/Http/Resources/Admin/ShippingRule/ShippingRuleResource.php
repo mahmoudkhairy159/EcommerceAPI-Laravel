@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Admin\Coupon;
+namespace App\Http\Resources\Admin\ShippingRule;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CouponResource extends JsonResource
+class ShippingRuleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,13 +14,9 @@ class CouponResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'code' => $this->code,
-            'quantity' => $this->quantity,
-            'max_use' => $this->max_use,
-            'start_date' => $this->start_date,
-            'end_date' => $this->end_date ,
-            'discount_type' => $this->discount_type,
-            'discount' => $this->discount,
+            'type' => $this->type,
+            'min_cost' => $this->min_cost,
+            'cost' => $this->cost,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

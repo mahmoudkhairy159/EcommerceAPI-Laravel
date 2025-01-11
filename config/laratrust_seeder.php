@@ -42,7 +42,7 @@ return [
             'flash_sales' => 'r,u',
             'flash_sale_Products' => 'c,r,u,d',
             'coupons' => 'c,r,u,d',
-
+            'shipping_rules' => 'c,r,u,d',
 
         ],
         'user' => [
