@@ -41,6 +41,9 @@ return [
             'banners' => 'c,r,u,d',
             'flash_sales' => 'r,u',
             'flash_sale_Products' => 'c,r,u,d',
+            'coupons' => 'c,r,u,d',
+
+
         ],
         'user' => [
             'profile' => 'r,u',

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BrandImageController;
 use App\Http\Controllers\Admin\CartController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FlashSaleController;
 use App\Http\Controllers\Admin\FlashSaleProductController;
 use App\Http\Controllers\Admin\HeroSliderController;
@@ -302,4 +303,11 @@ Route::name('admin-api.')->group(function () {
     Route::apiResource('flash-sales', FlashSaleController::class)->only('index','update');
     Route::apiResource('flash-sale-products', FlashSaleProductController ::class)->except('show');
     //flash-sales routes
+
+     //coupons routes
+    Route::controller(CouponController::class)->prefix('coupons')->name('coupons.')->group(function () {
+        Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
+    });
+    Route::apiResource('coupons', CouponController::class);
+    //coupons routes
 });
