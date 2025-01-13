@@ -39,14 +39,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array<int, string>
      */
     protected $guarded = [];
-//status
+    //status
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
-//status
+    //status
 //active
     const ACTIVE = 1;
     const INACTIVE = 0;
-//active
+    //active
     public function modelFilter()
     {
         return $this->provideFilter(UserFilter::class);
@@ -101,9 +101,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     /*******************relationships********************/
     public function linkedSocialAccounts()
-{
-    return $this->hasOne(LinkedSocialAccount::class);
-}
+    {
+        return $this->hasOne(LinkedSocialAccount::class);
+    }
     public function profile()
     {
         return $this->hasOne(UserProfile::class, 'user_id');
@@ -111,5 +111,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function cart()
     {
         return $this->hasOne(Cart::class);
+    }
+    public function wishlist()
+    {
+        return $this->hasOne(Wishlist::class);
+    }
+    public function userAddresses()
+    {
+        return $this->hasMany(userAddress::class);
     }
 }

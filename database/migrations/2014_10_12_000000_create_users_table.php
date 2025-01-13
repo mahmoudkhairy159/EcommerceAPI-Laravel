@@ -21,11 +21,7 @@ return new class extends Migration {
             $table->boolean('status')->default(1);
             $table->boolean('active')->default(1);
             $table->boolean('blocked')->default(0);
-            $table->string('address')->nullable();
-            // $table->foreignId('country_id')->nullable();
-            // $table->foreign('country_id')->references('id')->on('countries');
-            // $table->foreignId('city_id')->nullable();
-            // $table->foreign('city_id')->references('id')->on('cities');
+
             $table->timestamp('password_updated_at')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

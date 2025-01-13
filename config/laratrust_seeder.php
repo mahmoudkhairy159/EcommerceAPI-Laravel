@@ -43,7 +43,7 @@ return [
             'flash_sale_Products' => 'c,r,u,d',
             'coupons' => 'c,r,u,d',
             'shipping_rules' => 'c,r,u,d',
-
+            'user_addresses' => 'c,r,u,d',
         ],
         'user' => [
             'profile' => 'r,u',

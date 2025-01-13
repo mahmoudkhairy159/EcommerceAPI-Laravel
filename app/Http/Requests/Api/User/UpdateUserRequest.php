@@ -16,11 +16,9 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:3', 'max:256'],
-            'address' => ['nullable', 'string', 'min:3', 'max:256'],
             'email' => ['required', 'email', 'unique:users,email,' . auth()->id()],
             'phone' => ['nullable', 'unique:users,phone,' . auth()->id()],
-            // 'country_id' => ['nullable', 'exists:countries,id'],
-            // 'city_id' => ['nullable', 'exists:cities,id'],
+
             //userProfile
             'gender' => ['nullable', 'string', Rule::in(['Male', 'Female', 'Non-binary', 'Prefer not to say'])],
             'birth_date' => ['nullable', 'date'],

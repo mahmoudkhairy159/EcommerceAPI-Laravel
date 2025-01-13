@@ -13,7 +13,9 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\BrandImageController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\ContactMessageController;
+use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\FlashSaleController;
 use App\Http\Controllers\Api\FlashSaleProductController;
 use App\Http\Controllers\Api\Gateways\PaypalController;
@@ -32,6 +34,8 @@ use App\Http\Controllers\Api\RelatedProductController;
 use App\Http\Controllers\Api\RelatedServiceController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\StateController;
+use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VendorController;
 use App\Http\Controllers\Api\WishlistController;
@@ -159,8 +163,8 @@ Route::name('user-api.')->group(function () {
     Route::apiResource('product-variants', ProductVariantController::class)->only(['show']);
     // product-variants routes
 
-     // product-variant-items routes
-     Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
+    // product-variant-items routes
+    Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
         Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
     });
     Route::apiResource('product-variant-items', ProductVariantItemController::class)->only(['show']);
@@ -192,16 +196,16 @@ Route::name('user-api.')->group(function () {
         ->prefix('carts')
         ->group(function () {
             // Display the cart
-            Route::get('/', 'viewCart')->name('view');
+            Route::get('/products-cart', 'viewCart')->name('view');
 
             // Add a product to the cart
-            Route::post('/products', 'addToCart')->name('add');
+            Route::post('/products-cart', 'addToCart')->name('add');
 
             // Update the quantity of a specific product in the cart
-            Route::put('/products/{productId}', 'updateProductQuantity')->name('update');
+            Route::put('/products-cart/{id}', 'updateProductCart')->name('update');
 
             // Remove a specific product from the cart
-            Route::delete('/products/{productId}', 'removeFromCart')->name('remove');
+            Route::delete('/products-cart/{id}', 'removeFromCart')->name('remove');
 
             // Clear the entire cart
             Route::delete('/clear', 'clearCart')->name('clear');
@@ -261,27 +265,27 @@ Route::name('user-api.')->group(function () {
 
     //paypal payment gateway
     Route::controller(PaypalController::class)->prefix('paypal')->as('paypal.')->group(function () {
-        Route::post('/create-payment',  'createPayment')->name('createPayment');
-        Route::post('/capture-payment',  'capturePayment')->name('capturePayment');
+        Route::post('/create-payment', 'createPayment')->name('createPayment');
+        Route::post('/capture-payment', 'capturePayment')->name('capturePayment');
         Route::get('/success', 'success')->name('success');
-        Route::get('/cancel',  'cancel')->name('cancel');
+        Route::get('/cancel', 'cancel')->name('cancel');
 
 
     });
-     //end paypal payment gateway
+    //end paypal payment gateway
 
-       //stripe payment gateway
+    //stripe payment gateway
     Route::controller(StripeController::class)->prefix('stripe')->as('stripe.')->group(function () {
-        Route::post('/create-payment',  'createPayment')->name('createPayment');
-        Route::post('/capture-payment',  'capturePayment')->name('capturePayment');
+        Route::post('/create-payment', 'createPayment')->name('createPayment');
+        Route::post('/capture-payment', 'capturePayment')->name('capturePayment');
         Route::get('/success', 'success')->name('success');
-        Route::get('/cancel',  'cancel')->name('cancel');
+        Route::get('/cancel', 'cancel')->name('cancel');
 
 
     });
-     //end stripe payment gateway
+    //end stripe payment gateway
 
-      //Vendors
+    //Vendors
     Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::get('/featured', 'getFeatured')->name('getFeatured');
@@ -289,12 +293,36 @@ Route::name('user-api.')->group(function () {
     Route::apiResource('vendors', VendorController::class)->only(['index', 'show']);
     //Vendors
 
-        //flash-sales routes
-        Route::controller(FlashSaleProductController::class)->prefix('flash-sale-products')->name('flash-sale-products.')->group(function () {
-            Route::get('/show-at-home', 'getShowAtHome')->name('getShowAtHome');
-        });
-        Route::apiResource('flash-sales', FlashSaleController::class)->only('index');
-        Route::apiResource('flash-sale-products', FlashSaleProductController ::class)->only('index');
-        //flash-sales routes
+    //flash-sales routes
+    Route::controller(FlashSaleProductController::class)->prefix('flash-sale-products')->name('flash-sale-products.')->group(function () {
+        Route::get('/show-at-home', 'getShowAtHome')->name('getShowAtHome');
+    });
+    Route::apiResource('flash-sales', FlashSaleController::class)->only('index');
+    Route::apiResource('flash-sale-products', FlashSaleProductController::class)->only('index');
+    //flash-sales routes
+
+
+    // Countries routes
+    Route::apiResource('countries', CountryController::class)->only(['index', 'show']);
+    // Countries routes
+
+
+    // States routes
+    Route::controller(StateController::class)->name('states.')->prefix('/states')->group(function () {
+        Route::get('/country/{country_id}', 'getByCountryId')->name('getByCountryId');
+        Route::get('/{id}', 'show')->name('show');
+    });
+    // States routes
+
+
+    // cities routes
+    Route::controller(CityController::class)->name('cities.')->prefix('/cities')->group(function () {
+        Route::get('/country/{country_id}', 'getByCountryId')->name('getByCountryId');
+        Route::get('/{id}', 'show')->name('show');
+    });
+    // cities routes
+    //user-addresses
+    Route::apiResource('user-addresses', UserAddressController::class);
+    //user-addresses
 
 });

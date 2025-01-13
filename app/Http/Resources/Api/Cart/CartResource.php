@@ -23,5 +23,6 @@ class CartResource extends JsonResource
             'updated_at' => $this->updated_at,
             'items' => CartProductResource::collection($this->whenLoaded('products')),
 
-        ];}
+        ];
+    }
 }

@@ -157,7 +157,7 @@ return [
     'url' => 'The :attribute field must be a valid URL.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
-
+    'quantity_exceeded' => 'The requested quantity must not exceed the available stock of :quantity.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -170,6 +170,7 @@ return [
     */
 
     'custom' => [
+
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],

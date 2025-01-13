@@ -17,12 +17,10 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'min:3', 'max:256'],
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['required', 'alpha_num', 'between:11,13', 'unique:users,phone'],
-            'address' => ['nullable', 'string', 'min:3', 'max:256'],
             'status' => ['required', 'in:1,0'],
             'blocked' => ['required', 'in:1,0'],
 
-            // 'country_id' => ['nullable', 'exists:countries,id'],
-            // 'city_id' => ['nullable', 'exists:cities,id'],
+            
             'password' => ['required', 'string', 'min:3', 'max:256', 'confirmed'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10000'],
             //userProfile

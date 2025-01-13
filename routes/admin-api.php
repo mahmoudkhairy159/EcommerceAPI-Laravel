@@ -8,7 +8,9 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BrandImageController;
 use App\Http\Controllers\Admin\CartController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\FlashSaleController;
 use App\Http\Controllers\Admin\FlashSaleProductController;
@@ -31,6 +33,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShippingRuleController;
+use App\Http\Controllers\Admin\StateController;
+use App\Http\Controllers\Admin\UserAddressController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\WishlistController;
@@ -184,7 +188,7 @@ Route::name('admin-api.')->group(function () {
     Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
         Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
     });
-    Route::apiResource('product-variant-items', ProductVariantController::class)->except(['index']);
+    Route::apiResource('product-variant-items', ProductVariantItemController::class)->except(['index']);
     // product-variant-items routes
     // brand-images routes
     Route::controller(BrandImageController::class)->prefix('brand-images')->as('brand-images.')->group(function () {
@@ -217,11 +221,7 @@ Route::name('admin-api.')->group(function () {
 
     // cart routes
     Route::controller(CartController::class)->name('carts.')->prefix('carts')->group(function () {
-        Route::get('', 'index')->name('index');
         Route::get('/user/{userId}', 'viewUserCart')->name('viewUserCart');
-        Route::put('/user/{userId}', 'updateUserCart')->name('updateUserCart');
-        Route::delete('/remove/user/{userId}/product/{productId}', 'removeFromCart')->name('removeFromCart');
-
     });
     // cart routes
     // orders routes
@@ -318,4 +318,48 @@ Route::name('admin-api.')->group(function () {
     });
     Route::apiResource('shipping-rules', ShippingRuleController::class);
     //shipping-rules routes
+
+
+    // Countries routes
+    /***********Trashed Countries SoftDeletes**************/
+    Route::controller(CountryController::class)->prefix('countries')->as('countries.')->group(function () {
+        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed Countries SoftDeletes**************/
+    Route::apiResource('countries', CountryController::class);
+    // Countries routes
+
+    // States routes
+    Route::get('/states/country/{country_id}', [StateController::class, 'getByCountryId'])->name('states.getByCountryId');
+    /***********Trashed States SoftDeletes**************/
+    Route::controller(StateController::class)->prefix('states')->as('states.')->group(function () {
+        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed States SoftDeletes**************/
+    Route::apiResource('states', StateController::class);
+    // States routes
+
+     // Cities routes
+     Route::get('/cities/country/{country_id}', [CityController::class, 'getByCountryId'])->name('cities.getByCountryId');
+     Route::get('/cities/state/{state_id}', [CityController::class, 'getByStateId'])->name('cities.getByStateId');
+     /***********Trashed Cities SoftDeletes**************/
+     Route::controller(CityController::class)->prefix('cities')->as('cities.')->group(function () {
+         Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+         Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+         Route::post('/restore/{id}', 'restore')->name('restore');
+     });
+     /***********Trashed States SoftDeletes**************/
+     Route::apiResource('cities', CityController::class);
+     // Cities routes
+     //user-addresses
+     Route::controller(UserAddressController::class)->prefix('user-addresses')->as('user-addresses.')->group(function () {
+        Route::get('/user/{id}', 'getAllByUserId')->name('getAllByUserId');
+    });
+     Route::apiResource('user-addresses', UserAddressController::class);
+     //user-addresses
+
 });

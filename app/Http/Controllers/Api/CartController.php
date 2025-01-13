@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Cart\AddToCartRequest;
-use App\Http\Requests\Api\Cart\UpdateProductQuantityRequest;
+use App\Http\Requests\Api\Cart\UpdateProductCartRequest;
 use App\Http\Resources\Api\CartProduct\CartProductCollection;
 use App\Repositories\CartRepository;
 use App\Traits\ApiResponseTrait;
@@ -31,7 +31,9 @@ class CartController extends Controller
     public function viewCart()
     {
         try {
-            $data = $this->cartRepository->getProducts();
+            $userId = Auth::guard('user-api')->id();
+
+            $data = $this->cartRepository->getProducts($userId);
             $data['cartProducts']=new CartProductCollection( $data['cartProducts']);
             return $this->successResponse($data);
         } catch (Exception $e) {
@@ -70,10 +72,10 @@ class CartController extends Controller
         }
     }
 
-    public function removeFromCart($productId)
+    public function removeFromCart($id)
     {
         try {
-            $removed = $this->cartRepository->removeProduct($productId);
+            $removed = $this->cartRepository->removeProduct($id);
             if ($removed) {
                 return $this->messageResponse(
                     __("app.carts.deleted-successfully"),
@@ -96,11 +98,11 @@ class CartController extends Controller
         }
     }
 
-    public function updateProductQuantity(UpdateProductQuantityRequest $request, $productId)
+    public function updateProductCart(UpdateProductCartRequest $request, $id)
     {
         try {
             $data = $request->validated();
-            $updated = $this->cartRepository->updateProductQuantity($productId, $data);
+            $updated = $this->cartRepository->updateProductCart($id, $data);
             if ($updated) {
                 return $this->messageResponse(
                     __("app.carts.updated-successfully"),
@@ -110,6 +112,32 @@ class CartController extends Controller
             }{
                 return $this->messageResponse(
                     __("app.carts.updated-failed"),
+                    false,
+                    400
+                );
+            }
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [],
+                __('app.something-went-wrong'),
+                500
+            );
+        }
+    }
+    public function clearCart()
+    {
+        try {
+            $cartId=auth()->user()->cart->id;
+            $removed = $this->cartRepository->emptyCart($cartId);
+            if ($removed) {
+                return $this->messageResponse(
+                    __("app.carts.deleted-successfully"),
+                    true,
+                    201
+                );
+            }{
+                return $this->messageResponse(
+                    __("app.carts.deleted-failed"),
                     false,
                     400
                 );

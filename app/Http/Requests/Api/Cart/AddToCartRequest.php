@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Cart;
 
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -16,7 +17,15 @@ class AddToCartRequest extends FormRequest
     {
         return [
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'product_variant_items' => ['nullable', 'array'],
+            'product_variant_items.*' => ['exists:product_variant_items,id'],
+
+            'quantity' => [
+                'required',
+                'integer',
+                'min:1',
+                $this->validateProductStock(),
+            ],
         ];
     }
 
@@ -30,7 +39,7 @@ class AddToCartRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'expires_at' => $this->input('expires_at', Carbon::now()->addDays(7)->toDateTimeString()),
+            'expires_at' => $this->input('expires_at', Carbon::now()->addDays(1)->toDateTimeString()),
         ]);
     }
     /**
@@ -48,5 +57,24 @@ class AddToCartRequest extends FormRequest
             'message' => 'Validation Error',
             'statusCode' => 422,
         ], 422));
+    }
+    protected function validateProductStock(): \Closure
+    {
+        return function ($attribute, $value, $fail) {
+            $productId = $this->input('product_id');
+
+            // Fetch the product and check stock availability
+            $product = Product::findOrFail($productId);
+
+            if (!$product) {
+                return $fail(__('validation.exists', ['attribute' => 'product_id']));
+            }
+
+            if ($value > $product->quantity) {
+                $fail(__('validation.quantity_exceeded', [
+                    'quantity' => $product->quantity,
+                ]));
+            }
+        };
     }
 }

@@ -5,9 +5,12 @@ use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\Auth\AuthController;
 use App\Http\Controllers\Vendor\BrandController;
 use App\Http\Controllers\Vendor\CategoryController;
+use App\Http\Controllers\Vendor\CityController;
+use App\Http\Controllers\Vendor\CountryController;
 use App\Http\Controllers\Vendor\ProductImageController;
 use App\Http\Controllers\Vendor\ProductVariantController;
 use App\Http\Controllers\Vendor\ProductVariantItemController;
+use App\Http\Controllers\Vendor\StateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,8 +25,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::name('vendor-api.')->group(function () {
-       //app-settings
-       Route::controller(AppSettingsController::class)->group(function () {
+    //app-settings
+    Route::controller(AppSettingsController::class)->group(function () {
         Route::get('/app-settings', 'index');
     });
     //app-settings
@@ -76,27 +79,46 @@ Route::name('vendor-api.')->group(function () {
     });
     Route::apiResource('products', ProductController::class)->except('index');
     // products routes
- // product-images routes
- Route::controller(ProductImageController::class)->prefix('product-images')->as('product-images.')->group(function () {
-    Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
-});
-Route::apiResource('product-images', ProductImageController::class)->except(['index']);
-// product-images routes
- // product-variants routes
- Route::controller(ProductVariantController::class)->prefix('product-variants')->as('product-variants.')->group(function () {
-    Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
-});
-Route::apiResource('product-variants', ProductVariantController::class)->except(['index']);
-// product-variants routes
-  // product-variant-items routes
-  Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
-    Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
-});
-Route::apiResource('product-variant-items', ProductVariantItemController::class)->except(['index']);
-// product-variant-items routes
+    // product-images routes
+    Route::controller(ProductImageController::class)->prefix('product-images')->as('product-images.')->group(function () {
+        Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
+    });
+    Route::apiResource('product-images', ProductImageController::class)->except(['index']);
+    // product-images routes
+    // product-variants routes
+    Route::controller(ProductVariantController::class)->prefix('product-variants')->as('product-variants.')->group(function () {
+        Route::get('/product/{id}', 'getByProductId')->name('getByProductId');
+    });
+    Route::apiResource('product-variants', ProductVariantController::class)->except(['index']);
+    // product-variants routes
+    // product-variant-items routes
+    Route::controller(ProductVariantItemController::class)->prefix('product-variant-items')->as('product-variant-items.')->group(function () {
+        Route::get('/product-variant/{id}', 'getByProductVariantId')->name('getByProductVariantId');
+    });
+    Route::apiResource('product-variant-items', ProductVariantItemController::class)->except(['index']);
+    // product-variant-items routes
 
 
 
 
+    // Countries routes
+    Route::apiResource('countries', CountryController::class)->only(['index', 'show']);
+    // Countries routes
+
+
+    // States routes
+    Route::controller(StateController::class)->name('states.')->prefix('/states')->group(function () {
+        Route::get('/country/{country_id}', 'getByCountryId')->name('getByCountryId');
+        Route::get('/{id}', 'show')->name('show');
+    });
+    // States routes
+
+
+    // cities routes
+    Route::controller(CityController::class)->name('cities.')->prefix('/cities')->group(function () {
+        Route::get('/country/{country_id}', 'getByCountryId')->name('getByCountryId');
+        Route::get('/{id}', 'show')->name('show');
+    });
+    // cities routes
 
 });

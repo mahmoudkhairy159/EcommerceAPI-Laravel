@@ -65,7 +65,7 @@ class UserController extends Controller
     {
         try {
             $userData = $request->validated();
-            $userData = $request->only('name', 'phone', 'image', 'email', 'password', 'status', 'blocked', /*'country_id', 'city_id'*/);
+            $userData = $request->only('name', 'phone', 'image', 'email', 'password', 'status', 'blocked');
             $userData['created_by'] = auth()->guard($this->guard)->id();
             $userData['password'] = Hash::make($userData['password']);
             $userProfileData = $request->only('mode', 'language', 'bio', 'gender', 'birth_date');
@@ -143,7 +143,7 @@ class UserController extends Controller
     {
         try {
 
-            $userData = $request->only('name', 'phone', 'email', 'image', 'password', 'status', 'blocked', /*'country_id', 'city_id'*/);
+            $userData = $request->only('name', 'phone', 'email', 'image', 'password', 'status', 'blocked');
 
             $userData['updated_by'] = auth()->guard($this->guard)->id();
             if (!isset($userData['password']) || !$userData['password']) {

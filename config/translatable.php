@@ -14,6 +14,10 @@ return [
         'en',
         'ar',
         'sv',
+        'es',
+        'de',
+        'fr',
+        'zh'
     ],
 
     /*
