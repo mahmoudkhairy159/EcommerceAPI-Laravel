@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\ContactMessageController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\FlashSaleController;
 use App\Http\Controllers\Api\FlashSaleProductController;
 use App\Http\Controllers\Api\Gateways\PaypalController;
@@ -324,5 +325,12 @@ Route::name('user-api.')->group(function () {
     //user-addresses
     Route::apiResource('user-addresses', UserAddressController::class);
     //user-addresses
+
+    // coupons routes
+    Route::controller(CouponController::class)->name('coupons.')->prefix('coupons')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('/apply', 'apply')->name('apply');
+    });
+    // coupons routes
 
 });

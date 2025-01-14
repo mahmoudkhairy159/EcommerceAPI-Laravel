@@ -19,6 +19,7 @@ class Coupon extends Model
         'name',
         'code',
         'quantity',
+        'total_used',
         'max_use',
         'start_date',
         'end_date',
@@ -54,5 +55,6 @@ class Coupon extends Model
     {
         return $this->belongsTo(Admin::class, 'updated_by');
     }
+
 
 }

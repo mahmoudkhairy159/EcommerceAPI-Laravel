@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("name");
             $table->string('code')->unique();
             $table->unsignedInteger("quantity")->default(1);
+            $table->unsignedInteger("total_used")->default(0);
             $table->unsignedInteger("max_use")->default(1)->comment('max use per one person');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

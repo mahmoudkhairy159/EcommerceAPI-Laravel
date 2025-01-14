@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\DiscountTypeEnum;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -24,8 +25,20 @@ class CouponRepository extends BaseRepository
         return $this->model
             ->filter(request()->all())
             ->where('status', Coupon::STATUS_ACTIVE)
-            ->orderBy('serial', 'asc');
+            ->whereDate('start_date', '<=', date('y-m-d'))
+            ->whereDate('end_date', '>=', date('y-m-d'))
+            ->orderBy('created_at', 'desc');
     }
+    public function getOneActiveByCode(string $code)
+    {
+        return $this->model
+        ->where('code', $code)
+        ->where('status', Coupon::STATUS_ACTIVE)
+        ->whereDate('start_date', '<=', date('y-m-d'))
+        ->whereDate('end_date', '>=', date('y-m-d'))
+        ->first();
+    }
+
 
 
 
@@ -91,6 +104,17 @@ class CouponRepository extends BaseRepository
             DB::rollBack();
             return false;
         }
+    }
+    public function calculateCouponDiscountAmount(Coupon $coupon, $cartSumSubTotal)
+    {
+        if($coupon->discount_type==DiscountTypeEnum::PERCENTAGE){
+            $couponDiscountAmount= ( $cartSumSubTotal* $coupon->discount /100);
+
+        }elseif($coupon->discount_type==DiscountTypeEnum::AMOUNT){
+            $couponDiscountAmount= $coupon->discount;
+        }
+        return  $couponDiscountAmount;
+
     }
 
 }

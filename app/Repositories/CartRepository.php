@@ -51,6 +51,13 @@ class CartRepository extends BaseRepository
 
         ];
     }
+    public function getCartSumSubTotal($userId)
+    {
+        $cart = $this->getCartByUserId($userId);
+        $cartSumSubTotal = $cart->cartProducts()->sum('subtotal');
+        return $cartSumSubTotal;
+    }
+
 
 
 

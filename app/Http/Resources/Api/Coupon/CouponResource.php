@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Admin\Coupon;
+namespace App\Http\Resources\Api\Coupon;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,16 +15,16 @@ class CouponResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
-            'quantity' => $this->quantity,
-            'total_used' => $this->total_used,
-            'max_use' => $this->max_use,
-            'start_date' => $this->start_date,
-            'end_date' => $this->end_date ,
             'discount_type' => $this->discount_type,
             'discount' => $this->discount,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            // 'quantity' => $this->quantity,
+            // 'total_used' => $this->total_used,
+            // 'max_use' => $this->max_use,
+            // 'start_date' => $this->start_date,
+            // 'end_date' => $this->end_date ,
+            // 'status' => $this->status,
+            // 'created_at' => $this->created_at,
+            // 'updated_at' => $this->updated_at,
         ];
     }
 }
