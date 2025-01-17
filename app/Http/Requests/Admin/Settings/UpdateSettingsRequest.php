@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Admin\Settings;
 
+
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateSettingsRequest extends FormRequest
 {
@@ -64,9 +66,15 @@ class UpdateSettingsRequest extends FormRequest
         return $rules;
     }
 
-    // protected function failedValidation(Validator $validator)
-    // {
-    //     // Throw a validation exception with a JSON response
-    //     dd($validator->errors());
-    // }
+    protected function failedValidation(Validator $validator)
+    {
+
+        throw new HttpResponseException(
+            response()->json([
+                'data' => $validator->errors(),
+                'message' => __('global.validation_errors'),
+                'status' => false,
+            ], 400)
+        );
+    }
 }

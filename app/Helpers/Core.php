@@ -24,6 +24,10 @@ class Core
     {
         return app(CacheKeysType::APP_SETTINGS_CACHE);
     }
+    public function getPaypalSetting()
+    {
+        return app(CacheKeysType::PAYPAL_SETTING_CACHE);
+    }
 
 
     public function getCurrentLocaleName()

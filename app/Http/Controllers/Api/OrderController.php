@@ -51,36 +51,7 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreOrderRequest $request, PurchaseOrderService $purchaseOrderService)
-    {
-        try {
-            $data = $request->validated();
-            $data['user_id'] = auth()->guard($this->guard)->id();
-            $created = $purchaseOrderService->purchaseOrder($data);
-            if ($created) {
-                return $this->successResponse(
-                    new OrderResource($created),
-                    __('app.orders.created-successfully'),
-                    201
-                );
-            }{
-                return $this->messageResponse(
-                    __('app.orders.created-failed'),
-                    false,
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
-        }
-    }
+   
 
     /**
      * Show the specified resource.

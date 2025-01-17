@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use App\Services\PurchaseOrderService;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
 
@@ -78,5 +79,7 @@ class OrderRepository extends BaseRepository
             return ($orderProduct->price * $orderProduct->quantity) - $orderProduct->discount;
         });
     }
+
+    
 
 }

@@ -44,6 +44,7 @@ return [
             'coupons' => 'c,r,u,d',
             'shipping_rules' => 'c,r,u,d',
             'user_addresses' => 'c,r,u,d',
+            'paypal_settings' => 'r,u',
         ],
         'user' => [
             'profile' => 'r,u',

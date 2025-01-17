@@ -11,25 +11,23 @@ class OrderProduct extends Model
 {
 
     use HasFactory, Filterable;
-
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
         'order_id',
+        'vendor_id',
         'product_id',
-        'quantity',
         'price',
-        'cost_price',
-        'return_policy',
-        'discount',
+        'tax',
+        'quantity',
+        'variants',
+        'variantsTotalPrice'
     ];
-    public function modelFilter()
-    {
-        return $this->provideFilter(OrderProductFilter::class);
-    }
+    protected $casts = [
+        'variants' => 'array',
+    ];
+    // Relationships
+
     /**
-     * Get the order that owns the order item.
+     * Get the order that owns the order product.
      */
     public function order()
     {
@@ -37,7 +35,15 @@ class OrderProduct extends Model
     }
 
     /**
-     * Get the item that owns the order item.
+     * Get the vendor that supplied the product.
+     */
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
+    /**
+     * Get the product details.
      */
     public function product()
     {

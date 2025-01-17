@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\PaypalSetting;
 use App\Repositories\AboutUsPageRepository;
 use App\Repositories\BrainstormingPageRepository;
 use App\Repositories\CareersPageRepository;
@@ -16,6 +17,7 @@ use App\Repositories\HomePageRepository;
 use App\Repositories\InstitutionsPageRepository;
 use App\Repositories\MemberRepository;
 use App\Repositories\PartnerRepository;
+use App\Repositories\PaypalSettingRepository;
 use App\Repositories\SettingsRepository;
 use App\Repositories\StateRepository;
 use App\Repositories\TestResultPageRepository;
@@ -90,6 +92,13 @@ class CacheServiceProvider extends ServiceProvider
                 });
             },
                 // app settings Cache
+                // paypal settings Cache
+            CacheKeysType::PAYPAL_SETTING_CACHE => function () {
+                return Cache::remember(CacheKeysType::PAYPAL_SETTING_CACHE, now()->addDays(5), function () {
+                    return app(PaypalSettingRepository::class)->getPaypalSettings();
+                });
+            },
+                // paypal settings Cache
 
                 // Categories Tree Structure Cache
             CacheKeysType::CATEGORIES_TREE_CACHE => function () {

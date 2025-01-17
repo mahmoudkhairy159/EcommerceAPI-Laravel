@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\ShippingRuleTypeEnum;
 use App\Models\ShippingRule;
 use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -91,6 +92,15 @@ class ShippingRuleRepository extends BaseRepository
             DB::rollBack();
             return false;
         }
+    }
+    public function calculateShippingRuleAmount(ShippingRule $shippingRule)
+    {
+        if($shippingRule){
+            return $shippingRule->cost;
+        }else {
+            return 0;
+        }
+
     }
 
 }

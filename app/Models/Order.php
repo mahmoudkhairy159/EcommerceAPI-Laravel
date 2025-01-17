@@ -16,21 +16,25 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
-        'order_date',
+        'vendor_id',
         'status',
         'payment_method',
+        'payment_status',
+        'sub_total',
         'discount_amount',
-        'total_price',
-        'tax',
+        'amount',
+        'order_address',
+        'shipping_rule',
+        'coupon',
         'notes',
-        'tracking_id',
-        'order_type',
-        'state',
-        'city',
-        'pin_code',
-        'billing_address',
-        'order_phone_number',
     ];
+    // Cast attributes
+    protected $casts = [
+        'order_address' => 'array',
+        'shipping_rule' => 'array',
+        'coupon' => 'array',
+    ];
+
 
     public function modelFilter()
     {
@@ -50,7 +54,11 @@ class Order extends Model
     const PAYMENT_METHOD_PAYPAL = 'paypal';
     const PAYMENT_METHOD_BANK_TRANSFER = 'bank_transfer';
     // Enum values for payment_method
-
+// Enum values for payment_status
+    const PAYMENT_STATUS_PAID = 'paid';
+    const PAYMENT_STATUS_PENDING = 'pending';
+    const PAYMENT_STATUS_FAILED = 'failed';
+    // Enum values for payment_status
     /**
      * Get the list of valid statuses.
      *
@@ -66,7 +74,14 @@ class Order extends Model
             self::STATUS_CANCELLED,
         ];
     }
-
+    public static function getPaymentStatuses()
+    {
+        return [
+            self::PAYMENT_STATUS_PAID,
+            self::PAYMENT_STATUS_PENDING,
+            self::PAYMENT_STATUS_FAILED,
+        ];
+    }
     /**
      * Get the list of valid payment methods.
      *
@@ -82,17 +97,26 @@ class Order extends Model
         ];
     }
 
-    /**
-     * Get the user that owns the order.
-     */
+    // Relationships
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
+    }
+
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity', 'price', 'cost_price', 'return_policy','discount' );
+        return $this->belongsToMany(Product::class, 'order_products')
+                    ->withPivot('price','tax', 'quantity','variants','variantsTotalPrice')
+                    ->withTimestamps();
     }
 
 }

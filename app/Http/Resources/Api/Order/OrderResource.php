@@ -2,8 +2,7 @@
 
 namespace App\Http\Resources\Api\Order;
 
-use App\Http\Resources\Api\Product\ProductResource;
-use App\Http\Resources\Api\User\UserResource;
+use App\Http\Resources\Api\Transaction\TransactionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -14,24 +13,28 @@ class OrderResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'tracking_id' => $this->tracking_id,
-            'order_date' => $this->order_date,
+          'id' => $this->id,
+            'user' => $this->user ? [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ] : null,
+            'vendor' => $this->vendor ? [
+                'id' => $this->vendor->id,
+                'name' => $this->vendor->name,
+            ] : null,
+            'transaction' => new TransactionResource($this->whenLoaded('transaction')),
+
             'status' => $this->status,
             'payment_method' => $this->payment_method,
+            'payment_status' => $this->payment_status,
+            'sub_total' => $this->sub_total,
             'discount_amount' => $this->discount_amount,
-            'total_price' => $this->total_price,
-            'tax' => $this->tax,
+            'amount' => $this->amount,
+            'order_address' => $this->order_address,
+            'shipping_rule' => $this->shipping_rule,
+            'coupon' => $this->coupon,
             'notes' => $this->notes,
-            'order_type' => $this->order_type,
-            'state' => $this->state,
-            'city' => $this->city,
-            'pin_code' => $this->pin_code,
-            'billing_address' => $this->billing_address,
-            'order_phone_number' => $this->order_phone_number,
-            // 'user' => new UserResource($this->whenLoaded('user')),
-            'products' => ProductResource::collection($this->whenLoaded('products')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

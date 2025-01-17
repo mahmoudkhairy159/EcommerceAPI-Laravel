@@ -6,53 +6,24 @@ use EloquentFilter\ModelFilter;
 
 class OrderFilter extends ModelFilter
 {
-/**
- * Filter by user_id.
- *
- * @param int $userId
- * @return $this
- */
+    /**
+     * Filter by user_id.
+     *
+     * @param int $userId
+     * @return $this
+     */
     public function userId($userId)
     {
         return $this->where('user_id', $userId);
     }
 
-    /**
-     * Filter by order_number.
-     *
-     * @param string $orderNumber
-     * @return $this
-     */
-    public function orderNumber($orderNumber)
+
+    public function vendorId($vendorId)
     {
-        return $this->where('id', $orderNumber);
+        return $this->where('vendor_id', $vendorId);
     }
 
-    /**
-     * Filter by order_date range.
-     *
-     * @param string $date
-     * @return $this
-     */
-    public function fromOrderDate($fromOrderDate)
-    {
-        return $this->where(function ($q) use ($fromOrderDate) {
-            return $q->whereDate('order_date', '>=', $fromOrderDate);
-        });
-    }
 
-    /**
-     * Filter by order_date range.
-     *
-     * @param string $toDate
-     * @return $this
-     */
-    public function toOrderDate($toOrderDate)
-    {
-        return $this->where(function ($q) use ($toOrderDate) {
-            return $q->whereDate('order_date', '<=', $toOrderDate);
-        });
-    }
 
     /**
      * Filter by status.
@@ -75,6 +46,10 @@ class OrderFilter extends ModelFilter
     {
         return $this->where('payment_method', $paymentMethod);
     }
+    public function paymentStatus($paymentStatus)
+    {
+        return $this->where('payment_status', $paymentStatus);
+    }
 
     /**
      * Filter by total_price range.
@@ -83,32 +58,23 @@ class OrderFilter extends ModelFilter
      * @param float $maxTotalCost
      * @return $this
      */
-    public function fromTotalPrice($fromTotalPrice)
+    public function fromSubTotal($fromSubTotal)
     {
 
-        return $this->where(function ($q) use ($fromTotalPrice) {
-            return $q->where('total_price', '>=', $fromTotalPrice);
+        return $this->where(function ($q) use ($fromSubTotal) {
+            return $q->where('sub_total', '>=', $fromSubTotal);
         });
     }
 
-    public function toTotalPrice($toTotalPrice)
+    public function toSubTotal($toSubTotal)
     {
 
-        return $this->where(function ($q) use ($toTotalPrice) {
-            return $q->where('total_price', '<=', $toTotalPrice);
+        return $this->where(function ($q) use ($toSubTotal) {
+            return $q->where('sub_total', '<=', $toSubTotal);
         });
     }
 
-    /**
-     * Filter by tax.
-     *
-     * @param float $tax
-     * @return $this
-     */
-    public function tax($tax)
-    {
-        return $this->where('tax', $tax);
-    }
+
 
     /**
      * Filter by notes (search).

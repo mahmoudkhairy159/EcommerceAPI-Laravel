@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->enum('type',ShippingRuleTypeEnum::getConstants())->default(ShippingRuleTypeEnum::FLAT_COST);
-            $table->double("min_cost", 10, 2)->default(0);
+            $table->double("min_cost", 10, 2)->default(1000)->comment('minimum order amount');
             $table->double("cost", 10, 2)->default(0);
             $table->tinyInteger('status')->default(1);
             $table->unsignedBigInteger('created_by')->nullable();

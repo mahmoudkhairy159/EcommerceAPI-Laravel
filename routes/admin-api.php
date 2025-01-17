@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\UserAddressController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\WishlistController;
+use Database\Seeders\PaypalSettingSeeder;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -91,6 +92,13 @@ Route::name('admin-api.')->group(function () {
             Route::put('/update', 'update')->name('update');
         });
     // SETTINGS
+    // Paypal SETTING
+    Route::controller(PaypalSettingSeeder::class)->name('paypal-settings.')
+        ->prefix('paypal-settings')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::put('/update', 'update')->name('update');
+        });
+    //Paypal  SETTING
     //brands routes
     /***********Trashed brands SoftDeletes**************/
     Route::controller(BrandController::class)->prefix('brands')->as('brands.')->group(function () {
@@ -301,19 +309,19 @@ Route::name('admin-api.')->group(function () {
     Route::apiResource('vendors', VendorController::class);
     // vendors routes
     //flash-sales routes
-    Route::apiResource('flash-sales', FlashSaleController::class)->only('index','update');
-    Route::apiResource('flash-sale-products', FlashSaleProductController ::class)->except('show');
+    Route::apiResource('flash-sales', FlashSaleController::class)->only('index', 'update');
+    Route::apiResource('flash-sale-products', FlashSaleProductController::class)->except('show');
     //flash-sales routes
 
-     //coupons routes
+    //coupons routes
     Route::controller(CouponController::class)->prefix('coupons')->name('coupons.')->group(function () {
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
     });
     Route::apiResource('coupons', CouponController::class);
     //coupons routes
 
-     //shipping-rules routes
-     Route::controller(ShippingRuleController::class)->prefix('shipping-rules')->name('shipping-rules.')->group(function () {
+    //shipping-rules routes
+    Route::controller(ShippingRuleController::class)->prefix('shipping-rules')->name('shipping-rules.')->group(function () {
         Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
     });
     Route::apiResource('shipping-rules', ShippingRuleController::class);
@@ -343,23 +351,23 @@ Route::name('admin-api.')->group(function () {
     Route::apiResource('states', StateController::class);
     // States routes
 
-     // Cities routes
-     Route::get('/cities/country/{country_id}', [CityController::class, 'getByCountryId'])->name('cities.getByCountryId');
-     Route::get('/cities/state/{state_id}', [CityController::class, 'getByStateId'])->name('cities.getByStateId');
-     /***********Trashed Cities SoftDeletes**************/
-     Route::controller(CityController::class)->prefix('cities')->as('cities.')->group(function () {
-         Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
-         Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
-         Route::post('/restore/{id}', 'restore')->name('restore');
-     });
-     /***********Trashed States SoftDeletes**************/
-     Route::apiResource('cities', CityController::class);
-     // Cities routes
-     //user-addresses
-     Route::controller(UserAddressController::class)->prefix('user-addresses')->as('user-addresses.')->group(function () {
+    // Cities routes
+    Route::get('/cities/country/{country_id}', [CityController::class, 'getByCountryId'])->name('cities.getByCountryId');
+    Route::get('/cities/state/{state_id}', [CityController::class, 'getByStateId'])->name('cities.getByStateId');
+    /***********Trashed Cities SoftDeletes**************/
+    Route::controller(CityController::class)->prefix('cities')->as('cities.')->group(function () {
+        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed States SoftDeletes**************/
+    Route::apiResource('cities', CityController::class);
+    // Cities routes
+    //user-addresses
+    Route::controller(UserAddressController::class)->prefix('user-addresses')->as('user-addresses.')->group(function () {
         Route::get('/user/{id}', 'getAllByUserId')->name('getAllByUserId');
     });
-     Route::apiResource('user-addresses', UserAddressController::class);
-     //user-addresses
+    Route::apiResource('user-addresses', UserAddressController::class);
+    //user-addresses
 
 });

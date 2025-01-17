@@ -126,7 +126,9 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_products');
+        return $this->belongsToMany(Order::class, 'order_products')
+                    ->withPivot('price','tax', 'quantity','variants','variantsTotalPrice')
+                    ->withTimestamps();
     }
 
     public function relatedProducts()

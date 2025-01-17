@@ -17,14 +17,18 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("order_id");
             $table->foreign("order_id")->references("id")->on("orders")->onDelete("cascade");
+            $table->unsignedBigInteger("vendor_id")->nullable();
+            $table->foreign("vendor_id")->references("id")->on("vendors")->onDelete("set null");
             $table->unsignedBigInteger("product_id")->nullable();
             $table->foreign("product_id")->references("id")->on("products")->onDelete("cascade");
-
-            $table->decimal("price");
-            $table->decimal("cost_price");
+            $table->double("price", 10, 2);
+            $table->decimal('tax', 10, 2)->default(0);
             $table->integer("quantity");
-            $table->decimal("discount")->nullable();
-            $table->text("return_policy")->nullable();
+            $table->text('variants')->nullable();
+            $table->double("variantsTotalPrice", 10, 2);
+
+
+
             // Ensure combination of order_id and product_id is unique
             $table->unique(['order_id', 'product_id']);
             $table->timestamps();

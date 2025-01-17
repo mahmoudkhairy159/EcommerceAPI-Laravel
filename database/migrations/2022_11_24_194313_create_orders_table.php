@@ -17,24 +17,21 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             //
+
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->dateTime('order_date');
+            $table->unsignedBigInteger('vendor_id')->nullable();
+            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('set null');
             $table->enum('status', Order::getStatuses())->default(Order::STATUS_PENDING);
             $table->enum('payment_method', Order::getPaymentMethods())->nullable();
+            $table->enum('payment_status', Order::getPaymentStatuses())->nullable();
+            $table->decimal('sub_total', 8, 2)->default(0);
             $table->decimal('discount_amount', 8, 2)->default(0);
-            $table->decimal('total_price', 8, 2)->default(0);
-            $table->decimal('tax', 10, 2)->nullable();
+            $table->decimal('amount', 8, 2)->default(0);
+            $table->text('order_address')->nullable();
+            $table->text('shipping_rule')->nullable();
+            $table->text('coupon')->nullable();
             $table->text('notes')->nullable();
-            //
-            $table->string("tracking_id")->nullable();
-            $table->string("order_type");
-            $table->string("state");
-            $table->string("city");
-            $table->string("pin_code");
-            $table->text("billing_address");
-            $table->string("order_phone_number");
-            //
             $table->timestamps(); //
 
             ///

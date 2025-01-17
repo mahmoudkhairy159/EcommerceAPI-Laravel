@@ -6,6 +6,9 @@ use EloquentFilter\ModelFilter;
 
 class OrderProductFilter extends ModelFilter
 {
+
+
+
     /**
      * Filter by product_id.
      *
@@ -26,6 +29,10 @@ class OrderProductFilter extends ModelFilter
     {
         return $this->where('order_id', $orderId);
     }
+    public function vendorId($vendorId)
+    {
+        return $this->where('vendor_id', $vendorId);
+    }
 
     /**
      * Filter by quantity.
@@ -44,9 +51,9 @@ class OrderProductFilter extends ModelFilter
      * @param float $price
      * @return $this
      */
-    public function price($price)
+    public function unitPrice($unitPrice)
     {
-        return $this->where('price', $price);
+        return $this->where('price', $unitPrice);
     }
 
 }

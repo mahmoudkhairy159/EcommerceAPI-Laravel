@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Admin\OrderProduct;
 
-use App\Http\Resources\Admin\Product\ProductResource;
+use App\Http\Resources\Admin\Order\OrderResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderProductResource extends JsonResource
@@ -14,14 +14,22 @@ class OrderProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'order_id' => $this->pivot->order_id,
-            'product_id' => $this->pivot->product_id,
-            'quantity' => $this->pivot->quantity,
-            'price' => $this->pivot->price,
-            'cost_price' => $this->pivot->cost_price,
-            'discount' => $this->pivot->discount,
-            'return_policy' => $this->pivot->return_policy,
-            'item' => new ProductResource($this->whenLoaded('product')),
+            'order' => new OrderResource($this->whenLoaded('order')),  // Nested OrderResource
+            'vendor' => $this->vendor ? [
+                'id' => $this->vendor->id,
+                'name' => $this->vendor->name,
+            ] : null,
+            'product' => $this->product ? [
+                'id' => $this->product->id,
+                'name' => $this->product->name,
+                'price' => $this->product->price,
+            ] : null,
+            'price' => $this->price,
+            'tax' => $this->tax,
+            'quantity' => $this->quantity,
+            'total_price' => $this->price * $this->quantity,  // Calculated total price
+            'variants'=>$this->variants,
+            'variantsTotalPrice'=>$this->variantsTotalPrice,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
