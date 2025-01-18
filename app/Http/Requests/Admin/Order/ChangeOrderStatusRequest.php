@@ -18,6 +18,8 @@ class ChangeOrderStatusRequest extends FormRequest
         return [
 
             'status' => ['required', 'string',  Rule::in(Order::getStatuses())],
+            'payment_status' => ['required', 'string',  Rule::in(Order::getPaymentStatuses())],
+
 
         ];
     }

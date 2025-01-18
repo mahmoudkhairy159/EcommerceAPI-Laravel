@@ -19,10 +19,7 @@ class OrderResource extends JsonResource
                 'name' => $this->user->name,
                 'email' => $this->user->email,
             ] : null,
-            'vendor' => $this->vendor ? [
-                'id' => $this->vendor->id,
-                'name' => $this->vendor->name,
-            ] : null,
+          
             'transaction' => new TransactionResource($this->whenLoaded('transaction')),
 
             'status' => $this->status,

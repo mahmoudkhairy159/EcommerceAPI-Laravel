@@ -42,7 +42,7 @@ class PaypalController extends Controller
         $this->provider->setApiCredentials($this->paypalConfig());
         $this->paypalToken = $this->provider->getAccessToken();
         $this->cartRepository = $cartRepository;
-        $this->middleware('auth:' . $this->guard)->only('createPayment');
+        $this->middleware('auth:' . $this->guard)->except(['success','cancel']);
 
 
     }

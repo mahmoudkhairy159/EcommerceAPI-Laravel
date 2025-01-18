@@ -20,8 +20,6 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->unsignedBigInteger('vendor_id')->nullable();
-            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('set null');
             $table->enum('status', Order::getStatuses())->default(Order::STATUS_PENDING);
             $table->enum('payment_method', Order::getPaymentMethods())->nullable();
             $table->enum('payment_status', Order::getPaymentStatuses())->nullable();

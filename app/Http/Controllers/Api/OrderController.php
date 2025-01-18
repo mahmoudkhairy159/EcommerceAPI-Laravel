@@ -51,7 +51,7 @@ class OrderController extends Controller
         }
     }
 
-   
+
 
     /**
      * Show the specified resource.
@@ -86,52 +86,7 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateOrderRequest $request, $id, UpdateOrderService $updateOrderService)
-    {
-        try {
-            $order = $this->orderRepository->getOneById($id);
-            if (!$order) {
-                return $this->messageResponse(
-                    __('app.data-not-found'),
-                    false,
-                    404
-                );
-            }
-            if ($order->user_id != auth()->guard($this->guard)->id()) {
-                return $this->errorResponse(
-                    [],
-                    __('app.unauthorized'),
-                    403
-                );
-            }
-
-            $data = $request->validated();
-            $updated = $updateOrderService->updateOrder($data, $order);
-
-            if ($updated) {
-                return $this->successResponse(
-                    new OrderResource($updated),
-                    __('app.orders.updated-successfully'),
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __('app.orders.updated-failed'),
-                    false,
-                    400
-                );
-            }
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
-        }
-    }
+ 
 
     /**
      * Remove the specified resource from storage.

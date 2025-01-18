@@ -14,7 +14,6 @@ class StorePaypalPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => 'required|numeric|min:0.01', // Minimum amount is 0.01
             'description' => 'nullable|string|max:255', // Optional description
             'user_address_id' => 'required|exists:user_addresses,id',
             'shipping_rule_id' => 'required|exists:shipping_rules,id',

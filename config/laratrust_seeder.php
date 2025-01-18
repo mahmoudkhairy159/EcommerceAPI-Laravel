@@ -45,6 +45,8 @@ return [
             'shipping_rules' => 'c,r,u,d',
             'user_addresses' => 'c,r,u,d',
             'paypal_settings' => 'r,u',
+            'stripe_settings' => 'r,u',
+            'transactions'=>'r',
         ],
         'user' => [
             'profile' => 'r,u',

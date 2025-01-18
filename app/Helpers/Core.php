@@ -28,6 +28,10 @@ class Core
     {
         return app(CacheKeysType::PAYPAL_SETTING_CACHE);
     }
+    public function getStripeSetting()
+    {
+        return app(CacheKeysType::STRIPE_SETTING_CACHE);
+    }
 
 
     public function getCurrentLocaleName()

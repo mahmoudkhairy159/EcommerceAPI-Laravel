@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             VendorSeeder::class,
             SettingSeeder::class,
             PaypalSettingSeeder::class,
+            StripeSettingSeeder::class,
             PageSeeder::class,
             AssetSeeder::class,
             HeroSliderSeeder::class,

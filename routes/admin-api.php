@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OrderProductController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PageSectionController;
+use App\Http\Controllers\Admin\PaypalSettingController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductAccessoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -34,11 +35,12 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ShippingRuleController;
 use App\Http\Controllers\Admin\StateController;
+use App\Http\Controllers\Admin\StripeSettingController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserAddressController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\WishlistController;
-use Database\Seeders\PaypalSettingSeeder;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -93,12 +95,20 @@ Route::name('admin-api.')->group(function () {
         });
     // SETTINGS
     // Paypal SETTING
-    Route::controller(PaypalSettingSeeder::class)->name('paypal-settings.')
+    Route::controller(PaypalSettingController::class)->name('paypal-settings.')
         ->prefix('paypal-settings')->group(function () {
             Route::get('', 'index')->name('index');
             Route::put('/update', 'update')->name('update');
         });
     //Paypal  SETTING
+
+     // Stripe SETTING
+     Route::controller(StripeSettingController::class)->name('stripe-settings.')
+     ->prefix('stripe-settings')->group(function () {
+         Route::get('', 'index')->name('index');
+         Route::put('/update', 'update')->name('update');
+     });
+ //Stripe  SETTING
     //brands routes
     /***********Trashed brands SoftDeletes**************/
     Route::controller(BrandController::class)->prefix('brands')->as('brands.')->group(function () {
@@ -234,11 +244,13 @@ Route::name('admin-api.')->group(function () {
     // cart routes
     // orders routes
     Route::controller(OrderController::class)->prefix('orders')->as('orders.')->group(function () {
+        Route::get('/status/{status}', 'getAllByStatus')->name('getAllByStatus');
         Route::get('/user/{id}', 'getByUserId')->name('getByUserId');
         Route::put('/{id}/change-status', 'changeStatus')->name('changeStatus');
     });
-    Route::apiResource('orders', OrderController::class);
+    Route::apiResource('orders', OrderController::class)->except(['store', 'update']);
     // orders routes
+    Route::apiResource('transactions', TransactionController::class)->only(['index', 'show']);
 
     //order-products
     Route::controller(OrderProductController::class)->prefix('order-products')->as('order-products.')->group(function () {

@@ -20,6 +20,7 @@ use App\Repositories\PartnerRepository;
 use App\Repositories\PaypalSettingRepository;
 use App\Repositories\SettingsRepository;
 use App\Repositories\StateRepository;
+use App\Repositories\StripeSettingRepository;
 use App\Repositories\TestResultPageRepository;
 use App\Types\CacheKeysType;
 use Illuminate\Support\Facades\Cache;
@@ -99,6 +100,13 @@ class CacheServiceProvider extends ServiceProvider
                 });
             },
                 // paypal settings Cache
+                    // stripe settings Cache
+            CacheKeysType::STRIPE_SETTING_CACHE => function () {
+                return Cache::remember(CacheKeysType::STRIPE_SETTING_CACHE, now()->addDays(5), function () {
+                    return app(StripeSettingRepository::class)->getStripeSettings();
+                });
+            },
+                // stripe settings Cache
 
                 // Categories Tree Structure Cache
             CacheKeysType::CATEGORIES_TREE_CACHE => function () {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Vendor\BrandController;
 use App\Http\Controllers\Vendor\CategoryController;
 use App\Http\Controllers\Vendor\CityController;
 use App\Http\Controllers\Vendor\CountryController;
+use App\Http\Controllers\Vendor\OrderController;
 use App\Http\Controllers\Vendor\ProductImageController;
 use App\Http\Controllers\Vendor\ProductVariantController;
 use App\Http\Controllers\Vendor\ProductVariantItemController;
@@ -120,5 +121,14 @@ Route::name('vendor-api.')->group(function () {
         Route::get('/{id}', 'show')->name('show');
     });
     // cities routes
+
+    // orders routes
+    Route::controller(OrderController::class)->prefix('orders')->as('orders.')->group(function () {
+        Route::get('/status/{status}', 'getAllByStatus')->name('getAllByStatus');
+        Route::get('/user/{id}', 'getByUserId')->name('getByUserId');
+        Route::put('/{id}/change-status', 'changeStatus')->name('changeStatus');
+    });
+    Route::apiResource('orders', OrderController::class)->except(['store', 'update','destroy']);
+    // orders routes
 
 });

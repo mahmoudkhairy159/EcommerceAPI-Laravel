@@ -16,7 +16,6 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
-        'vendor_id',
         'status',
         'payment_method',
         'payment_status',
@@ -115,7 +114,7 @@ class Order extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_products')
-                    ->withPivot('price','tax', 'quantity','variants','variantsTotalPrice')
+                    ->withPivot('price','tax', 'quantity','variants','vendor_id','variantsTotalPrice')
                     ->withTimestamps();
     }
 

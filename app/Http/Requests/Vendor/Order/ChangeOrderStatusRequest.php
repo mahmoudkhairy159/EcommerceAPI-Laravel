@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Api\Gateways\Stripe;
+namespace App\Http\Requests\Vendor\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
+use App\Models\Order;
 
-class StoreStripePaymentRequest extends FormRequest
+class ChangeOrderStatusRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,10 +16,9 @@ class StoreStripePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'nullable|string|max:255', // Optional description
-            'user_address_id' => 'required|exists:user_addresses,id',
-            'shipping_rule_id' => 'required|exists:shipping_rules,id',
-            'code' => 'nullable|exists:coupons,code',
+
+            'status' => ['required', 'string',  Rule::in(Order::STATUS_PENDING,Order::STATUS_PROCESSING)],
+
         ];
     }
 
@@ -41,7 +42,7 @@ class StoreStripePaymentRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'errors' => $validator->errors(),
             'message' => 'Validation Error',
-            'statusCode'=>422
+            'statusCode' => 422
         ], 422));
     }
 }

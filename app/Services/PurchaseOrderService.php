@@ -76,7 +76,7 @@ class PurchaseOrderService
                 $this->orderProductRepository->create([
                     'order_id' => $order->id,
                     'product_id' => $cartProduct->product_id,
-                    'vendor_id' => $cartProduct->vendor_id,
+                    'vendor_id' => $product->vendor_id,
                     'variants' => $cartProduct->options['variants'],
                     'variantsTotalPrice' => $cartProduct->options['variantsTotalPrice'],
                     'quantity' => $cartProduct->quantity,

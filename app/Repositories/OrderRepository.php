@@ -19,7 +19,42 @@ class OrderRepository extends BaseRepository
             ->filter(request()->all())
             ->orderBy('created_at', 'desc');
     }
+    public function getAllByVendorId($vendorId)
+    {
+        return $this->model
+            ->filter(request()->all())
+            ->whereHas('products', function ($query) use ($vendorId) {
+                $query->where('order_products.vendor_id', $vendorId);
+            })->orderBy('created_at', 'desc');
+    }
+    public function getAllByStatus(string $status)
+    {
+        return $this->model
+            ->filter(request()->all())
+            ->where('status',$status)
+            ->orderBy('created_at', 'desc');
+    }
+    public function getAllByStatusByVendorId(string $status,$vendorId)
+    {
+        return $this->model
+            ->filter(request()->all())
+            ->where('status',$status)
+            ->whereHas('products', function ($query) use ($vendorId) {
+                $query->where('order_products.vendor_id', $vendorId);
+            })
+            ->orderBy('created_at', 'desc');
+    }
 
+    public function getByUserIdForVendor(int $user_id, $vendorId)
+    {
+        return $this->model
+            ->where('user_id', $user_id)
+            ->whereHas('products', function ($query) use ($vendorId) {
+                $query->where('vendor_id', $vendorId);
+            })
+            ->filter(request()->all())
+            ->orderBy('created_at', 'desc');
+    }
     public function getByUserId(int $user_id)
     {
         return $this->model
@@ -80,6 +115,6 @@ class OrderRepository extends BaseRepository
         });
     }
 
-    
+
 
 }

@@ -1,17 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Order\ChangeOrderStatusRequest;
-use App\Http\Requests\Admin\Order\StoreOrderRequest;
-use App\Http\Requests\Admin\Order\UpdateOrderRequest;
-use App\Http\Resources\Admin\Order\OrderCollection;
-use App\Http\Resources\Admin\Order\OrderResource;
-use App\Models\Order;
+use App\Http\Requests\Vendor\Order\ChangeOrderStatusRequest;
+use App\Http\Resources\Vendor\Order\OrderCollection;
+use App\Http\Resources\Vendor\Order\OrderResource;
 use App\Repositories\OrderRepository;
-use App\Services\PurchaseOrderService;
-use App\Services\UpdateOrderService;
 use App\Traits\ApiResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -27,16 +22,13 @@ class OrderController extends Controller
 
     public function __construct(OrderRepository $orderRepository)
     {
-        $this->guard = 'admin-api';
+        $this->guard = 'vendor-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->orderRepository = $orderRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
-        $this->middleware(['ability:admin,orders-read'])->only(['index', 'getByUserId', 'show']);
-        $this->middleware(['ability:admin,orders-update'])->only(['changeStatus']);
-        $this->middleware(['ability:admin,orders-delete'])->only(['destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -44,20 +36,8 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            $data = $this->orderRepository->getAll()->paginate();
-            return $this->successResponse(new OrderCollection($data));
-        } catch (Exception $e) {
-            return $this->errorResponse(
-                [$e->getMessage(), $e->getCode()],
-                __('app.something-went-wrong'),
-                500
-            );
-        }
-    }
-    public function getAllByStatus($status)
-    {
-        try {
-            $data = $this->orderRepository->getAllByStatus($status)->paginate();
+            $vendorId=auth()->id();
+            $data = $this->orderRepository->getAllByVendorId($vendorId)->paginate();
             return $this->successResponse(new OrderCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -71,7 +51,8 @@ class OrderController extends Controller
     public function getByUserId($user_id)
     {
         try {
-            $data = $this->orderRepository->getByUserId($user_id)->paginate();
+            $vendorId=auth()->id();
+            $data = $this->orderRepository->getByUserIdForVendor($user_id,$vendorId)->paginate();
             return $this->successResponse(new OrderCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -89,7 +70,11 @@ class OrderController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->orderRepository->with(['user','products'])->findOrFail($id);
+            $vendorId=auth()->id();
+
+            $data = $this->orderRepository->withWhereHas('products', function ($query) use ($vendorId) {
+                $query->where('order_products.vendor_id', $vendorId);
+            })->with(['user'])->findOrFail($id);
             return $this->successResponse(new OrderResource($data));
         } catch (Exception $e) {
             return $this->errorResponse(
@@ -100,37 +85,21 @@ class OrderController extends Controller
         }
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function getAllByStatus($status,)
     {
         try {
-
-            $deleted = $this->orderRepository->deleteOne($id);
-
-            if ($deleted) {
-                return $this->messageResponse(
-                    __('app.orders.deleted-successfully'),
-                    true,
-                    200
-                );
-            }{
-                return $this->messageResponse(
-                    __('app.orders.deleted-failed'),
-                    false,
-                    400
-                );
-            }
+            $vendorId=auth()->id();
+            $data = $this->orderRepository->getAllByStatusByVendorId($status,$vendorId)->paginate();
+            return $this->successResponse(new OrderCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
-                [],
+                [$e->getMessage(), $e->getCode()],
                 __('app.something-went-wrong'),
                 500
             );
         }
     }
+
     // Change the status of an order
     public function changeStatus(ChangeOrderStatusRequest $request, $id)
     {
