@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Wishlist\AddToWishlistRequest;
-use App\Http\Resources\Admin\WishlistItem\WishlistItemCollection;
+use App\Http\Resources\Admin\WishlistProduct\WishlistProductCollection;
 use App\Repositories\WishlistRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
@@ -30,8 +30,9 @@ class WishlistController extends Controller
     public function viewWishlist()
     {
         try {
-            $data = $this->WishlistRepository->getProducts()->paginate();
-            return $this->successResponse(new WishlistItemCollection($data));
+            $userId=auth()->id();
+            $data = $this->WishlistRepository->getWishlistProducts($userId)->paginate();
+            return $this->successResponse(new WishlistProductCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -44,7 +45,8 @@ class WishlistController extends Controller
     {
         try {
             $data = $request->validated();
-            $added = $this->WishlistRepository->addProduct($data);
+            $userId=auth()->id();
+            $added = $this->WishlistRepository->addProduct($data,$userId);
 
             if ($added) {
                 return $this->messageResponse(
@@ -71,7 +73,9 @@ class WishlistController extends Controller
     public function removeFromWishlist($productId)
     {
         try {
-            $removed = $this->WishlistRepository->removeProduct($productId);
+            $userId=auth()->id();
+
+            $removed = $this->WishlistRepository->removeProduct($productId,  $userId);
             if ($removed) {
                 return $this->messageResponse(
                     __("app.wishlists.deleted-successfully"),

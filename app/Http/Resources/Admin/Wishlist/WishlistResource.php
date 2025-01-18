@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Admin\Wishlist;
 
-use App\Http\Resources\Admin\WishlistItem\WishlistItemResource;
+use App\Http\Resources\Admin\WishlistProduct\WishlistProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WishlistResource extends JsonResource
@@ -21,7 +21,7 @@ class WishlistResource extends JsonResource
             // 'discount_amount' => $this->discount_amount,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'items' => WishlistItemResource::collection($this->whenLoaded('items')),
+            'items' => WishlistProductResource::collection($this->whenLoaded('items')),
 
         ];
     }

@@ -33,7 +33,7 @@ return [
             'product_accessories'=>'c,r,u,d',
             'related_services' => 'c,r,u,d',
             'wishlists' => 'c,r,u,d',
-            'wishlist_items' => 'c,r,u,d',
+            'wishlist_products' => 'c,r,u,d',
             'contact_messages' => 'c,r,u,d',
             'assets' => 'r,u',
             'pages' => 'r,u,d',

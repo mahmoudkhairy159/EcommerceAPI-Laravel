@@ -80,7 +80,7 @@ class Product extends Model
 
     public function getIsWishListedAttribute()
     {
-        return Auth::guard('user-api')->user() &&  Auth::guard('user-api')->user()->wishlist? $this->wishlistItems()->where("wishlist_id", Auth::guard('user-api')->user()->wishlist->id)->exists() : false;
+        return Auth::guard('user-api')->user() &&  Auth::guard('user-api')->user()->wishlist? $this->wishlistProducts()->where("wishlist_id", Auth::guard('user-api')->user()->wishlist->id)->exists() : false;
     }
 
     public function modelFilter()
@@ -160,9 +160,9 @@ class Product extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
-    public function wishlistItems()
+    public function wishlistProducts()
     {
-        return $this->hasMany(WishlistItem::class);
+        return $this->hasMany(WishlistProduct::class);
     }
 
     /******************* End Relationships *********************/

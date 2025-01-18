@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api\WishlistItem;
+namespace App\Http\Resources\Admin\WishlistProduct;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class WishlistItemCollection extends ResourceCollection
+class WishlistProductCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,7 @@ class WishlistItemCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => WishlistItemResource::collection($this->collection),
+            'data' => WishlistProductResource::collection($this->collection),
             'pagination' => [
                 'total' => $this->total(),
                 'per_page' => $this->perPage(),

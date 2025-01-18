@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Product;
 use App\Models\Wishlist;
-use App\Models\WishlistItem;
+use App\Models\WishlistProduct;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,29 +17,18 @@ class WishlistRepository extends BaseRepository
         return Wishlist::class;
     }
 
-   
+
     public function getAll()
     {
-        return $this->model->with('items');
+        return $this->model->with('wishlistProducts');
     }
 
-    /**
-     * Get the wishlist for the authenticated user.
-     *
-     * @return Wishlist
-     */
-    public function getWishlist()
+    public function getWishlistProducts($userId)
     {
-        $userId = Auth::guard('user-api')->id();
-        return $this->getWishlistByUserId($userId);
+        $wishlist = $this->getWishlistByUserId($userId);
+        return $wishlist->wishlistProducts()->with('product');
     }
 
-    /**
-     * Get the wishlist by user ID, create one if it doesn't exist.
-     *
-     * @param int $userId
-     * @return Wishlist
-     */
     public function getWishlistByUserId($userId)
     {
         return $this->model->firstOrCreate(['user_id' => $userId]);
@@ -49,23 +38,23 @@ class WishlistRepository extends BaseRepository
      * Add a product to the authenticated user's wishlist.
      *
      * @param array $data
-     * @return WishlistItem|bool
+     * @return WishlistProduct|bool
      */
-    public function addProduct(array $data)
+    public function addProduct(array $data,$userId)
     {
         DB::beginTransaction();
 
         try {
-            $wishlist = $this->getWishlist();
+            $wishlist = $this->getWishlistByUserId($userId);
 
             // Check if the product is already in the wishlist
-            $existingItem = $wishlist->items()->where('product_id', $data['product_id'])->first();
+            $existingItem = $wishlist->wishlistProducts()->where('product_id', $data['product_id'])->first();
             if (!$existingItem) {
-                $wishlistItem = new WishlistItem([
+                $wishlistProduct = new WishlistProduct([
                     'product_id' => $data['product_id'],
                 ]);
 
-                $wishlist->items()->save($wishlistItem);
+                $wishlist->wishlistProducts()->save($wishlistProduct);
             }
             DB::commit();
             return true;
@@ -82,13 +71,13 @@ class WishlistRepository extends BaseRepository
      * @param int $productId
      * @return bool
      */
-    public function removeProduct($productId)
+    public function removeProduct($productId,  $userId)
     {
         DB::beginTransaction();
 
         try {
-            $wishlist = $this->getWishlist();
-            $wishlist->items()->where('product_id', $productId)->delete();
+            $wishlist = $this->getWishlistByUserId($userId);
+            $wishlist->wishlistProducts()->where('product_id', $productId)->delete();
 
             DB::commit();
             return true;
@@ -109,7 +98,7 @@ class WishlistRepository extends BaseRepository
         DB::beginTransaction();
 
         try {
-            WishlistItem::where('wishlist_id', $wishlistId)->delete();
+            WishlistProduct::where('wishlist_id', $wishlistId)->delete();
             DB::commit();
             return true;
         } catch (Exception $e) {
@@ -118,15 +107,7 @@ class WishlistRepository extends BaseRepository
         }
     }
 
-    /**
-     * Get the products in the authenticated user's wishlist.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getProducts()
-    {
-        $wishlist = $this->getWishlist();
-        return $wishlist->items()->with('product');
-    }
+
+
 
 }

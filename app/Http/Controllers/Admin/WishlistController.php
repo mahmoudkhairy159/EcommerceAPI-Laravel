@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Wishlist\WishlistResource;
+use App\Http\Resources\Admin\WishlistProduct\WishlistProductCollection;
 use App\Repositories\WishlistRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
@@ -30,8 +30,8 @@ class WishlistController extends Controller
     public function viewUserWishlist($userId)
     {
         try {
-            $wishlist = $this->wishlistRepository->getWishlistByUserId($userId);
-            return $this->successResponse(new WishlistResource($wishlist));
+            $data = $this->wishlistRepository->getWishlistProducts($userId)->paginate();
+            return $this->successResponse(new WishlistProductCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],

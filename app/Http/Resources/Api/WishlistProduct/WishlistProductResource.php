@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin\WishlistItem;
+namespace App\Http\Resources\Api\WishlistProduct;
 
-use App\Http\Resources\Admin\Product\ProductResource;
+use App\Http\Resources\Api\Product\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WishlistItemResource extends JsonResource
+class WishlistProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +15,7 @@ class WishlistItemResource extends JsonResource
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
-            'item' => new ProductResource($this->whenLoaded('product')),
+            'product' => new ProductResource($this->whenLoaded('product')),
         ];
     }
 }
