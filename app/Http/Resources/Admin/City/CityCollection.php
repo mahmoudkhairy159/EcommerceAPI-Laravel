@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\Admin\City;
+namespace App\Http\Resources\Admin\City;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 

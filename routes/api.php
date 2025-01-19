@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdvertisementController;
 use App\Http\Controllers\Api\AppSettingsController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
@@ -332,5 +333,12 @@ Route::name('user-api.')->group(function () {
         Route::post('/apply', 'apply')->name('apply');
     });
     // coupons routes
+     //advertisements
+     Route::controller(AdvertisementController::class)->prefix('advertisements')->name('advertisements.')->group(function () {
+        Route::get('/position/{position}', 'getByPosition')->name('getByPosition');
+        Route::put('/track-click', 'trackClick')->name('trackClick');
+    });
+    Route::apiResource('advertisements', AdvertisementController::class)->only(['index', 'show']);
+    //advertisements
 
 });

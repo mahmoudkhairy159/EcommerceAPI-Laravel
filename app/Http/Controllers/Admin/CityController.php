@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Types\CacheKeysType;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\CityRepository;
-use App\resources\Admin\City\CityCollection;
-use App\resources\Admin\City\CityResource;
+use App\Http\Resources\Admin\City\CityCollection;
+use App\Http\Resources\Admin\City\CityResource;
 use App\Http\Requests\Admin\City\StoreCityRequest;
 use App\Http\Requests\Admin\City\UpdateCityRequest;
 

@@ -8,8 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Types\CacheKeysType;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\CountryRepository;
-use App\resources\Admin\Country\CountryResource;
-use App\resources\Admin\Country\CountryCollection;
+use App\Http\Resources\Admin\Country\CountryResource;
+use App\Http\Resources\Admin\Country\CountryCollection;
 use App\Http\Requests\Admin\Country\StoreCountryRequest;
 use App\Http\Requests\Admin\Country\UpdateCountryRequest;
 

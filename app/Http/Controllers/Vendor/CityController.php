@@ -7,8 +7,8 @@ use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\CityRepository;
-use App\resources\Vendor\City\CityCollection;
-use App\resources\Vendor\City\CityResource;
+use App\Http\Resources\Vendor\City\CityCollection;
+use App\Http\Resources\Vendor\City\CityResource;
 
 class CityController extends Controller
 {

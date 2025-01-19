@@ -7,7 +7,7 @@ use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\StateRepository;
-use App\resources\Api\State\StateResource;
+use App\Http\Resources\Api\State\StateResource;
 
 class StateController extends Controller
 {

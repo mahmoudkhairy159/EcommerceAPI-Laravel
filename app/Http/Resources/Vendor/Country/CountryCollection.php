@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\Vendor\Country;
+namespace App\Http\Resources\Vendor\Country;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 

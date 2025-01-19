@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\Brand\BrandCollection;
-use App\Http\Resources\Api\Brand\BrandResource;
-use App\Repositories\BrandRepository;
+use App\Http\Resources\Api\Advertisement\AdvertisementCollection;
+use App\Http\Resources\Api\Advertisement\AdvertisementResource;
+use App\Repositories\AdvertisementRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
-class BrandController extends Controller
+class AdvertisementController extends Controller
 {
     use ApiResponseTrait;
-    protected $brandRepository;
+    protected $advertisementRepository;
     protected $_config;
     protected $guard;
-    public function __construct(BrandRepository $brandRepository)
+    public function __construct(AdvertisementRepository $advertisementRepository)
     {
         $this->guard = 'user-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
-        $this->brandRepository = $brandRepository;
+        $this->advertisementRepository = $advertisementRepository;
         // permissions
         // $this->middleware('auth:' . $this->guard);
 
@@ -37,8 +37,8 @@ class BrandController extends Controller
     public function index()
     {
         try {
-            $data = $this->brandRepository->getAllActive()->paginate();
-            return $this->successResponse(new BrandCollection($data));
+            $data = $this->advertisementRepository->getAllActive()->paginate();
+            return $this->successResponse(new AdvertisementCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -47,11 +47,11 @@ class BrandController extends Controller
             );
         }
     }
-    public function getFeatured()
+    public function getByPosition($position)
     {
         try {
-            $data = $this->brandRepository->getFeatured()->get();
-            return $this->successResponse( BrandResource::Collection($data));
+            $data = $this->advertisementRepository->getAllActiveByPosition($position)->get();
+            return $this->successResponse( AdvertisementResource::Collection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -67,8 +67,8 @@ class BrandController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->brandRepository->findOrFail($id);
-            return $this->successResponse(new BrandResource($data));
+            $data = $this->advertisementRepository->findOrFail($id);
+            return $this->successResponse(new AdvertisementResource($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -77,18 +77,25 @@ class BrandController extends Controller
             );
         }
     }
-    public function showBySlug(string $slug)
+    public function trackClick($id)
     {
+
         try {
-            $data = $this->brandRepository->findActiveBySlug($slug);
-            if (!$data) {
-                return $this->errorResponse(
-                    [],
-                    __('app.data-not-found'),
-                    404
+
+            $updated = $this->advertisementRepository->trackClick($id);
+            if ($updated) {
+                return $this->messageResponse(
+                    __("app.advertisements.updated-successfully"),
+                    true,
+                    200
+                );
+            }{
+                return $this->messageResponse(
+                    __("app.advertisements.updated-failed"),
+                    false,
+                    400
                 );
             }
-            return $this->successResponse(new BrandResource($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -97,5 +104,6 @@ class BrandController extends Controller
             );
         }
     }
+
 
 }

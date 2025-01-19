@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\Admin\Country;
+namespace App\Http\Resources\Admin\Country;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Admin\App\resources\Role\RoleResource;

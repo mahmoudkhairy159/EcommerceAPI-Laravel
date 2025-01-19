@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\Auth\AuthController;
 use App\Http\Controllers\Admin\BannerController;
@@ -102,13 +103,13 @@ Route::name('admin-api.')->group(function () {
         });
     //Paypal  SETTING
 
-     // Stripe SETTING
-     Route::controller(StripeSettingController::class)->name('stripe-settings.')
-     ->prefix('stripe-settings')->group(function () {
-         Route::get('', 'index')->name('index');
-         Route::put('/update', 'update')->name('update');
-     });
- //Stripe  SETTING
+    // Stripe SETTING
+    Route::controller(StripeSettingController::class)->name('stripe-settings.')
+        ->prefix('stripe-settings')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::put('/update', 'update')->name('update');
+        });
+    //Stripe  SETTING
     //brands routes
     /***********Trashed brands SoftDeletes**************/
     Route::controller(BrandController::class)->prefix('brands')->as('brands.')->group(function () {
@@ -381,5 +382,14 @@ Route::name('admin-api.')->group(function () {
     });
     Route::apiResource('user-addresses', UserAddressController::class);
     //user-addresses
+
+    //advertisements routes
+    Route::controller(AdvertisementController::class)->prefix('advertisements')->name('advertisements.')->group(function () {
+        Route::post('/{id}/change-status', 'changeStatus')->name('changeStatus');
+
+    });
+    Route::apiResource('advertisements', AdvertisementController::class);
+    //advertisements routes
+
 
 });

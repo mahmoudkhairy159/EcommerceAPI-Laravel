@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Types\CacheKeysType;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\CountryRepository;
-use App\resources\Vendor\Country\CountryResource;
+use App\Http\Resources\Vendor\Country\CountryResource;
 
 use App\Models\Country;
 
