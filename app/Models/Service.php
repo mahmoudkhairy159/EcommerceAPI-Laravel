@@ -66,8 +66,5 @@ class Service extends Model
         return $this->belongsToMany(Product::class, 'product_service');
     }
 
-    public function reviews()
-    {
-        return $this->morphMany(Review::class, 'reviewable');
-    }
+  
 }

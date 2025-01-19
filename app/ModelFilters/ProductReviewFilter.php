@@ -2,35 +2,34 @@
 
 namespace App\ModelFilters;
 
-use App\Models\Product;
-use App\Models\Service;
+
 use EloquentFilter\ModelFilter;
 
-class ReviewFilter extends ModelFilter
+class ProductReviewFilter extends ModelFilter
 {
 
     public function search($search)
     {
         return $this->where(function ($q) use ($search) {
-            return $q->where('comment', 'LIKE', "%$search%");
+            return $q->where('review', 'LIKE', "%$search%");
         });
     }
-    public function rate($rate)
+    public function rating($rating)
     {
-        return $this->where(function ($q) use ($rate) {
-            return $q->where('rate', $rate);
+        return $this->where(function ($q) use ($rating) {
+            return $q->where('rating', $rating);
         });
     }
     public function productId($productId)
     {
         return $this->where(function ($q) use ($productId) {
-            return $q->where('reviewable',Product::class)->where('reviewable_id', $productId);
+            return $q->where('product_id', $productId);
         });
     }
-    public function serviceId($serviceId)
+    public function vendorId($vendorId)
     {
-        return $this->where(function ($q) use ($serviceId) {
-            return $q->where('reviewable',Service::class)->where('reviewable_id', $serviceId);
+        return $this->where(function ($q) use ($vendorId) {
+            return $q->where('vendor_id', $vendorId);
         });
     }
     public function userId($userId)

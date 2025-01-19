@@ -31,7 +31,6 @@ class OrderController extends Controller
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->orderRepository = $orderRepository;
-        $this->per_page = config('pagination.default');
         // permissions
         $this->middleware('auth:' . $this->guard);
     }
@@ -86,7 +85,7 @@ class OrderController extends Controller
         }
     }
 
- 
+
 
     /**
      * Remove the specified resource from storage.

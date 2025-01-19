@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Requests\Api\Review;
+namespace App\Http\Requests\Api\ProductReview;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class UpdateReviewRequest extends FormRequest
+class UpdateProductReviewRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
     {
-        $rules = [];
         return[
-            'content'=>['required', 'string'],
-            'rate'=>['required', Rule::in(['1','2','3','4','5'])],
+            
+            'review' => ['required', 'string', 'max:1000'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
         ];
     }
 

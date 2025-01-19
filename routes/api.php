@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\PageSectionController;
 use App\Http\Controllers\Api\ProductAccessoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductImageController;
+use App\Http\Controllers\Api\ProductReviewController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\ProductVariantItemController;
 use App\Http\Controllers\Api\RelatedProductController;
@@ -227,12 +228,12 @@ Route::name('user-api.')->group(function () {
     //order-products
 
     // reviews routes
-    Route::controller(ReviewController::class)->name('reviews.')->prefix('/reviews')->group(function () {
-        Route::get('/product/{product_id}', 'getByProductId')->name('getByProductId');
-        Route::get('/service/{service_id}', 'getByServiceId')->name('getByServiceId');
-        Route::get('/user/{user_id}', 'getByUserId')->name('getByUserId');
+    Route::controller(ProductReviewController::class)->name('product-reviews.')->prefix('/product-reviews')->group(function () {
+        Route::get('/product/{productId}', 'getByProductId')->name('getByProductId');
+        Route::get('/vendor/{vendorId}', 'getByVendorId')->name('getByVendorId');
+        Route::get('/user/{userId}', 'getByUserId')->name('getByUserId');
     });
-    Route::apiResource('reviews', ReviewController::class)->except(['index']);
+    Route::apiResource('product-reviews', ProductReviewController::class)->except(['index']);
     // reviews routes
 
     // wishlists routes
@@ -336,7 +337,7 @@ Route::name('user-api.')->group(function () {
      //advertisements
      Route::controller(AdvertisementController::class)->prefix('advertisements')->name('advertisements.')->group(function () {
         Route::get('/position/{position}', 'getByPosition')->name('getByPosition');
-        Route::put('/track-click', 'trackClick')->name('trackClick');
+        Route::put('{id}/track-click', 'trackClick')->name('trackClick');
     });
     Route::apiResource('advertisements', AdvertisementController::class)->only(['index', 'show']);
     //advertisements

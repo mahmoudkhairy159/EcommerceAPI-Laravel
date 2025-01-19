@@ -26,7 +26,7 @@ return [
             'roles' => 'c,r,u,d',
             'products' => 'c,r,u,d',
             'product_images' => 'c,r,u,d',
-            'reviews' => 'c,r,u,d',
+            'product_reviews' => 'r,d',
             'services' => 'c,r,u,d',
             'settings' => 'c,r,u,d',
             'related_products' => 'c,r,u,d',

@@ -3,33 +3,32 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Review\StoreReviewRequest;
-use App\Http\Requests\Api\Review\UpdateReviewRequest;
-use App\Http\Resources\Api\Review\ReviewResource;
-use App\Http\Resources\Api\Review\ReviewCollection;
-use App\Repositories\ReviewRepository;
+use App\Http\Requests\Api\ProductReview\StoreProductReviewRequest;
+use App\Http\Requests\Api\ProductReview\UpdateProductReviewRequest;
+use App\Http\Resources\Api\ProductReview\ProductReviewResource;
+use App\Http\Resources\Api\ProductReview\ProductReviewCollection;
+use App\Repositories\ProductReviewRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
-class ReviewController extends Controller
+class ProductReviewController extends Controller
 {
     use ApiResponseTrait;
 
-    protected $reviewRepository;
+    protected $productReviewRepository;
 
     protected $_config;
     protected $guard;
     protected $per_page;
 
-    public function __construct(ReviewRepository $reviewRepository)
+    public function __construct(ProductReviewRepository $productReviewRepository)
     {
         $this->guard = 'user-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
-        $this->reviewRepository = $reviewRepository;
-        $this->per_page = config('pagination.default');
+        $this->productReviewRepository = $productReviewRepository;
         // permissions
         $this->middleware('auth:' . $this->guard)->except([
             'getByProductId',
@@ -38,11 +37,11 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function getByProductId($product_id)
+    public function getByProductId($productId)
     {
         try {
-            $data = $this->reviewRepository->getByProductId($product_id)->paginate($this->per_page);
-            return $this->successResponse(new ReviewCollection($data));
+            $data = $this->productReviewRepository->getByProductId($productId)->paginate();
+            return $this->successResponse(new ProductReviewCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -51,11 +50,11 @@ class ReviewController extends Controller
             );
         }
     }
-    public function getByServiceId($service_id)
+    public function getByVendorId($serviceId)
     {
         try {
-            $data = $this->reviewRepository->getByServiceId($service_id)->paginate($this->per_page);
-            return $this->successResponse(new ReviewCollection($data));
+            $data = $this->productReviewRepository->getByVendorId($serviceId)->paginate();
+            return $this->successResponse(new ProductReviewCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -64,11 +63,11 @@ class ReviewController extends Controller
             );
         }
     }
-    public function getByUserId($user_id)
+    public function getByUserId($userId)
     {
         try {
-            $data = $this->reviewRepository->getByUserId($user_id)->paginate($this->per_page);
-            return $this->successResponse(new ReviewCollection($data));
+            $data = $this->productReviewRepository->getByUserId($userId)->paginate();
+            return $this->successResponse(new ProductReviewCollection($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -81,32 +80,22 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreReviewRequest $request, $reviewable_id)
+    public function store(StoreProductReviewRequest $request)
     {
         try {
             $data = $request->validated();
             $data['user_id'] = auth()->guard($this->guard)->id();
-            if($data['type']=='product'){
-                $data['reviewable_type'] = 'App\\Models\\Product'; // Use double backslashes for the namespace
-            }elseif($data['type']=='service'){
-                $data['reviewable_type'] = 'App\\Models\\Service'; // Use double backslashes for the namespace
-            }
-            $data['reviewable_id'] = $reviewable_id;
-            unset($data['type']);
-
-            $created = $this->reviewRepository->create($data);
-
+            $created = $this->productReviewRepository->create($data);
             if ($created) {
-
                 return $this->successResponse(
-                    new ReviewResource($created),
-                    __("app.reviews.created-successfully"),
+                    new ProductReviewResource($created),
+                    __("app.productReviews.created-successfully"),
                     201
                 );
 
             }{
                 return $this->messageResponse(
-                    __("app.reviews.created-failed"),
+                    __("app.productReviews.created-failed"),
                     false,
                     400
                 );
@@ -127,9 +116,8 @@ class ReviewController extends Controller
     public function show($id)
     {
         try {
-            $data = $this->reviewRepository->findOrFail($id);
-
-            return $this->successResponse(new ReviewResource($data));
+            $data = $this->productReviewRepository->findOrFail($id);
+            return $this->successResponse(new ProductReviewResource($data));
         } catch (Exception $e) {
             return $this->errorResponse(
                 [],
@@ -142,27 +130,23 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateReviewRequest $request, $id)
+    public function update(UpdateProductReviewRequest $request, $id)
     {
         try {
-            $data['user_id'] = auth()->guard($this->guard)->id();
-            $review = $this->reviewRepository->where('user_id', $data['user_id'])->find($id);
-            if (!$review) {
-                return abort(404);
-            }
             $data = $request->validated();
-            $updated = $this->reviewRepository->update($data, $id);
+            $data['user_id'] = auth()->guard($this->guard)->id();
+            $updated = $this->productReviewRepository->updateOne($data, $id);
 
             if ($updated) {
                 return $this->messageResponse(
-                    __("app.reviews.updated-successfully"),
+                    __("app.productReviews.updated-successfully"),
                     true,
                     200
                 );
 
             }{
                 return $this->messageResponse(
-                    __("app.reviews.updated-failed"),
+                    __("app.productReviews.updated-failed"),
                     false,
                     400
                 );
@@ -183,17 +167,17 @@ class ReviewController extends Controller
     {
         try {
             $data['user_id'] = auth()->guard($this->guard)->id();
-            $review = $this->reviewRepository->where('user_id', $data['user_id'])->findOrFail($id);
-            $deleted = $this->reviewRepository->delete($id);
+            $productReview = $this->productReviewRepository->where('user_id', $data['user_id'])->findOrFail($id);
+            $deleted = $this->productReviewRepository->delete($id);
             if ($deleted) {
                 return $this->messageResponse(
-                    __("app.reviews.deleted-successfully"),
+                    __("app.productReviews.deleted-successfully"),
                     true,
                     200
                 );
             }{
                 return $this->messageResponse(
-                    __("app.reviews.deleted-successfully"),
+                    __("app.productReviews.deleted-successfully"),
                     false,
                     400
                 );

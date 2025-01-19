@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductAccessoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ProductVariantItemController;
 use App\Http\Controllers\Admin\RelatedProductController;
@@ -260,21 +261,15 @@ Route::name('admin-api.')->group(function () {
     Route::apiResource('order-products', OrderProductController::class)->except(['index']);
     //order-products
 
-    // reviews routes
-    /***********Trashed reviews SoftDeletes**************/
-    Route::controller(ReviewController::class)->prefix('reviews')->as('reviews.')->group(function () {
-        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
-        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
-        Route::post('/restore/{id}', 'restore')->name('restore');
+    // productReviews routes
+
+    Route::controller(ProductReviewController::class)->name('product-reviews.')->prefix('product-reviews')->group(function () {
+        Route::get('/product/{productId}', 'getByProductId')->name('getByProductId');
+        Route::get('/vendor/{vendorId}', 'getByVendorId')->name('getByVendorId');
+        Route::get('/user/{userId}', 'getByUserId')->name('getByUserId');
     });
-    /***********Trashed reviews SoftDeletes**************/
-    Route::controller(ReviewController::class)->name('reviews.')->prefix('/reviews')->group(function () {
-        Route::get('/product/{product_id}', 'getByProductId')->name('getByProductId');
-        Route::get('/service/{service_id}', 'getByServiceId')->name('getByServiceId');
-        Route::get('/user/{user_id}', 'getByUserId')->name('getByUserId');
-    });
-    Route::apiResource('reviews', ReviewController::class)->only(['show', 'destroy']);
-    // reviews routes
+    Route::apiResource('product-reviews', ProductReviewController::class)->only(['show', 'destroy']);
+    // productReviews routes
 
     // wishlist routes
     Route::controller(WishlistController::class)->name('wishlists.')->prefix('wishlists')->group(function () {

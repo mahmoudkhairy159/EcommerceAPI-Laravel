@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Resources\Admin\ProductReview;
+namespace App\Http\Resources\Api\ProductReview;
 
-use App\Http\Resources\Admin\Product\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductReviewResource extends JsonResource
@@ -14,7 +13,7 @@ class ProductReviewResource extends JsonResource
     {
         return [
 
-           'id' => $this->id,
+            'id' => $this->id,
             'product_id' => $this->product_id,
             'user_id' => $this->user_id,
             'vendor_id' => $this->vendor_id,
@@ -38,7 +37,6 @@ class ProductReviewResource extends JsonResource
             ] : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-
 
         ];
     }

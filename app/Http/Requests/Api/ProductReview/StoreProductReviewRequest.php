@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Review;
+namespace App\Http\Requests\Api\ProductReview;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class StoreReviewRequest extends FormRequest
+class StoreProductReviewRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,9 +16,10 @@ class StoreReviewRequest extends FormRequest
     {
 
         return[
-            'content'=>['required', 'string'],
-            'rate'=>['required', Rule::in(['1','2','3','4','5'])],
-            'type'=>['required', Rule::in(['service','product'])],
+            'product_id' => ['required', 'exists:products,id'],
+            'vendor_id' => ['required', 'exists:vendors,id'],
+            'review' => ['required', 'string', 'max:1000'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
         ];
     }
 

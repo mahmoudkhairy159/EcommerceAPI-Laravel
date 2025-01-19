@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api\Review;
+namespace App\Http\Resources\Api\ProductReview;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ReviewCollection extends ResourceCollection
+class ProductReviewCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,7 @@ class ReviewCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => ReviewResource::collection($this->collection),
+            'data' => ProductReviewResource::collection($this->collection),
             'pagination' => [
                 'total' => $this->total(),
                 'per_page' => $this->perPage(),
