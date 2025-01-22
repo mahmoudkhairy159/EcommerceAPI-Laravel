@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class StoreOrderRequest extends FormRequest
+class StoreCashOrderRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,14 +16,10 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method' => ['required', 'string', Rule::in(Order::getPaymentMethods())],
-            'order_type' => ['required', 'string'],
-            'billing_address' => ['required', 'string'],
-            'state' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'pin_code' => ['required', 'string'],
-            'order_phone_number' => ['required', 'alpha_num'],
-            'notes' => ['nullable', 'string'],
+            'description' => 'nullable|string|max:255', // Optional description
+            'user_address_id' => 'required|exists:user_addresses,id',
+            'shipping_rule_id' => 'required|exists:shipping_rules,id',
+            'code' => 'nullable|exists:coupons,code',
         ];
     }
 

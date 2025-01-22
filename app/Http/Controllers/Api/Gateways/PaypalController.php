@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\UserRepository;
+use App\Services\OrderCalculationService;
 use App\Services\PurchaseOrderService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -74,7 +75,7 @@ class PaypalController extends Controller
     /**
      * Create a payment.
      */
-    public function createPayment(StorePaypalPaymentRequest $request)
+    public function createPayment(StorePaypalPaymentRequest $request,OrderCalculationService $orderCalculationService)
     {
         try {
             $data = $request->validated();
@@ -84,6 +85,7 @@ class PaypalController extends Controller
                 return $this->errorResponse([], "The cart is empty.", statusCode: 404);
 
             }
+            $amount=$orderCalculationService->calculateOrderAmount($data);
             $paymentData = [
                 'intent' => 'CAPTURE',
                 'application_context' => [
@@ -99,7 +101,7 @@ class PaypalController extends Controller
                     [
                         'amount' => [
                             'currency_code' => $this->paypalSetting->currency ?? 'USD',
-                            'value' => round($request->amount, 2),
+                            'value' =>  $amount['amount'],
                         ],
                         'description' => $request->description,
                     ],
@@ -148,7 +150,7 @@ class PaypalController extends Controller
     /**
      * Handle payment success.
      */
-    public function success(Request $request, PurchaseOrderService $purchaseOrderService)
+    public function success(Request $request, PurchaseOrderService $purchaseOrderService,OrderCalculationService $orderCalculationService)
     {
         //dd($request->all());
         $response = $this->provider->capturePaymentOrder($request->token);
@@ -156,7 +158,7 @@ class PaypalController extends Controller
             $data = $request->all();
             $data['payment_method'] = Order::PAYMENT_METHOD_PAYPAL;
             $data['payment_status'] = Order::PAYMENT_STATUS_PAID;
-            $created = $purchaseOrderService->purchaseOrder($data, $response['id']);
+            $created = $purchaseOrderService->purchaseOrder($data, $response['id'],$orderCalculationService);
             // return $this->successResponse([ $response], "Payment completed successfully.");
             return $this->successResponse("Payment completed successfully.");
 

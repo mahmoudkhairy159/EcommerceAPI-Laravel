@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Gateways\Stripe\CaptureStripePaymentRequest;
 use App\Http\Requests\Api\Gateways\Stripe\StoreStripePaymentRequest;
 use App\Models\Order;
 use App\Repositories\CartRepository;
+use App\Services\OrderCalculationService;
 use App\Services\PurchaseOrderService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class StripeController extends Controller
     /**
      * Create a payment.
      */
-    public function createPayment(StoreStripePaymentRequest $request)
+    public function createPayment(StoreStripePaymentRequest $request,OrderCalculationService $orderCalculationService)
     {
         try {
             $data = $request->validated();
@@ -59,6 +60,7 @@ class StripeController extends Controller
                 return $this->errorResponse([], "The cart is empty.", statusCode: 404);
 
             }
+            $amount=$orderCalculationService->calculateOrderAmount($data);
             $data = [
                 'payment_method_types' => ['card'], // Only card payments for now
                 'line_items' => [
@@ -68,7 +70,7 @@ class StripeController extends Controller
                             'product_data' => [
                                 'name' => 'Gimme money !!!!',
                             ],
-                            'unit_amount' => $data['amount'] * 100, // Stripe expects the amount in cents
+                            'unit_amount' =>  $amount['amount'] * 100, // Stripe expects the amount in cents
                         ],
                         'quantity' => 1,
                     ],
@@ -136,7 +138,7 @@ class StripeController extends Controller
     /**
      * Handle payment success.
      */
-    public function success(Request $request, PurchaseOrderService $purchaseOrderService)
+    public function success(Request $request, PurchaseOrderService $purchaseOrderService,OrderCalculationService $orderCalculationService)
     {
         try {
             // Ensure session_id is present in the query parameters
@@ -154,7 +156,7 @@ class StripeController extends Controller
                 $data = $request->all();
                 $data['payment_method'] = Order::PAYMENT_METHOD_PAYPAL;
                 $data['payment_status'] = Order::PAYMENT_STATUS_PAID;
-                $created = $purchaseOrderService->purchaseOrder($data, $sessionId);
+                $created = $purchaseOrderService->purchaseOrder($data, $sessionId,$orderCalculationService);
                 // Payment was successful
                 return $this->successResponse("Payment completed successfully.");
             } else {

@@ -222,7 +222,7 @@ Route::name('user-api.')->group(function () {
     //  cart routes
 
     // orders routes
-    Route::apiResource('orders', OrderController::class)->except('store', 'update');
+    Route::apiResource('orders', OrderController::class)->except( 'update');
     // orders routes
 //order-products
     Route::controller(OrderProductController::class)->prefix('order-products')->as('order-products.')->group(function () {
