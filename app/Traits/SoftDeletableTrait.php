@@ -11,7 +11,7 @@ trait SoftDeletableTrait
         return $this->model
             ->onlyTrashed()
             ->filter(request()->all())
-            ->orderBy('deleted_at', 'desc');    
+            ->orderBy('deleted_at', 'desc');
     }
 
     public function forceDelete(int $id)
@@ -26,6 +26,7 @@ trait SoftDeletableTrait
             DB::commit();
             return  $deleted;
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             DB::rollBack();
             return false;
         }

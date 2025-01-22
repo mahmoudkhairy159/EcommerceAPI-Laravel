@@ -9,6 +9,7 @@ use App\Http\Controllers\Vendor\CityController;
 use App\Http\Controllers\Vendor\CountryController;
 use App\Http\Controllers\Vendor\OrderController;
 use App\Http\Controllers\Vendor\ProductImageController;
+use App\Http\Controllers\Vendor\ProductReviewController;
 use App\Http\Controllers\Vendor\ProductVariantController;
 use App\Http\Controllers\Vendor\ProductVariantItemController;
 use App\Http\Controllers\Vendor\StateController;
@@ -130,5 +131,16 @@ Route::name('vendor-api.')->group(function () {
     });
     Route::apiResource('orders', OrderController::class)->except(['store', 'update','destroy']);
     // orders routes
+
+    // productReviews routes
+
+    Route::controller(ProductReviewController::class)->name('product-reviews.')->prefix('product-reviews')->group(function () {
+        Route::get('/product/{productId}', 'getByProductId')->name('getByProductId');
+        Route::get('/vendor/{vendorId}', 'getByVendorId')->name('getByVendorId');
+        Route::get('/user/{userId}', 'getByUserId')->name('getByUserId');
+    });
+    Route::apiResource('product-reviews', ProductReviewController::class)->only(['show']);
+    // productReviews routes
+
 
 });

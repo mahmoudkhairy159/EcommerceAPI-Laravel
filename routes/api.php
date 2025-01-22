@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BlogCategoryController;
 use App\Http\Controllers\Api\AdvertisementController;
 use App\Http\Controllers\Api\AppSettingsController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\SocialiteController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 use App\Http\Controllers\Api\BannerController;
+use App\Http\Controllers\Api\BlogCommentController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\BrandImageController;
 use App\Http\Controllers\Api\CartController;
@@ -148,6 +151,7 @@ Route::name('user-api.')->group(function () {
     Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::get('/featured', 'getFeaturedProducts')->name('getFeaturedProducts');
+        Route::get('/vendor/{vendorId}', 'getByVendorId')->name('getByVendorId');
 
     });
     Route::apiResource('products', ProductController::class)->only(['index', 'show']);
@@ -218,7 +222,7 @@ Route::name('user-api.')->group(function () {
     //  cart routes
 
     // orders routes
-    Route::apiResource('orders', OrderController::class)->except('store','update');
+    Route::apiResource('orders', OrderController::class)->except('store', 'update');
     // orders routes
 //order-products
     Route::controller(OrderProductController::class)->prefix('order-products')->as('order-products.')->group(function () {
@@ -334,12 +338,33 @@ Route::name('user-api.')->group(function () {
         Route::post('/apply', 'apply')->name('apply');
     });
     // coupons routes
-     //advertisements
-     Route::controller(AdvertisementController::class)->prefix('advertisements')->name('advertisements.')->group(function () {
+    //advertisements
+    Route::controller(AdvertisementController::class)->prefix('advertisements')->name('advertisements.')->group(function () {
         Route::get('/position/{position}', 'getByPosition')->name('getByPosition');
         Route::put('{id}/track-click', 'trackClick')->name('trackClick');
     });
     Route::apiResource('advertisements', AdvertisementController::class)->only(['index', 'show']);
     //advertisements
+    // blogs routes
+    Route::controller(BlogController::class)->name('blogs.')->prefix('/blogs')->group(function () {
+        Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
+    });
+    Route::apiResource('blogs', BlogController::class)->only(['index', 'show']);
+    // blogs routes
+    Route::apiResource('blog-categories', BlogCategoryController::class)->only(['index', 'show']);
+
+    // blog_comments routes
+    Route::controller(BlogCommentController::class)->name('blog-comments.')->prefix('/blog-comments')->group(function () {
+        Route::get('/blog/{blog_id}', 'getByBlogId')->name('getByBlogId');
+    });
+    ///////////////////////////comment replies ////////////////////////////
+    Route::controller(BlogCommentController::class)->name('blog-comment-replies.')->prefix('/blog-comment-replies')->group(function () {
+        Route::get('/comment/{comment_id}', 'getRepliesByCommentId')->name('getRepliesByCommentId');
+        Route::post('/{comment_id}', 'reply')->name('reply');
+    });
+    ///////////////////////////comment replies ////////////////////////////
+
+    Route::apiResource('blog-comments', BlogCommentController::class)->except(['index']);
+    // blog_comments routes
 
 });

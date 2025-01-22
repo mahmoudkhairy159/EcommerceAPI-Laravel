@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api\Country;
+namespace App\Http\Resources\Api\Blog;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CountryCollection extends ResourceCollection
+class BlogCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,7 @@ class CountryCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => CountryResource::collection($this->collection),
+            'data' => BlogResource::collection($this->collection),
             'pagination' => [
                 'total' => $this->total(),
                 'per_page' => $this->perPage(),

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\ProductReview\ProductReviewCollection;
-use App\Http\Resources\Admin\ProductReview\ProductReviewResource;
+use App\Http\Resources\Vendor\ProductReview\ProductReviewCollection;
+use App\Http\Resources\Vendor\ProductReview\ProductReviewResource;
 use App\Repositories\ProductReviewRepository;
 use App\Traits\ApiResponseTrait;
 use Exception;
@@ -21,15 +21,14 @@ class ProductReviewController extends Controller
 
     public function __construct(ProductReviewRepository $productReviewRepository)
     {
-        $this->guard = 'admin-api';
+        $this->guard = 'vendor-api';
         request()->merge(['token' => 'true']);
         Auth::setDefaultDriver($this->guard);
         $this->_config = request('_config');
         $this->productReviewRepository = $productReviewRepository;
         // permissions
         $this->middleware('auth:' . $this->guard);
-        $this->middleware(['ability:admin,product_reviews-read'])->only(['index', 'show', 'getByItemId', 'getByUserId']);
-        $this->middleware(['ability:admin,product_reviews-delete'])->only(['destroy']);
+
     }
 
     public function getByProductId($productId)
@@ -89,35 +88,6 @@ class ProductReviewController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        try {
-            $productReview = $this->productReviewRepository->findOrFail($id);
-            $deleted = $this->productReviewRepository->delete($id);
-            if ($deleted) {
-                return $this->messageResponse(
-                    __("app.productReviews.deleted-successfully"),
-                    true,
-                200
-                );
-            }{
-                return $this->messageResponse(
-                    __("app.productReviews.deleted-failed"),
-                    false,
-                    400
-                );
-            }
-        } catch (Exception $e) {
 
-            return $this->errorResponse(
-                [],
-                __('app.something-went-wrong'),
-                500
-            );
-        }
-    }
 
 }

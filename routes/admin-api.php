@@ -5,6 +5,9 @@ use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\AssetController;
 use App\Http\Controllers\Admin\Auth\AuthController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogCommentController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BrandImageController;
 use App\Http\Controllers\Admin\CartController;
@@ -179,6 +182,7 @@ Route::name('admin-api.')->group(function () {
     Route::controller(ProductController::class)->prefix('products')->name('products.')->group(function () {
         Route::get('/slugs/{slug}', 'showBySlug')->name('showBySlug');
         Route::get('/pending', 'getAllPendingProducts')->name('getAllPendingProducts');
+        Route::get('/vendor/{vendorId}', 'getByVendorId')->name('getByVendorId');
         Route::get('/statistics', 'getStatistics')->name('getStatistics');
         Route::get('/{id}/statistics', 'getStatisticsById')->name('getStatisticsById');
         Route::get('/low-quantity-alert-products-count', 'getLowQuantityAlertProductsCount')->name('getLowQuantityAlertProductsCount');
@@ -385,6 +389,42 @@ Route::name('admin-api.')->group(function () {
     });
     Route::apiResource('advertisements', AdvertisementController::class);
     //advertisements routes
+    // blogs routes
+    /***********Trashed blogs SoftDeletes**************/
+    Route::controller(BlogController::class)->prefix('blogs')->as('blogs.')->group(function () {
+        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed blogs SoftDeletes**************/
 
+    Route::apiResource('blogs', BlogController::class);
+    // blogs routes
+     // blogs routes
+    /***********Trashed blogs SoftDeletes**************/
+    Route::controller(BlogCategoryController::class)->prefix('blog-categories')->as('blog-categories.')->group(function () {
+        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed blogs SoftDeletes**************/
+
+    Route::apiResource('blog-categories', BlogCategoryController::class);
+    // blogs routes
+
+    // blog_comments routes
+    /***********Trashed blog_comments SoftDeletes**************/
+    Route::controller(BlogCommentController::class)->prefix('blog-comments')->as('blog-comments.')->group(function () {
+        Route::get('/trashed', 'getOnlyTrashed')->name('getOnlyTrashed');
+        Route::delete('/force-delete/{id}', 'forceDelete')->name('forceDelete');
+        Route::post('/restore/{id}', 'restore')->name('restore');
+    });
+    /***********Trashed blog_comments SoftDeletes**************/
+    Route::controller(BlogCommentController::class)->name('blog-comments.')->prefix('/blog-comments')->group(function () {
+        Route::get('/blog/{blog_id}', 'getByBlogId')->name('getByBlogId');
+        Route::get('/user/{user_id}', 'getByUserId')->name('getByUserId');
+    });
+    Route::apiResource('blog-comments', BlogCommentController::class)->only(['show', 'destroy']);
+    // blog_comments routes
 
 });

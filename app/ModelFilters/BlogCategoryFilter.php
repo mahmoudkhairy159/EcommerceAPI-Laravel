@@ -4,7 +4,7 @@ namespace App\ModelFilters;
 
 use EloquentFilter\ModelFilter;
 
-class BrandFilter extends ModelFilter
+class BlogCategoryFilter extends ModelFilter
 {
 
     public function search($search)
@@ -13,15 +13,6 @@ class BrandFilter extends ModelFilter
             return $q->where('name', 'LIKE', "%$search%");
         });
     }
-  
 
-
-
-    public function status($status)
-    {
-        return $this->where(function ($q) use ($status) {
-            return $q->where('status', $status);
-        });
-    }
 
 }

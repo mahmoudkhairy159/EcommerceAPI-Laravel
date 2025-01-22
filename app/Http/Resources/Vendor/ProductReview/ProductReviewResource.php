@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Api\ProductReview;
+namespace App\Http\Resources\Vendor\ProductReview;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

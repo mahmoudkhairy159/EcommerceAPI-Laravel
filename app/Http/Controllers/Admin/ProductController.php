@@ -58,6 +58,19 @@ class ProductController extends Controller
             );
         }
     }
+    public function getByVendorId($vendorId)
+    {
+        try {
+            $data = $this->productRepository->getAllByVendorId($vendorId)->paginate();
+            return $this->successResponse(new ProductCollection($data));
+        } catch (Exception $e) {
+            return $this->errorResponse(
+                [],
+                __('app.something-went-wrong'),
+                500
+            );
+        }
+    }
     public function getAllPendingProducts()
     {
         try {

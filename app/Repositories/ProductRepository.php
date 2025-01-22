@@ -52,30 +52,23 @@ class ProductRepository extends BaseRepository
         ];
     }
 
-    public function getStatisticsById($id)
-    {
 
-        // $date_type = $request->date_type;
-
-        return [
-            // "product_total_order" => Order$this->model->where("product_id", $id)->FilterByOrderReportDate($date_type)->sum("price"),
-            // "product_views_count" => $this->model->find($id)->no_of_views,
-            // "total_orders_count" => Order::query()->FilterByProductId($id)->count(),
-            // "pending_orders_count" => Order::query()->FilterByProductId($id)->FilterByStatus("Pending")->FilterByOrderReportDate($date_type)->count(),
-            // "completed_orders_count" => Order::query()->FilterByProductId($id)->FilterByStatus("Completed")->FilterByOrderReportDate($date_type)->count(),
-            // "cancelled_orders_count" => Order::query()->FilterByProductId($id)->FilterByStatus("Cancelled")->FilterByOrderReportDate($date_type)->count(),
-            // "returned_orders_count" => Order::query()->FilterByProductId($id)->FilterByStatus("Returned")->FilterByOrderReportDate($date_type)->count(),
-            // "damaged_orders_count" => Order::query()->FilterByProductId($id)->FilterByStatus("Damaged")->FilterByOrderReportDate($date_type)->count(),
-        ];
-
-    }
     public function getAllActive()
     {
         return $this->model
             ->filter(request()->all())
             ->where('status', Product::STATUS_ACTIVE)
             ->where('approval_status', Product::APPROVAL_APPROVED)
-            ->orderBy('created_at', 'desc');
+            ->orderBy('serial', 'asc');
+    }
+    public function getAllActiveByVendorId($vendorId)
+    {
+        return $this->model
+            ->filter(request()->all())
+            ->where('status', Product::STATUS_ACTIVE)
+            ->where('approval_status', Product::APPROVAL_APPROVED)
+            ->where('vendor_id', $vendorId)
+            ->orderBy('serial', 'asc');
     }
 
     public function getFeaturedProducts()

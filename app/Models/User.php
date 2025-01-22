@@ -98,6 +98,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function scopeActive($query)
+    {
+        return $query->where('status',USER:: STATUS_ACTIVE);
+    }
 
     /*******************relationships********************/
     public function linkedSocialAccounts()
